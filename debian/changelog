@@ -1,0 +1,127 @@
+libting (4.0.0-2) stable; urgency=low
+
+  * prorab.mk fix
+
+ -- Ivan Gagis <igagis@gmail.com>  Tue, 11 Aug 2015 18:08:00 +0200
+ 
+libting (4.0.0-1) stable; urgency=low
+
+  * Flags template class
+  * PoolStored rewritten
+  * bug fixes
+  * other refactoring changes
+
+ -- Ivan Gagis <igagis@gmail.com>  Tue, 24 Jun 2014 16:15:00 +0200
+ 
+libting (3.0.0-1) stable; urgency=low
+
+  * IPv6 support
+  * stable MacOS X support
+  * bug fixes
+
+ -- Ivan Gagis <igagis@gmail.com>  Tue, 06 Aug 2013 12:52:00 +0200
+ 
+libting (2.0.0-1) stable; urgency=low
+
+  * Acquire/Release semantics for atomic operations
+  * atomic::U32 class
+
+ -- Ivan Gagis <igagis@gmail.com>  Wed, 02 May 2013 16:48:00 +0200
+
+libting (1.0.0-1) stable; urgency=low
+
+  * Some directory structure refactoring
+  * Some bug fixes
+
+ -- Ivan Gagis <igagis@gmail.com>  Tue, 13 Mar 2012 13:52:00 +0200
+
+libting (0.11.0-1) stable; urgency=low
+
+  * Sockets related stuff moved to ting::net namespace, ting::SocketLib renamed to ting::net::Lib
+  * ting::net::HostNameResolver class added for DNS lookups, ting::SocketLib::GetHostByName() removed.
+  * ting::atomic namespace added providing some primitives for cross platform atomic operations.
+  * .pc file added, so ting can now be used with pkg-config
+  * some other minor changes
+
+ -- Ivan Gagis <igagis@gmail.com>  Fri, 03 Feb 2012 16:28:00 +0200
+
+libting (0.10.0-1) stable; urgency=low
+
+  * ting::File and ting::FSFile
+  * moved implementation to .cpp and libting.so
+
+ -- Ivan Gagis <igagis@gmail.com>  Fri, 07 Oct 2011 16:28:00 +0200
+
+libting (0.9.0-1) stable; urgency=low
+
+  * ting::Signal::IsConnected() family of functions added.
+
+ -- Ivan Gagis <igagis@gmail.com>  Mon, 15 Aug 2011 16:50:00 +0200
+
+libting (0.8.1-1) stable; urgency=low
+
+  * Bug fixes to support 64 bit systems.
+
+ -- Ivan Gagis <igagis@gmail.com>  Mon, 23 May 2011 22:28:00 +0200
+
+libting (0.8.0-1) stable; urgency=low
+
+  * Bug fixes
+  * New Timer implementation
+
+ -- Ivan Gagis <igagis@gmail.com>  Fri, 20 May 2011 12:10:00 +0200
+
+libting (0.7.0-1) stable; urgency=low
+
+  * Bug fixes
+  * Experimental Mac OS support
+
+ -- Ivan Gagis <igagis@gmail.com>  Wed, 23 Mar 2011 15:29:00 +0200
+
+libting (0.6.0-1) stable; urgency=low
+
+  * ting::Array::Buf() method removed
+
+ -- Ivan Gagis <igagis@gmail.com>  Sat, 26 Feb 2011 16:55:00 +0200
+
+libting (0.5.1-1) stable; urgency=low
+
+  * Bug fix in Sockets.hpp
+
+ -- Ivan Gagis <igagis@gmail.com>  Mon, 31 Jan 2011 15:42:00 +0200
+
+libting (0.5.0-1) stable; urgency=low
+
+  * const support for Ref and WeakRef and Ptr.
+
+ -- Ivan Gagis <igagis@gmail.com>  Tue, 28 Dec 2010 17:49:00 +0200
+
+libting (0.4.2-1) stable; urgency=low
+
+  * Matrix transpose/scale/rotate multiplies from the right now, not from the left.
+  * Minor improvements.
+
+ -- Ivan Gagis <igagis@gmail.com>  Wed, 7 Apr 2010 15:11:00 +0200
+
+
+libting (0.4.1-1) stable; urgency=low
+
+  * bug fix in ting/Timer.hpp
+
+ -- Ivan Gagis <igagis@gmail.com>  Sat, 6 Mar 2010 21:41:00 +0200
+
+
+libting (0.4.0-1) stable; urgency=low
+
+  * some improvements
+  * some bugfixes
+
+ -- Ivan Gagis <igagis@gmail.com>  Fri, 25 Feb 2010 15:52:00 +0200
+
+
+libting (0.3.0-1) stable; urgency=low
+
+  * Initial release
+
+ -- Ivan Gagis <igagis@gmail.com>  Fri, 06 Nov 2009 17:44:00 +0300
+
