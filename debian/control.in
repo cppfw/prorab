@@ -1,40 +1,14 @@
-Source: libting
+Source: prorab
 Section: misc
 Priority: extra
 Maintainer: Ivan Gagis <igagis@gmail.com>
-Build-Depends: debhelper (>= 9), libc6-dev
-Build-Depends-Indep: doxygen
+Build-Depends: debhelper (>= 9), sed, make
 Standards-Version: 3.9.2
 
-Package: libting$(soname)
-Section: libs
-Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}
-Description: cross-platform C++ utility library.
- For multithreaded development ting provides classes such as Mutex, Semaphore, Thread, Queue, Message, CondVar.
- For network development it provides TCPSocket, UDPSocket classes, etc.
- It also provides reference counted pointers, smart pointers for buffers.
-
-Package: libting$(soname)-dbg
-Section: libdevel
-Architecture: any
-Depends: libting$(soname) (= ${binary:Version}), ${misc:Depends}
-Description: debugging symbols for libting$(soname) package.
-
-Package: libting-dev
+Package: prorab
 Section: devel
 Architecture: any
-Depends: libting$(soname) (= ${binary:Version}), ${misc:Depends}
-Suggests: libting$(soname)-dbg (= ${binary:Version}), libting-doc
-Description: cross-platform C++ utility library.
- For multithreaded development ting provides classes such as Mutex, Semaphore, Thread, Queue, Message, CondVar.
- For network development it provides TCPSocket, UDPSocket classes, etc.
- It also provides reference counted pointers, smart pointers for buffers.
-
-Package: libting-doc
-Section: devel
-Architecture: all
-Depends: ${misc:Depends}
-Description: documentation for libting - simple cross-platform C++ library.
- Documentation for libting - simple cross-platform C++ library.
- For more details see description to libting-dev package.
+Depends: sed, make
+Description: GNU make based build system.
+ GNU make based build system mainly for C++ programs.
+ Defines building sequences for applications, libraries, debian packages.
