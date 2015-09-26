@@ -276,7 +276,7 @@ ifneq ($(prorab_included),true)
 
         $(eval prorab_private_deb_target_set := true)
 
-        deb: $(prorab_this_dir)debian/control $(patsubst %.install.in, %$(this_soname).install, $(shell ls $(prorab_this_dir)debian/*.install.in))
+        deb: $(prorab_this_dir)debian/control $(patsubst %.install.in, %$(this_soname).install, $(shell ls $(prorab_this_dir)debian/*.install.in 2>/dev/null))
 		$(prorab_echo)(cd $(prorab_this_dir); dpkg-buildpackage)
 
         $(prorab_this_dir)debian/control: $(prorab_this_dir)debian/control.in $(prorab_this_makefile) $(this_soname_dependency)
