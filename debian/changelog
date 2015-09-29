@@ -1,3 +1,9 @@
+prorab (1.1.2-1) stable; urgency=medium
+
+  * take version from debian changelog
+
+ -- Ivan Gagis <igagis@gmail.com>  Tue, 29 Sep 2015 17:33:15 +0300
+
 prorab (1.1.1-1) stable; urgency=medium
 
   * removed copyright message

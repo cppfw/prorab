@@ -41,9 +41,8 @@ ifneq ($(prorab_included),true)
     this_ldflags :=
     this_ldlibs :=
     this_srcs :=
-    
+
     #variables ued with prorab-apply-version rule
-    this_version :=
     this_version_files :=
 
 
@@ -306,9 +305,9 @@ ifneq ($(prorab_included),true)
 
         ver:: $(prorab_private_version_targets)
 
-        $(prorab_private_version_targets): %: %.in $(prorab_this_dir)debian/control
-		@echo "Applying version to $$^..."
-		$(prorab_echo)sed -e "s/\$$$$(version)/$(prorab_private_version)/" $$^ > $$@
+        $(prorab_private_version_targets): %: %.in $(prorab_this_dir)debian/changelog
+		@echo "Applying version to $$(firstword $$^)..."
+		$(prorab_echo)sed -e "s/\$$$$(version)/$(prorab_private_version)/" $$(firstword $$^) > $$@
     endef
 
 endif #~once
