@@ -140,6 +140,14 @@ ifneq ($(prorab_included),true)
 		$(prorab_echo)rm -f $(prorab_this_symbolic_name)
     endef
 
+    define prorab-private-lib-install-headers-rule
+        install::
+		#foreach is used to filter out all files which are not inside of a directory
+		$(prorab_echo)for i in $(foreach v,$(patsubst $(prorab_this_dir)%,%,$(shell find $(prorab_this_dir) -type f -name "*.hpp")),$(if $(findstring /,$(v)),$(v),)); do \
+		    install -d $(DESTDIR)$(PREFIX)/include/$$$${i%/*}; \
+		    install $(prorab_this_dir)$$$$i $(DESTDIR)$(PREFIX)/include/$$$$i; \
+		done
+    endef
 
     define prorab-private-lib-specific-rules
         $(if $(filter windows,$(prorab_os)), \
@@ -165,12 +173,9 @@ ifneq ($(prorab_included),true)
         clean::
 		$(prorab_echo)rm -f $(prorab_this_staticlib)
 
+        $(prorab-private-lib-install-headers-rule)
+
         install:: $(prorab_this_staticlib) $(prorab_this_name)
-		#foreach is used to filter out all files which are not inside of a directory
-		$(prorab_echo)for i in $(foreach v,$(patsubst $(prorab_this_dir)%,%,$(shell find $(prorab_this_dir) -type f -name "*.hpp")),$(if $(findstring /,$(v)),$(v),)); do \
-		    install -d $(DESTDIR)$(PREFIX)/include/$$$${i%/*}; \
-		    install $(prorab_this_dir)$$$$i $(DESTDIR)$(PREFIX)/include/$$$$i; \
-		done
 		$(prorab_echo)install -d $(DESTDIR)$(PREFIX)/lib/
 		$(prorab_echo)install $(prorab_this_staticlib) $(DESTDIR)$(PREFIX)/lib/
 		$(prorab_echo)install $(prorab_this_name) $(DESTDIR)$(PREFIX)/lib/
@@ -206,10 +211,14 @@ ifneq ($(prorab_included),true)
 		$(prorab_echo)rm -f $(prorab_this_name)
     endef
 
-
+    #if there are no any sources in this_srcs then just install headers, no need to build binaries
     define prorab-build-lib
-        $(prorab-private-lib-specific-rules)
-        $(prorab-private-common-rules)
+        $(if $(this_srcs), \
+                $(prorab-private-lib-specific-rules) \
+                $(prorab-private-common-rules) \
+                , \
+                $(prorab-private-lib-install-headers-rule) \
+            )
     endef
 
 
