@@ -1,13 +1,10 @@
 # Prorab build system
-# Copyright Ivan Gagis <igagis@gmail.com>, 2015
+# Copyright 2015 Ivan Gagis <igagis@gmail.com>
 
 
 #once
 ifneq ($(prorab_included),true)
     prorab_included := true
-
-    $(info Prorab build system version 1.1. Copyright Ivan Gagis <igagis@gmail.com>)
-
 
     #for storing list of included makefiles
     prorab_included_makefiles :=
@@ -261,7 +258,7 @@ ifneq ($(prorab_included),true)
 
 
     prorab-clear-this-vars = $(foreach var,$(filter this_%,$(.VARIABLES)),$(eval $(var) := ))
-    
+
 
 
     #doxygen docs are only possible for libraries, so install path is lib*-doc
@@ -304,7 +301,7 @@ ifneq ($(prorab_included),true)
 
     define prorab-apply-version
         $(eval prorab_private_version_targets := $(patsubst %.in, $(prorab_this_dir)%, $(this_version_files)))
-        
+
         .PHONY: $(prorab_private_version_targets)
 
         ver:: $(prorab_private_version_targets)
@@ -322,8 +319,5 @@ $(if $(filter $(prorab_this_makefile),$(prorab_included_makefiles)), \
     , \
         $(eval prorab_included_makefiles += $(abspath $(prorab_this_makefile))) \
     )
-
-#$(info $(prorab_included_makefiles))
-
 
 $(prorab-clear-this-vars)
