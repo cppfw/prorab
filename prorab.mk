@@ -140,9 +140,9 @@ ifneq ($(prorab_included),true)
 		$(prorab_echo)rm -f $(prorab_this_symbolic_name)
     endef
 
+    #foreach is used to filter out all files which are not inside of a directory
     define prorab-private-lib-install-headers-rule
         install::
-		#foreach is used to filter out all files which are not inside of a directory
 		$(prorab_echo)for i in $(foreach v,$(patsubst $(prorab_this_dir)%,%,$(shell find $(prorab_this_dir) -type f -name "*.hpp")),$(if $(findstring /,$(v)),$(v),)); do \
 		    install -d $(DESTDIR)$(PREFIX)/include/$$$${i%/*}; \
 		    install $(prorab_this_dir)$$$$i $(DESTDIR)$(PREFIX)/include/$$$$i; \
