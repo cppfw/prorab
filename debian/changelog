@@ -1,3 +1,9 @@
+prorab (1.2.2-1) stable; urgency=medium
+
+  * added empty test target
+
+ -- Ivan Gagis <ivan@ivan-desktop-pc>  Wed, 30 Sep 2015 00:23:08 +0300
+
 prorab (1.2.1-1) stable; urgency=medium
 
   * avoid using dpkg tools in ver target
