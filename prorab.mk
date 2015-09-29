@@ -302,13 +302,13 @@ ifneq ($(prorab_included),true)
     define prorab-apply-version
         $(eval prorab_private_version_targets := $(patsubst %.in, $(prorab_this_dir)%, $(this_version_files)))
 
-        .PHONY: $(prorab_private_version_targets)
+        $(eval prorab_private_version := $(firstword $(subst -, ,$(shell dpkg-parsechangelog --show-field Version))))
 
         ver:: $(prorab_private_version_targets)
 
-        $(prorab_private_version_targets): %: %.in
+        $(prorab_private_version_targets): %: %.in $(prorab_this_dir)debian/control
 		@echo "Applying version to $$^..."
-		$(prorab_echo)sed -e "s/\$$$$(version)/$(this_version)/" $$^ > $$@
+		$(prorab_echo)sed -e "s/\$$$$(version)/$(prorab_private_version)/" $$^ > $$@
     endef
 
 endif #~once
