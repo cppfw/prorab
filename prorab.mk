@@ -301,7 +301,7 @@ ifneq ($(prorab_included),true)
     define prorab-apply-version
         $(eval prorab_private_version_targets := $(patsubst %.in, $(prorab_this_dir)%, $(this_version_files)))
 
-        $(eval prorab_private_version := $(firstword $(subst -, ,$(shell dpkg-parsechangelog --show-field Version))))
+        $(eval prorab_private_version := $(firstword $(subst -, ,$(shell head -1 debian/changelog | awk -F'[()]' '{print $$2}'))))
 
         ver:: $(prorab_private_version_targets)
 
