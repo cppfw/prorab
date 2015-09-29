@@ -1,12 +1,12 @@
 # Prorab build system
-# Copyright Ivan Gagis <igagis@gmail.com>, 2014
+# Copyright Ivan Gagis <igagis@gmail.com>, 2015
 
 
-#pragma once
+#once
 ifneq ($(prorab_included),true)
     prorab_included := true
 
-    $(info Prorab build system version 1.0. Copyright Ivan Gagis <igagis@gmail.com>)
+    $(info Prorab build system version 1.1. Copyright Ivan Gagis <igagis@gmail.com>)
 
 
     #for storing list of included makefiles
@@ -44,10 +44,14 @@ ifneq ($(prorab_included),true)
     this_ldflags :=
     this_ldlibs :=
     this_srcs :=
+    
+    #variables ued with prorab-apply-version rule
+    this_version :=
+    this_version_files :=
 
 
 
-    .PHONY: clean all install distclean deb
+    .PHONY: clean all install distclean deb ver
 
 
     #define the very first default target
@@ -288,7 +292,17 @@ ifneq ($(prorab_included),true)
 		$(prorab_echo)cp $$< $$@
     endef
 
+    define prorab-apply-version
+        $(eval prorab_private_version_targets := $(patsubst %.in, $(prorab_this_dir)%, $(this_version_files)))
+        
+        .PHONY: $(prorab_private_version_targets)
 
+        ver:: $(prorab_private_version_targets)
+
+        $(prorab_private_version_targets): %: %.in
+		@echo "Applying version to $$^..."
+		$(prorab_echo)sed -e "s/\$$$$(version)/$(this_version)/" $$^ > $$@
+    endef
 
 endif #~once
 

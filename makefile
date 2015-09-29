@@ -8,3 +8,15 @@ install::
 
 
 $(eval $(prorab-build-deb))
+
+$(eval $(prorab-clear-this-vars))
+
+
+
+this_version := 1.3.2
+
+this_version_files += tests/test_file.txt.in
+this_version_files += tests/test_file2.txt.in
+
+$(eval $(prorab-apply-version))
+
