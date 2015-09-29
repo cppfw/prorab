@@ -1,3 +1,9 @@
+prorab (1.2.0-1) stable; urgency=medium
+
+  * deb depends on ver
+
+ -- Ivan Gagis <ivan@ivan-desktop-pc>  Tue, 29 Sep 2015 21:28:01 +0300
+
 prorab (1.1.2-1) stable; urgency=medium
 
   * take version from debian changelog
