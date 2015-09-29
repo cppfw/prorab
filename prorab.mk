@@ -255,6 +255,7 @@ ifneq ($(prorab_included),true)
     
 
 
+    #doxygen docs are only possible for libraries, so install path is lib*-doc
     define prorab-build-doxygen
         all: doc
 
@@ -268,8 +269,8 @@ ifneq ($(prorab_included),true)
 		$(prorab_echo)rm -rf $(prorab_this_dir)doxygen
 
         install::
-		$(prorab_echo)install -d $(DESTDIR)$(PREFIX)/share/doc/$(this_name)
-		$(prorab_echo)install $(prorab_this_dir)doxygen/* $(DESTDIR)$(PREFIX)/share/doc/$(this_name) || true #ignore error, not all systems have doxygen
+		$(prorab_echo)install -d $(DESTDIR)$(PREFIX)/share/doc/lib$(this_name)-doc
+		$(prorab_echo)install $(prorab_this_dir)doxygen/* $(DESTDIR)$(PREFIX)/share/doc/lib$(this_name)-doc || true #ignore error, not all systems have doxygen
 
     endef
 
