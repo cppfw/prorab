@@ -12,7 +12,7 @@
 
 * Check if SO-name needs increment and update src/soname.txt if needed
 
-* make version tag in version control system
+* commit to version control system and make version tag
 
 * generate debian package:
 	$ make deb
