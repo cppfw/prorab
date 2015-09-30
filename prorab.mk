@@ -292,7 +292,7 @@ ifneq ($(prorab_included),true)
 
         $(prorab_this_dir)debian/control: $(prorab_this_dir)debian/control.in $(prorab_this_makefile) $(this_soname_dependency)
 		@echo "Generating $$@..."
-		$(prorab_echo)sed -e "s/\$$$$(soname)/$(this_soname)/" $$(filter %debian/control.in, $$^) > $$@
+		$(prorab_echo)sed -e "s/\$$$$(soname)/$(this_soname)/g" $$(filter %debian/control.in, $$^) > $$@
 
         %$(this_soname).install: %.install.in $(prorab_this_makefile) $(this_soname_dependency)
 		@echo "Generating $$@..."
@@ -308,7 +308,7 @@ ifneq ($(prorab_included),true)
 
         $(prorab_private_version_targets): %: %.in $(prorab_this_dir)debian/changelog
 		@echo "Applying version to $$(firstword $$^)..."
-		$(prorab_echo)sed -e "s/\$$$$(version)/$(prorab_private_version)/" $$(firstword $$^) > $$@
+		$(prorab_echo)sed -e "s/\$$$$(version)/$(prorab_private_version)/g" $$(firstword $$^) > $$@
     endef
 
 endif #~once
