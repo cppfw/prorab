@@ -3,7 +3,7 @@
 **prorab** is a *GNU make*-based build system. Essentially it just provides
 convenient definitions for writing clean makefiles.
 
-The main feature of prorab is that it allows having independent makefiles
+The main feature of **prorab** is that it allows having independent makefiles
 in several subdirectories of the project and at the same time there can be
 a main makefile in root directory of the project which builds all those subprojects.
 And in parallel building is still supported in that case.
@@ -14,7 +14,7 @@ and libraries.
 
 ##Including prorab into the makefile
 
-Including prorab in the make file is simple and obvious, just add the following directive
+Including **prorab** in the make file is simple and obvious, just add the following directive
 in the beginning of the makefile
 
 ```
@@ -33,7 +33,7 @@ Right after inclusion of *prorab.mk* there will be following variables defined:
 ##Prorab definitions and variables naming conventions
 
 All **prorab** definitions are named using kebab-case and start with **prorab-** prefix.
-Variables defined by prorab are named using underscore case and start with **prorab_** prefix.
+Variables defined by **prorab** are named using underscore case and start with **prorab_** prefix.
 Input variables are named using underscore case and start with **this_** prefix.
 
 
@@ -54,7 +54,7 @@ And that's it. This will invoke the same target on every subdirectory which has 
 
 ##Prorab definitions and input variables
 
-Before invoking most of the prorab definitions one has to set some input variables for the definition.
+Before invoking most of the **prorab** definitions one has to set some input variables for the definition.
 For example:
 
 ```
@@ -86,7 +86,7 @@ $(eval $(prorab-build-app))
 
 ##Echoing commands from recipes
 
-All commands in prorab recipes are prefixed with *prorab_echo* variable which by default equals to @. So, by redefining this variable one could make prorab to echo all the commands it invokes, useful for debugging purposes:
+All commands in **prorab** recipes are prefixed with *prorab_echo* variable which by default equals to @. So, by redefining this variable one can make **prorab** to echo all the commands it invokes, useful for debugging purposes:
 
 ```
 make prorab_echo=
