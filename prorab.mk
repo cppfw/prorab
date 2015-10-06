@@ -42,7 +42,7 @@ ifneq ($(prorab_included),true)
     this_ldlibs :=
     this_srcs :=
 
-    #variables ued with prorab-apply-version rule
+    #variables used with prorab-apply-version rule
     this_version_files :=
 
 
