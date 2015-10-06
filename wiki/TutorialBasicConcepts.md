@@ -84,7 +84,7 @@ $(eval $(prorab-build-app))
 ```
 
 
-#Echoing commands from recipes
+##Echoing commands from recipes
 
 All commands in prorab recipes are prefixed with *prorab_echo* variable which by default equals to @. So, by redefining this variable one could make prorab to echo all the commands it invokes, useful for debugging purposes:
 
