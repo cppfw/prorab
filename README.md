@@ -3,4 +3,4 @@
 
 Supports rules for C++ library/application, debianization, doxygen docs.
 
-##[WiKi](wiki/HomePage.md)
+See **[WiKi](wiki/HomePage.md)** for installation instructions and tutorials.
