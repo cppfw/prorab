@@ -38,4 +38,4 @@ $(eval $(prorab-build-lib))
 
 **prorab** will define a *install* target for the library.
 Note, that it only installs *.hpp* header files from _subdirectories_ to PREFIX/include directory.
-Shared and static library files are installed to PREFIX/lib directory
+Shared and static library files are installed to PREFIX/lib directory.
