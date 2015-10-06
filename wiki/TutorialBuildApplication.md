@@ -22,6 +22,7 @@ this_name := myapp
 
 this_cflags += -Wall
 this_cflags += -DDEBUG
+this_ldlibs += -lpthread
 
 this_srcs += main.cpp myapp.cpp
 
