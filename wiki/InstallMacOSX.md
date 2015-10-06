@@ -1,6 +1,6 @@
 #Installation in MacOS X
 
-Installation in MacOS X requires *[brew](http://brew.sh/)* package manager. Install it before proceeding.
+Installation in MacOS X requires **[brew](http://brew.sh/)** package manager. Install it before proceeding.
 
 - Add the homebrew tap (needs to be done once):
 
