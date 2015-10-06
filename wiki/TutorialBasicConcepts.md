@@ -23,3 +23,19 @@ include prorab.mk
 
 Basically, all makefiles in the project are supposed to use **prorab** and have this include directive as a first include.
 
+
+##Building subprojects with prorab
+
+As said before, **prorab** allows 'cascading' of makefiles. Say, you have two subdirectories in your project: "app" and "test". And both those directories contain some subproject which can be built independently. So, in both those directories there are project makefiles.
+
+Now, if we want to have a makefile in project root directory which builds both those subprojects, we just create the following makefile:
+
+```
+include prorab.mk
+
+$(eval $(prorab-build-subdirs))
+```
+
+And that's it. Note, that parallel build is still supported.
+
+
