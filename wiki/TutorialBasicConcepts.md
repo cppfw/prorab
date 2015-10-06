@@ -23,6 +23,12 @@ include prorab.mk
 
 Basically, all makefiles in the project are supposed to use **prorab** and have this include directive as a first include.
 
+Right after inclusion of *prorab.mk* there will be following variables defined:
+- *prorab_dir* - directory where *prorab.mk* is located
+- *prorab_this_dir* - directory where this makefile resides
+- *prorab_os* - operating system where makefile is run, can be *linux*, *macosx*, *windows*
+- *prorab_lib_extension* - typical extension for dynamically linked libraries in the OS (.dll, .so, .dylib)
+
 
 ##Prorab definitions and variables naming conventions
 
@@ -75,4 +81,13 @@ this_ldflags += -I../another_src
 
 $(eval $(prorab-build-app))
 
+```
+
+
+#Echoing commands from recipes
+
+All commands in prorab recipes are prefixed with *prorab_echo* variable which by default equals to @. So, by redefining this variable one could make prorab to echo all the commands it invokes, useful for debugging purposes:
+
+```
+make prorab_echo=
 ```
