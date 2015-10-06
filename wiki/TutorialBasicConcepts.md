@@ -43,7 +43,7 @@ include prorab.mk
 $(eval $(prorab-build-subdirs))
 ```
 
-And that's it. Note, that parallel build is still supported.
+And that's it. This will invoke the same target on every subdirectory which has a makefile. Note, that parallel build is still supported.
 
 
 ##Prorab definitions and input variables
