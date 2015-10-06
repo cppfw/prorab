@@ -8,5 +8,5 @@
 
 #Tutorials
 - [Basic concepts](TutorialBasicConcepts.md)
-- [Building C++ application](TutorialBuildingApplication.md)
-- [Building C++ library](TutorialBuildingLibrary.md)
+- [Building C++ application](TutorialBuildApplication.md)
+- [Building C++ library](TutorialBuildLibrary.md)
