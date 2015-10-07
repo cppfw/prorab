@@ -97,7 +97,9 @@ Example:
 
 $(prorab_this_name): $(abspath $(prorab_this_dir)../stuff/libstuff$(prorab_lib_extension))
 
+
 #include makefile for building libstuff
+
 $(eval $(call prorab-include,$(prorab_this_dir)../stuff/makefile))
 
 ...
