@@ -84,6 +84,26 @@ $(eval $(prorab-build-app))
 ```
 
 
+##Including other makefiles
+
+In order to include some other makefile one cane use *prorab-include* function. This function will check if the makefile was already included or not and only include it if necessary.
+
+Example:
+
+```
+...
+
+#add dependency on some other artifact, e.g. libstuff which is built by another makefile
+
+$(prorab_this_name): $(abspath $(prorab_this_dir)../stuff/libstuff$(prorab_lib_extension))
+
+#include makefile for building libstuff
+$(eval $(call prorab-include,$(prorab_this_dir)../stuff/makefile))
+
+...
+```
+
+
 ##Echoing commands from recipes
 
 All commands in **prorab** recipes are prefixed with *prorab_echo* variable which by default equals to @. So, by redefining this variable one can make **prorab** to echo all the commands it invokes, useful for debugging purposes:
