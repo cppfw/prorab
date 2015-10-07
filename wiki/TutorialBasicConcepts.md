@@ -86,7 +86,7 @@ $(eval $(prorab-build-app))
 
 ##Including other makefiles
 
-In order to include some other makefile one cane use *prorab-include* function. This function will check if the makefile was already included or not and only include it if necessary.
+In order to include some other makefile one can use *prorab-include* function. This function will check if the makefile was already included or not and only include it if necessary.
 
 Example:
 
