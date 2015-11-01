@@ -3,6 +3,6 @@ dist: trusty
 
 before_install:
     - sudo apt-get update -qq
-    - sudo apt-get install debhelper
+    - sudo apt-get install debhelper -qq
 
 script: make deb
