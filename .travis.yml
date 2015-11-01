@@ -1,14 +1,8 @@
-language: cpp
-
-compiler:
-  - clang
-  - gcc
-  
 sudo: required
 dist: trusty
 
 before_install:
     - sudo apt-get update -qq
-    - sudo apt-get install -qq debhelper
+    - sudo apt-get install debhelper
 
 script: make deb
