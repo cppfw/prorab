@@ -6,7 +6,7 @@ convenient definitions for writing clean makefiles.
 The main feature of **prorab** is that it allows having independent makefiles
 in several subdirectories of the project and at the same time there can be
 a main makefile in root directory of the project which builds all those subprojects.
-And in parallel building is still supported in that case.
+And parallel building is still supported in that case.
 
 Also, **prorab** provides some predefined rules for easy building of C++ applications
 and libraries.
