@@ -59,7 +59,7 @@ For example:
 
 ```
 this_name := AppName
-this_ldflags += -I../src -DDEBUG
+this_cflags += -I../src -DDEBUG
 
 $(eval $(prorab-build-app))
 ```
