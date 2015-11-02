@@ -5,17 +5,17 @@ Installation in MacOS X requires **[homebrew](http://brew.sh/)** package manager
 - Add the homebrew tap (needs to be done once):
 
   ```
-  sudo brew tap igagis/tap
+  brew tap igagis/tap
   ```
 
 - Update formulaes:
 
   ```
-  sudo brew update
+  brew update
   ```
 
 - Install **prorab** keg
 
   ```
-  sudo brew install prorab
+  brew install prorab
   ```
