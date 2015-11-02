@@ -1,8 +1,8 @@
 class Prorab < Formula
   desc "GNU make based build system."
   homepage "https://github.com/igagis/prorab"
-  url "https://github.com/igagis/prorab/archive/1.2.3.tar.gz"
-  sha256 "14021432972c39eb0a5c4554f6fc23faa754f10f0d7c15e0b6868518c7ad7915"
+  url "https://github.com/igagis/prorab/archive/$(version).tar.gz"
+  sha256 "$(sha256)"
 
   def install
     system "make", "ver"

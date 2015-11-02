@@ -1,20 +1,5 @@
-{
-	"package": {
-		"name": "prorab",
-		"repo": "deb",
-		"subject": "igagis"
-	},
-	
-	"version": {
-		"name": "all"
-	},
+#!/bin/sh
 
-	"files": [
-		{
-			"includePattern": "../(.[^/]*(\\.deb)$)",
-			"uploadPattern": "$1"
-		}
-	],
-	"publish": true,
-	"override": false
-}
+prorab_echo=@
+
+$prorab_echomake ver
