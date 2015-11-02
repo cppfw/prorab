@@ -34,7 +34,7 @@
 
 	"files": [
 		{
-			"includePattern": "\\.\\./(.*\\.deb)",
+			"includePattern": "../(.*\\.deb)",
 			"uploadPattern": "$1"
 		}
 	],
