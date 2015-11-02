@@ -1,4 +1,4 @@
-include prorab.mk
+include src/prorab.mk
 
 
 install::
