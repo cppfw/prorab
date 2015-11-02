@@ -10,7 +10,7 @@ while true; do
             echo "Usage:"
             echo "\t$(basename $0) <tap-name>"
             echo " "
-            echo "GitHub access token should be in GITHUB_ACCESS_TOKEN environment variable."
+            echo "GitHub username and access token should be in GITHUB_USERNAME and GITHUB_ACCESS_TOKEN environment variable."
             echo " "
             echo "Example:"
             echo "\t$(basename $0) igagis/tap"
