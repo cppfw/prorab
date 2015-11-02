@@ -34,7 +34,7 @@
 
 	"files": [
 		{
-			"includePattern": "\.\./(.*\.deb)",
+			"includePattern": "\.\./(prorab_*\.deb)",
 			"uploadPattern": "$1"
 		}
 	],
