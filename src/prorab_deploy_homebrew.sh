@@ -32,9 +32,11 @@ tapname="homebrew-${tap[1]}"
 #update version numbers
 make ver
 
+#clean if needed
+rm -rf $tapname
 
 #clone tap repo
-git clone https://github.com/$username/$tapname.git
+git clone https://$GITHUB_USERNAME:$GITHUB_ACCESS_TOKEN@github.com/$username/$tapname.git
 
 recipes=$(ls homebrew/*.rb)
 
@@ -42,7 +44,5 @@ echo "$recipes"
 
 for f in recipes
 do
-
-
 
 done
