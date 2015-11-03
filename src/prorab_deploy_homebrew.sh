@@ -35,14 +35,33 @@ make ver
 #clean if needed
 rm -rf $tapname
 
+git config --global credential.helper store
+
+
 #clone tap repo
-git clone https://$GITHUB_USERNAME:$GITHUB_ACCESS_TOKEN@github.com/$username/$tapname.git
+repo=https://$GITHUB_USERNAME:$GITHUB_ACCESS_TOKEN@github.com/$username/$tapname.git
+#echo "repo = $repo"
+git clone $repo
 
 recipes=$(ls homebrew/*.rb)
 
-echo "$recipes"
+#echo "$recipes"
 
-for f in recipes
+for f in $recipes
 do
-
+    url=$(awk '/\ *url\ *"http.*\.tar.gz"$/{print $2}' $f | sed -n -e 's/^"\(.*\)"$/\1/p')
+#    echo "url = $url"
+    filename=$(echo $url | sed -n -e 's/.*\/\([^\/]*\.tar\.gz\)$/\1/p')
+#    echo "filename = $filename"
+    curl -O $url
+    sha=($(shasum -p -a 256 $filename))
+    sha=${sha[0]}
+#    echo "sha = $sha"
+    sedcommand="s/\$(sha256)/$sha/"
+#    echo "sedcommand = $sedcommand"
+    sed $sedcommand $f
+    cp $f $tapname
+    (cd $tapname; git commit -a -m"new formula version")
 done
+
+(cd $tapname; git status; git diff; git push)
