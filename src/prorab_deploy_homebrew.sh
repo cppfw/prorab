@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 #Script for quick deployment to homebrew.
 #It assumes that homebrew recipes to deploy are in 'homebrew' directory.
@@ -65,4 +65,4 @@ do
     (cd $tapname; git commit -a -m"new version of $f")
 done
 
-(cd $tapname; git status; git diff; git push)
+(cd $tapname; git push)
