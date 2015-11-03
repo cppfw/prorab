@@ -54,7 +54,7 @@ do
     filename=$(echo $url | sed -n -e 's/.*\/\([^\/]*\.tar\.gz\)$/\1/p')
 #    echo "filename = $filename"
     curl -O $url
-    sha=($(shasum -p -a 256 $filename))
+    sha=($(shasum -a 256 $filename))
     sha=${sha[0]}
 #    echo "sha = $sha"
     sedcommand="s/\$(sha256)/$sha/"
@@ -62,7 +62,7 @@ do
     sed $sedcommand $f > $f.out
     mv $f.out $f
     cp $f $tapname
-    (cd $tapname; git commit -a -m"new formula version")
+    (cd $tapname; git commit -a -m"new version of $f")
 done
 
 (cd $tapname; git status; git diff; git push)
