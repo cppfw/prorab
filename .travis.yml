@@ -27,4 +27,4 @@ deploy:
   skip_cleanup: true
   script: src/prorab_deploy_homebrew.sh igagis/tap
   on:
-    tags: false
+    tags: true
