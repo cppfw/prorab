@@ -59,7 +59,8 @@ do
 #    echo "sha = $sha"
     sedcommand="s/\$(sha256)/$sha/"
 #    echo "sedcommand = $sedcommand"
-    sed $sedcommand $f
+    sed $sedcommand $f > $f.out
+    mv $f.out $f
     cp $f $tapname
     (cd $tapname; git commit -a -m"new formula version")
 done
