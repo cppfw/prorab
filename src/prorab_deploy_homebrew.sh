@@ -10,7 +10,7 @@ while true; do
             echo "Usage:"
             echo "\t$(basename $0) <tap-name>"
             echo " "
-            echo "GitHub username and access token should be in GITHUB_USERNAME and GITHUB_ACCESS_TOKEN environment variable."
+            echo "GitHub username and access token should be in HOMEBREW_GITHUB_USERNAME and HOMEBREW_GITHUB_ACCESS_TOKEN environment variable."
             echo " "
             echo "Example:"
             echo "\t$(basename $0) igagis/tap"
@@ -39,7 +39,7 @@ git config --global credential.helper store
 
 
 #clone tap repo
-repo=https://$GITHUB_USERNAME:$GITHUB_ACCESS_TOKEN@github.com/$username/$tapname.git
+repo=https://$HOMEBREW_GITHUB_USERNAME:$HOMEBREW_GITHUB_ACCESS_TOKEN@github.com/$username/$tapname.git
 #echo "repo = $repo"
 git clone $repo
 
@@ -52,11 +52,11 @@ do
     url=$(awk '/\ *url\ *"http.*\.tar.gz"$/{print $2}' $f | sed -n -e 's/^"\(.*\)"$/\1/p')
 #    echo "url = $url"
     filename=$(echo $url | sed -n -e 's/.*\/\([^\/]*\.tar\.gz\)$/\1/p')
-#    echo "filename = $filename"
+    echo "downloaded $filename"
     curl -O $url
     sha=($(shasum -a 256 $filename))
     sha=${sha[0]}
-#    echo "sha = $sha"
+    echo "calculated sha256 = $sha"
     sedcommand="s/\$(sha256)/$sha/"
 #    echo "sedcommand = $sedcommand"
     sed $sedcommand $f > $f.out
