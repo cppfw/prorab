@@ -12,6 +12,7 @@
       <itemPath>.travis.yml</itemPath>
       <itemPath>nbproject/private/launcher.properties</itemPath>
       <itemPath>makefile</itemPath>
+      <itemPath>travis_bintray.json</itemPath>
     </logicalFolder>
   </logicalFolder>
   <sourceFolderFilter>^(nbproject)$</sourceFolderFilter>
