@@ -5,9 +5,10 @@ install::
 #install prorab.mk
 	$(prorab_echo)install -d $(DESTDIR)$(PREFIX)/include
 	$(prorab_echo)install $(prorab_this_dir)src/prorab.mk $(DESTDIR)$(PREFIX)/include
-ifeq ($(prorab_os),macosx)
 	$(prorab_echo)install -d $(DESTDIR)$(PREFIX)/bin
-	$(prorab_echo)install $(prorab_this_dir)src/*.sh $(DESTDIR)$(PREFIX)/bin
+	$(prorab_echo)install $(prorab_this_dir)src/prorab-deb-version.sh $(DESTDIR)$(PREFIX)/bin
+ifeq ($(prorab_os),macosx)
+	$(prorab_echo)install $(prorab_this_dir)src/prorab-deploy-homebrew.sh $(DESTDIR)$(PREFIX)/bin
 endif
 
 $(eval $(prorab-build-deb))
