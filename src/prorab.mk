@@ -248,7 +248,6 @@ ifneq ($(prorab_included),true)
         prorab_this_makefile := $$(lastword $$(prorab_private_this_makefiles))
         prorab_this_dir := $$(dir $$(prorab_this_makefile))
         prorab_private_this_makefiles := $$(wordlist 1,$$(call prorab-num,$$(call prorab-dec,$$(prorab_private_this_makefiles))),$$(prorab_private_this_makefiles))
-
     endef
 
     #include all makefiles in subdirectories
@@ -261,11 +260,18 @@ ifneq ($(prorab_included),true)
 
 
 
+    #extract version from debian changelog
+    prorab-deb-version = $(firstword $(subst -, ,$(shell head -1 $1 | awk -F'[()]' '{print $$2}')))
+
     #doxygen docs are only possible for libraries, so install path is lib*-doc
     define prorab-build-doxygen
         all: doc
 
         doc:: $(prorab_this_dir)doxygen
+
+        $(prorab_this_dir)doxygen.cfg: $(prorab_this_dir)doxygen.cfg.in $(prorab_this_dir)../debian/control
+		@echo "Applying version to doxygen.cfg..."
+		$(prorab_echo)sed -e "s/\$$$$(version)/$(call prorab-deb-version,debian/changelog)/g" $$(firstword $$^) > $$@
 
         $(prorab_this_dir)doxygen: $(prorab_this_dir)doxygen.cfg
 		@echo "Building docs..."
@@ -273,6 +279,7 @@ ifneq ($(prorab_included),true)
 
         clean::
 		$(prorab_echo)rm -rf $(prorab_this_dir)doxygen
+		$(prorab_echo)rm -rf $(prorab_this_dir)doxygen.cfg
 
         install::
 		$(prorab_echo)install -d $(DESTDIR)$(PREFIX)/share/doc/lib$(this_name)-doc
@@ -299,16 +306,16 @@ ifneq ($(prorab_included),true)
 		$(prorab_echo)cp $$< $$@
     endef
 
+
+
     define prorab-apply-version
         $(eval prorab_private_version_targets := $(patsubst %.in, $(prorab_this_dir)%, $(this_version_files)))
-
-        $(eval prorab_private_version := $(firstword $(subst -, ,$(shell head -1 debian/changelog | awk -F'[()]' '{print $$2}'))))
 
         ver:: $(prorab_private_version_targets)
 
         $(prorab_private_version_targets): %: %.in $(prorab_this_dir)debian/changelog
 		@echo "Applying version to $$(firstword $$^)..."
-		$(prorab_echo)sed -e "s/\$$$$(version)/$(prorab_private_version)/g" $$(firstword $$^) > $$@
+		$(prorab_echo)sed -e "s/\$$$$(version)/$(call prorab-deb-version,debian/changelog)/g" $$(firstword $$^) > $$@
     endef
 
 endif #~once
