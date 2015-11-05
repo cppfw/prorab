@@ -35,7 +35,7 @@ deploy:
   dry-run: false
 - provider: script
   skip_cleanup: true
-  script: src/prorab-deploy-homebrew.sh igagis/tap
+  script: PATH=$PATH:src prorab-deploy-homebrew.sh igagis/tap
   on:
     tags: true
     condition: $TRAVIS_OS_NAME = osx
