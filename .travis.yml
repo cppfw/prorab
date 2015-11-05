@@ -21,6 +21,9 @@ script:
 - if [ "$TRAVIS_OS_NAME" == "linux" ]; then
     make deb;
   fi
+- if [ "$TRAVIS_OS_NAME" == "osx" ]; then
+    make install;
+  fi
 
 deploy:
 - provider: bintray
@@ -35,7 +38,7 @@ deploy:
   dry-run: false
 - provider: script
   skip_cleanup: true
-  script: PATH=$PATH:./src prorab-deploy-homebrew.sh igagis/tap
+  script: prorab-deploy-homebrew.sh igagis/tap
   on:
     tags: false
     condition: $TRAVIS_OS_NAME = osx
