@@ -47,7 +47,7 @@ ifneq ($(prorab_included),true)
 
 
 
-    .PHONY: clean all install distclean deb ver test
+    .PHONY: clean all install distclean deb test
 
 
     #define the very first default target
@@ -305,21 +305,6 @@ ifneq ($(prorab_included),true)
 		@echo "Generating $$@..."
 		$(prorab_echo)cp $$< $$@
     endef
-
-
-
-    define prorab-apply-version
-        $(eval prorab_private_version_targets := $(patsubst %.in, $(prorab_this_dir)%, $(this_version_files)))
-
-        ver:: $(prorab_private_version_targets)
-
-        $(eval prorab_private_version := $(call prorab-deb-version,debian/changelog))
-
-        $(prorab_private_version_targets): %: %.in $(prorab_this_dir)debian/changelog
-		@echo "Applying version $(prorab_private_version) to $$(firstword $$^)..."
-		$(prorab_echo)sed -e "s/\$$$$(version)/$(prorab_private_version)/g" $$(firstword $$^) > $$@
-    endef
-
 endif #~once
 
 

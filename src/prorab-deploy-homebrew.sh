@@ -30,7 +30,8 @@ username="${tap[0]}"
 tapname="homebrew-${tap[1]}"
 
 #update version numbers
-make ver
+version=$(prorab-deb-version.sh debian/changelog)
+echo $version
 
 #clean if needed
 rm -rf $tapname
