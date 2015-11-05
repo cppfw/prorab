@@ -313,9 +313,11 @@ ifneq ($(prorab_included),true)
 
         ver:: $(prorab_private_version_targets)
 
+        $(eval prorab_private_version := $(call prorab-deb-version,debian/changelog))
+
         $(prorab_private_version_targets): %: %.in $(prorab_this_dir)debian/changelog
-		@echo "Applying version to $$(firstword $$^)..."
-		$(prorab_echo)sed -e "s/\$$$$(version)/$(call prorab-deb-version,debian/changelog)/g" $$(firstword $$^) > $$@
+		@echo "Applying version $(prorab_private_version) to $$(firstword $$^)..."
+		$(prorab_echo)sed -e "s/\$$$$(version)/$(prorab_private_version)/g" $$(firstword $$^) > $$@
     endef
 
 endif #~once
