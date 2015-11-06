@@ -20,11 +20,11 @@ before_install:
 
 script:
 - if [ "$TRAVIS_OS_NAME" == "linux" ]; then
-    make install;
+    sudo make install;
     make deb;
   fi
 - if [ "$TRAVIS_OS_NAME" == "osx" ]; then
-    make install;
+    sudo make install;
   fi
 
 deploy:
