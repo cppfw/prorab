@@ -20,7 +20,6 @@ before_install:
 
 script:
 - if [ "$TRAVIS_OS_NAME" == "linux" ]; then
-    sudo make install;
     make deb;
   fi
 - if [ "$TRAVIS_OS_NAME" == "osx" ]; then
