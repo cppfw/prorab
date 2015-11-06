@@ -269,7 +269,6 @@ ifneq ($(prorab_included),true)
         doc:: $(prorab_this_dir)doxygen
 
         $(prorab_this_dir)doxygen.cfg: $(prorab_this_dir)doxygen.cfg.in $(prorab_this_dir)../debian/changelog
-		@echo "Applying version to doxygen.cfg..."
 		$(prorab_echo)prorab-apply-version.sh $(shell prorab-deb-version.sh $(prorab_this_dir)../debian/changelog) $$(firstword $$^)
 
         $(prorab_this_dir)doxygen: $(prorab_this_dir)doxygen.cfg
