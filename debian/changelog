@@ -1,3 +1,9 @@
+prorab (1.3.7-1) stable; urgency=medium
+
+  * do not echo some stuff
+
+ -- Ivan Gagis <igagis@gmail.com>  Fri, 06 Nov 2015 17:11:08 +0200
+
 prorab (1.3.6-1) stable; urgency=medium
 
   * bug fix
