@@ -5,7 +5,6 @@ class Prorab < Formula
   sha256 "$(sha256)"
 
   def install
-    system "make", "ver"
     system "make", "install"
   end
   
