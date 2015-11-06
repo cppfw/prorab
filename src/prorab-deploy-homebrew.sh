@@ -54,8 +54,8 @@ do
     url=$(awk '/\ *url\ *"http.*\.tar.gz"$/{print $2}' $f | sed -n -e 's/^"\(.*\)"$/\1/p')
 #    echo "url = $url"
     filename=$(echo $url | sed -n -e 's/.*\/\([^\/]*\.tar\.gz\)$/\1/p')
+    curl -L -O $url
     echo "downloaded $filename"
-    curl -O $url
     sha=($(shasum -a 256 $filename))
     sha=${sha[0]}
     echo "calculated sha256 = $sha"
