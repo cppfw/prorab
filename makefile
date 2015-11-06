@@ -9,3 +9,9 @@ install::
 	$(prorab_echo)install $(prorab_this_dir)src/*.sh $(DESTDIR)$(PREFIX)/bin
 
 $(eval $(prorab-build-deb))
+
+$(prorab-clear-this-vars)
+
+
+$(eval $(prorab-build-subdirs))
+

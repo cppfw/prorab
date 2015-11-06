@@ -19,6 +19,7 @@
   <sourceRootList>
     <Elem>src</Elem>
     <Elem>homebrew</Elem>
+    <Elem>doc</Elem>
   </sourceRootList>
   <projectmakefile>makefile</projectmakefile>
   <confs>

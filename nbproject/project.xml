@@ -12,6 +12,7 @@
             <sourceRootList>
                 <sourceRootElem>src</sourceRootElem>
                 <sourceRootElem>homebrew</sourceRootElem>
+                <sourceRootElem>doc</sourceRootElem>
             </sourceRootList>
             <confList>
                 <confElem>

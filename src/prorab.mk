@@ -280,7 +280,7 @@ ifneq ($(prorab_included),true)
 		$(prorab_echo)rm -rf $(prorab_this_dir)doxygen
 		$(prorab_echo)rm -rf $(prorab_this_dir)doxygen.cfg
 
-        install::
+        install:: $(prorab_this_dir)doxygen
 		$(prorab_echo)install -d $(DESTDIR)$(PREFIX)/share/doc/lib$(this_name)-doc
 		$(prorab_echo)install $(prorab_this_dir)doxygen/* $(DESTDIR)$(PREFIX)/share/doc/lib$(this_name)-doc || true #ignore error, not all systems have doxygen
 
