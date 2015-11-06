@@ -248,7 +248,9 @@ ifneq ($(prorab_included),true)
         prorab_this_makefile := $$(lastword $$(prorab_private_this_makefiles))
         prorab_this_dir := $$(dir $$(prorab_this_makefile))
         prorab_private_this_makefiles := $$(wordlist 1,$$(call prorab-num,$$(call prorab-dec,$$(prorab_private_this_makefiles))),$$(prorab_private_this_makefiles))
+
     endef
+    #!!!NOTE: the trailing empty line in 'prorab-private-include' definition is needed so that include files would be separated from each other
 
     #include all makefiles in subdirectories
     define prorab-build-subdirs
