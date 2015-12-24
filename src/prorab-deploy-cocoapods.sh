@@ -26,4 +26,7 @@ version=$(prorab-deb-version.sh debian/changelog)
 #echo $version
 prorab-apply-version.sh $version cocoapods/*.podspec.in
 
-pod repo push $1 cocoapods/*.podspec
+#Need to pass --use-libraries because before pushing the spec it will run 'pod lint'
+#on it. And 'pod lint' uses framework integration by default which will fail to copy
+#some header files to the right places.
+pod repo push $1 cocoapods/*.podspec --use-libraries
