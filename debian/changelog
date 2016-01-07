@@ -1,3 +1,9 @@
+prorab (1.4.3) stable; urgency=medium
+
+  * remove doxygen SQL file on clean
+
+ -- Ivan Gagis <igagis@gmail.com>  Thu, 07 Jan 2016 21:43:16 +0200
+
 prorab (1.4.2) stable; urgency=medium
 
   * native debian version
