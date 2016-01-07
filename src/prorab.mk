@@ -278,6 +278,7 @@ ifneq ($(prorab_included),true)
         clean::
 		$(prorab_echo)rm -rf $(prorab_this_dir)doxygen
 		$(prorab_echo)rm -rf $(prorab_this_dir)doxygen.cfg
+		$(prorab_echo)rm -rf $(prorab_this_dir)doxygen_sqlite3.db
 
         install:: $(prorab_this_dir)doxygen
 		$(prorab_echo)install -d $(DESTDIR)$(PREFIX)/share/doc/lib$(this_name)-doc
