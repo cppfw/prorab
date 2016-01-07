@@ -1,3 +1,9 @@
+prorab (1.4.2) stable; urgency=medium
+
+  * native debian version
+
+ -- Ivan Gagis <igagis@gmail.com>  Thu, 07 Jan 2016 14:41:08 +0200
+
 prorab (1.4.1-1) stable; urgency=medium
 
   * cocoapods fix
