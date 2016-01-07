@@ -1,4 +1,4 @@
-# prorab [![Build Status](https://travis-ci.org/igagis/prorab.svg?branch=master)](https://travis-ci.org/igagis/prorab)
+# prorab [![GitHub tag](https://img.shields.io/github/tag/igagis/prorab.svg)]() [![Build Status](https://travis-ci.org/igagis/prorab.svg?branch=master)](https://travis-ci.org/igagis/prorab)
 
 **GNU make**-based build system.
 
