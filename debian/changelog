@@ -1,3 +1,9 @@
+prorab (1.4.7) stable; urgency=medium
+
+  * adding prefix to homebrew formula
+
+ -- Ivan Gagis <igagis@gmail.com>  Mon, 01 Feb 2016 19:22:49 +0200
+
 prorab (1.4.6) stable; urgency=medium
 
   * reverting all back
