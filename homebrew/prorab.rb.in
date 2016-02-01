@@ -5,7 +5,7 @@ class Prorab < Formula
   sha256 "$(sha256)"
 
   def install
-    ENV['PATH'] += ':./src'
+    ENV['PATH'] += ':/usr/local/bin'
     system "make", "install"
   end
   
