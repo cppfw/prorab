@@ -1,3 +1,9 @@
+prorab (1.4.5) stable; urgency=medium
+
+  * trying to fix 'empty installation' problem on Mac OS X
+
+ -- Ivan Gagis <igagis@gmail.com>  Mon, 01 Feb 2016 18:18:49 +0200
+
 prorab (1.4.4) stable; urgency=medium
 
   * Mac OS X bug fix related to stripping version from debian changelog
