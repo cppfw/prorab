@@ -12,6 +12,7 @@
                    projectFiles="false"
                    kind="IMPORTANT_FILES_FOLDER">
       <itemPath>.travis.yml</itemPath>
+      <itemPath>debian/changelog</itemPath>
       <itemPath>nbproject/private/launcher.properties</itemPath>
       <itemPath>makefile</itemPath>
       <itemPath>homebrew/prorab.rb.in</itemPath>

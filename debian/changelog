@@ -1,3 +1,9 @@
+prorab (1.4.6) stable; urgency=medium
+
+  * reverting all back
+
+ -- Ivan Gagis <igagis@gmail.com>  Mon, 01 Feb 2016 18:46:49 +0200
+
 prorab (1.4.5) stable; urgency=medium
 
   * trying to fix 'empty installation' problem on Mac OS X
