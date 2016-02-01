@@ -1,3 +1,9 @@
+prorab (1.4.4) stable; urgency=medium
+
+  * Mac OS X bug fix related to stripping version from debian changelog
+
+ -- Ivan Gagis <igagis@gmail.com>  Mon, 01 Feb 2016 17:51:10 +0200
+
 prorab (1.4.3) stable; urgency=medium
 
   * remove doxygen SQL file on clean
