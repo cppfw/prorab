@@ -1,3 +1,9 @@
+prorab (1.4.8) stable; urgency=medium
+
+  * do not show sensitive info when pushing to cocoapods
+
+ -- Ivan Gagis <igagis@gmail.com>  Tue, 02 Feb 2016 16:39:49 +0200
+
 prorab (1.4.7) stable; urgency=medium
 
   * adding prefix to homebrew formula
