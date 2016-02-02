@@ -29,4 +29,4 @@ prorab-apply-version.sh $version cocoapods/*.podspec.in
 #Need to pass --use-libraries because before pushing the spec it will run 'pod lint'
 #on it. And 'pod lint' uses framework integration by default which will fail to copy
 #some header files to the right places.
-pod repo push $1 cocoapods/*.podspec --use-libraries
+pod repo push $1 cocoapods/*.podspec --use-libraries --silent
