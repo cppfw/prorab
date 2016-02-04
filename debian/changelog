@@ -1,3 +1,9 @@
+prorab (1.4.10) stable; urgency=medium
+
+  * deploy to homebrew, add file to git, fix
+
+ -- Ivan Gagis <igagis@gmail.com>  Thu, 04 Feb 2016 13:45:49 +0200
+
 prorab (1.4.9) stable; urgency=medium
 
   * deploy to homebrew, add file to git
