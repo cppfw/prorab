@@ -64,7 +64,7 @@ do
     sed $sedcommand $f > $f.out
     mv $f.out $f
     cp $f $tapname
-    (cd $tapname; git commit -a -m"new version of $f")
+    (cd $tapname && git add $f && git commit -a -m"new version of $f")
 done
 
 (cd $tapname; git push  >> git.log 2> git_error.log)
