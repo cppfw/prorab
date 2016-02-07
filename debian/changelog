@@ -1,3 +1,9 @@
+prorab (1.4.11) stable; urgency=medium
+
+  * allow warnings when deploying to cocoapods
+
+ -- Ivan Gagis <igagis@gmail.com>  Sun, 07 Feb 2016 14:55:49 +0200
+
 prorab (1.4.10) stable; urgency=medium
 
   * deploy to homebrew, add file to git, fix
