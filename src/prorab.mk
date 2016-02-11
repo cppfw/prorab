@@ -1,5 +1,5 @@
 # Prorab build system
-# Copyright 2015 Ivan Gagis <igagis@gmail.com>
+# Copyright Ivan Gagis <igagis@gmail.com>
 
 
 #once
@@ -186,16 +186,26 @@ ifneq ($(prorab_included),true)
 
         all: $(prorab_this_name)
 
-        $(eval prorab_this_objs := $(addprefix $(prorab_this_dir)$(prorab_obj_dir),$(patsubst %.cpp,%.o,$(this_srcs))))
+        $(eval prorab_this_cpp_objs := $(addprefix $(prorab_this_dir)$(prorab_obj_dir)cpp/,$(patsubst %.cpp,%.o,$(filter %.cpp,$(this_srcs)))))
+        $(eval prorab_this_c_objs := $(addprefix $(prorab_this_dir)$(prorab_obj_dir)c/,$(patsubst %.c,%.o,$(filter %.c,$(this_srcs)))))
 
-        #compile static pattern rule
-        $(prorab_this_objs): $(prorab_this_dir)$(prorab_obj_dir)%.o: $(prorab_this_dir)%.cpp $(prorab_this_makefile)
+        $(eval prorab_this_objs := $(prorab_this_cpp_objs) $(prorab_this_c_objs))
+
+        #compile .cpp static pattern rule
+        $(prorab_this_cpp_objs): $(prorab_this_dir)$(prorab_obj_dir)cpp/%.o: $(prorab_this_dir)%.cpp $(prorab_this_makefile)
 		@echo "Compiling $$<..."
 		$(prorab_echo)mkdir -p $$(dir $$@)
-		$(prorab_echo)$$(CXX) -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -o "$$@" $(CXXFLAGS) $(CPPFLAGS) $(this_cflags) $$<
+		$(prorab_echo)$$(CXX) -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -o "$$@" $(CXXFLAGS) $(CPPFLAGS) $(this_cflags) $(this_cxxflags) $$<
+
+        #compile .c static pattern rule
+        $(prorab_this_c_objs): $(prorab_this_dir)$(prorab_obj_dir)c/%.o: $(prorab_this_dir)%.c $(prorab_this_makefile)
+		@echo "Compiling $$<..."
+		$(prorab_echo)mkdir -p $$(dir $$@)
+		$(prorab_echo)$$(CC) -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -o "$$@" $(CFLAGS) $(CPPFLAGS) $(this_cflags) $$<
 
         #include rules for header dependencies
-        include $(wildcard $(addsuffix *.d,$(dir $(addprefix $(prorab_this_dir)$(prorab_obj_dir),$(this_srcs)))))
+        include $(wildcard $(addsuffix *.d,$(dir $(addprefix $(prorab_this_dir)$(prorab_obj_dir)cpp/,$(this_srcs)))))
+        include $(wildcard $(addsuffix *.d,$(dir $(addprefix $(prorab_this_dir)$(prorab_obj_dir)c/,$(this_srcs)))))
 
         #link rule
         $(prorab_this_name): $(prorab_this_objs) $(prorab_this_makefile)
