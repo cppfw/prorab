@@ -1,3 +1,9 @@
+prorab (1.5.0) stable; urgency=medium
+
+  * Support compilation of C files
+
+ -- Ivan Gagis <igagis@gmail.com>  Thu, 11 Feb 2016 21:39:13 +0200
+
 prorab (1.4.11) stable; urgency=medium
 
   * allow warnings when deploying to cocoapods
