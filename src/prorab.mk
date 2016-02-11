@@ -38,6 +38,7 @@ ifneq ($(prorab_included),true)
     this_name :=
     this_soname :=
     this_cflags :=
+    this_cxxflags :=
     this_ldflags :=
     this_ldlibs :=
     this_srcs :=
@@ -140,7 +141,7 @@ ifneq ($(prorab_included),true)
     #foreach is used to filter out all files which are not inside of a directory
     define prorab-private-lib-install-headers-rule
         install::
-		$(prorab_echo)for i in $(foreach v,$(patsubst $(prorab_this_dir)%,%,$(shell find $(prorab_this_dir) -type f -name "*.hpp")),$(if $(findstring /,$(v)),$(v),)); do \
+		$(prorab_echo)for i in $(foreach v,$(patsubst $(prorab_this_dir)%,%,$(shell find $(prorab_this_dir) -type f -name "*.hpp" -o -name "*.h")),$(if $(findstring /,$(v)),$(v),)); do \
 		    install -d $(DESTDIR)$(PREFIX)/include/$$$${i%/*}; \
 		    install $(prorab_this_dir)$$$$i $(DESTDIR)$(PREFIX)/include/$$$$i; \
 		done
@@ -160,13 +161,6 @@ ifneq ($(prorab_included),true)
 
         all: $(prorab_this_staticlib)
 
-
-        #static library rule
-        $(prorab_this_staticlib): $(addprefix $(prorab_this_dir)$(prorab_obj_dir),$(patsubst %.cpp,%.o,$(this_srcs))) $(prorab_this_makefile)
-			@echo "Creating static library $$(notdir $$@)..."
-			$(prorab_echo)ar cr $$@ $$(filter %.o,$$^)
-
-
         clean::
 		$(prorab_echo)rm -f $(prorab_this_staticlib)
 
@@ -181,6 +175,12 @@ ifneq ($(prorab_included),true)
 		    )
     endef
 
+    define prorab-private-lib-static-library-rule
+        #static library rule
+        $(prorab_this_staticlib): $(prorab_this_objs) $(prorab_this_makefile)
+			@echo "Creating static library $$(notdir $$@)..."
+			$(prorab_echo)ar cr $$@ $$(filter %.o,$$^)
+    endef
 
     define prorab-private-common-rules
 
@@ -195,7 +195,7 @@ ifneq ($(prorab_included),true)
         $(prorab_this_cpp_objs): $(prorab_this_dir)$(prorab_obj_dir)cpp/%.o: $(prorab_this_dir)%.cpp $(prorab_this_makefile)
 		@echo "Compiling $$<..."
 		$(prorab_echo)mkdir -p $$(dir $$@)
-		$(prorab_echo)$$(CXX) -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -o "$$@" $(CXXFLAGS) $(CPPFLAGS) $(this_cflags) $(this_cxxflags) $$<
+		$(prorab_echo)$$(CXX) -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -o "$$@" $(CXXFLAGS) $(CPPFLAGS) $(this_cxxflags) $$<
 
         #compile .c static pattern rule
         $(prorab_this_c_objs): $(prorab_this_dir)$(prorab_obj_dir)c/%.o: $(prorab_this_dir)%.c $(prorab_this_makefile)
@@ -223,6 +223,7 @@ ifneq ($(prorab_included),true)
         $(if $(this_srcs), \
                 $(prorab-private-lib-specific-rules) \
                 $(prorab-private-common-rules) \
+                $(prorab-private-lib-static-library-rule) \
                 , \
                 $(prorab-private-lib-install-headers-rule) \
             )

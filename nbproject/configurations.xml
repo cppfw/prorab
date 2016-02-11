@@ -3,12 +3,19 @@
   <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
     <df root="doc" name="0">
     </df>
-    <df root="src" name="2">
+    <df root="src" name="1">
     </df>
-    <df root="test" name="3">
+    <df root="test" name="2">
+      <df name="app">
+        <df name="src">
+          <in>test.cpp</in>
+          <in>test1.c</in>
+        </df>
+      </df>
       <df name="lib">
         <df name="src">
-          <in>test.h</in>
+          <in>test.c</in>
+          <in>test.cpp</in>
         </df>
       </df>
     </df>
@@ -43,16 +50,32 @@
       <makefileType>
         <makeTool>
           <buildCommandWorkingDir>.</buildCommandWorkingDir>
-          <buildCommand>${MAKE} -f makefile</buildCommand>
-          <cleanCommand>${MAKE} -f makefile clean</cleanCommand>
+          <buildCommand>${MAKE}</buildCommand>
+          <cleanCommand>${MAKE} clean</cleanCommand>
           <executablePath></executablePath>
+          <cTool>
+            <incDir>
+              <pElem>.</pElem>
+            </incDir>
+          </cTool>
+          <ccTool>
+            <incDir>
+              <pElem>.</pElem>
+            </incDir>
+          </ccTool>
         </makeTool>
         <preBuild>
           <preBuildCommandWorkingDir>.</preBuildCommandWorkingDir>
           <preBuildCommand></preBuildCommand>
         </preBuild>
       </makefileType>
-      <item path="test/lib/src/test.h" ex="false" tool="3" flavor2="0">
+      <item path="test/app/src/test.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="test/app/src/test1.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="test/lib/src/test.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="test/lib/src/test.cpp" ex="false" tool="1" flavor2="0">
       </item>
     </conf>
   </confs>
