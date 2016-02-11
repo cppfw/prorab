@@ -5,7 +5,8 @@ To build a C++ library with prorab we can use a *prorab-build-lib* definition.
 But before we have to define some input variables if needed:
 - *this_name* - name of the application. It will be used to generate the output binary filename.
 - *this_soname* - 'so' name for shared library, for example 0.
-- *this_cflags* - flags passed to compiler, ok to use += right a way.
+- *this_cflags* - flags passed to C compiler, ok to use += right a way.
+- *this_cxxflags* - flags passed to C++ compiler, ok to use += right a way.
 - *this_ldflags* - flags passed to linker, ok to use += right a way.
 - *this_ldlibs* - libs passed to linker, ok to use += right a way.
 - *this_srcs* - list of sources, ok to use += right a way.
@@ -25,8 +26,9 @@ this_name := mylib
 
 this_soname := 0
 
+this_cxxflags += -Wall
+this_cxxflags += -DDEBUG
 this_cflags += -Wall
-this_cflags += -DDEBUG
 this_ldlibs += -lpthread
 
 this_srcs += main.cpp myapp.cpp
