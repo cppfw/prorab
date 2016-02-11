@@ -4,7 +4,8 @@ To build a C++ application with prorab we can use a *prorab-build-app* definitio
 
 But before we have to define some input variables if needed:
 - *this_name* - name of the application. It will be used to generate the output binary filename.
-- *this_cflags* - flags passed to compiler, ok to use += right a way.
+- *this_cflags* - flags passed to C compiler, ok to use += right a way.
+- *this_cxxflags* - flags passed to C++ compiler, ok to use += right a way.
 - *this_ldflags* - flags passed to linker, ok to use += right a way.
 - *this_ldlibs* - libs passed to linker, ok to use += right a way.
 - *this_srcs* - list of sources, ok to use += right a way.
@@ -20,11 +21,13 @@ include prorab.mk
 
 this_name := myapp
 
+this_cxxflags += -Wall
+this_cxxflags += -DDEBUG
 this_cflags += -Wall
-this_cflags += -DDEBUG
+
 this_ldlibs += -lpthread
 
-this_srcs += main.cpp myapp.cpp
+this_srcs += main.cpp myapp.cpp legacy.c
 
 $(eval $(prorab-build-app))
 ```
