@@ -1,3 +1,9 @@
+prorab (1.6.0) stable; urgency=medium
+
+  * Support sources from upper directories
+
+ -- Ivan Gagis <igagis@gmail.com>  Fri, 12 Feb 2016 17:56:01 +0200
+
 prorab (1.5.0) stable; urgency=medium
 
   * Support compilation of C files
