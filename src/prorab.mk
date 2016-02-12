@@ -24,11 +24,18 @@ ifneq ($(prorab_included),true)
 
 
     #define arithmetic functions
-    prorab-num = $(words $1)
-    prorab-add = $1 $2
-    prarab-inc = x $1
-    prorab-dec = $(wordlist 2,$(words $1),$1)
+    prorab-num = $(words $1) #get number from variable
+    prorab-add = $1 $2 #add two variables
+    prarab-inc = x $1 #increment variable
+    prorab-dec = $(wordlist 2,$(words $1),$1) #decrement variable
+    prorab-max = $(subst xx,x,$(join $1,$2)) #get maximum of two variables
+    prorab-gt = $(filter-out $(words $2),$(words $(call prorab-max,$1,$2))) #greater predicate
+    prorab-eq = $(filter $(words $1),$(words $2)) #equals predicate
+    prorab-gte = $(call prorab-gt,$1,$2)$(call prorab-eq,$1,$2) #greater or equals predicate
+    prorab-sub = $(if $(call prorab-gte,$1,$2),$(filter-out xx,$(join $1,$2)),$(error subtraction goes negative)) #subtract one variable from another, negative result is clamped to zero
 
+    #calculate number of ../ in a file path
+    prorab-calculate-stepups = $(foreach var,$(filter ..,$(subst /, ,$(dir $1))),x)
 
     #define this directory for parent makefile
     prorab_this_makefile := $(word $(call prorab-num,$(call prorab-dec,$(MAKEFILE_LIST))),$(MAKEFILE_LIST))
@@ -88,6 +95,8 @@ ifneq ($(prorab_included),true)
 
 
     prorab_echo := @
+
+    prorab_obj_dir := obj/
 
 
     define prorab-private-app-specific-rules
@@ -178,27 +187,32 @@ ifneq ($(prorab_included),true)
 			$(prorab_echo)ar cr $$@ $$(filter %.o,$$^)
     endef
 
+
     define prorab-private-common-rules
 
         all: $(prorab_this_name)
 
-        $(eval prorab_obj_dir := obj/)
+        #calculate max number of steps up in source paths and prepare obj directory spacer
+        $(eval prorab_private_numobjspacers := )
+        $(foreach var,$(this_srcs),\
+                $(eval prorab_private_numobjspacers := $(call prorab-max,$(call prorab-calculate-stepups,$(var)),$(prorab_private_numobjspacers))) \
+            )
+        $(eval prorab_private_objspacer:= )
+        $(foreach var,$(prorab_private_numobjspacers), $(eval prorab_private_objspacer := $(prorab_private_objspacer)_prorab/))
 
-
-
-        $(eval prorab_this_cpp_objs := $(addprefix $(prorab_this_dir)$(prorab_obj_dir)cpp/,$(patsubst %.cpp,%.o,$(filter %.cpp,$(this_srcs)))))
-        $(eval prorab_this_c_objs := $(addprefix $(prorab_this_dir)$(prorab_obj_dir)c/,$(patsubst %.c,%.o,$(filter %.c,$(this_srcs)))))
-
+        #Prepare list of object files
+        $(eval prorab_this_cpp_objs := $(addprefix $(prorab_this_dir)$(prorab_obj_dir)cpp/$(prorab_private_objspacer),$(patsubst %.cpp,%.o,$(filter %.cpp,$(this_srcs)))))
+        $(eval prorab_this_c_objs := $(addprefix $(prorab_this_dir)$(prorab_obj_dir)c/$(prorab_private_objspacer),$(patsubst %.c,%.o,$(filter %.c,$(this_srcs)))))
         $(eval prorab_this_objs := $(prorab_this_cpp_objs) $(prorab_this_c_objs))
 
         #compile .cpp static pattern rule
-        $(prorab_this_cpp_objs): $(prorab_this_dir)$(prorab_obj_dir)cpp/%.o: $(prorab_this_dir)%.cpp $(prorab_this_makefile)
+        $(prorab_this_cpp_objs): $(prorab_this_dir)$(prorab_obj_dir)cpp/$(prorab_private_objspacer)%.o: $(prorab_this_dir)%.cpp $(prorab_this_makefile)
 		@echo "Compiling $$<..."
 		$(prorab_echo)mkdir -p $$(dir $$@)
 		$(prorab_echo)$$(CXX) -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -o "$$@" $(CXXFLAGS) $(CPPFLAGS) $(this_cxxflags) $$<
 
         #compile .c static pattern rule
-        $(prorab_this_c_objs): $(prorab_this_dir)$(prorab_obj_dir)c/%.o: $(prorab_this_dir)%.c $(prorab_this_makefile)
+        $(prorab_this_c_objs): $(prorab_this_dir)$(prorab_obj_dir)c/$(prorab_private_objspacer)%.o: $(prorab_this_dir)%.c $(prorab_this_makefile)
 		@echo "Compiling $$<..."
 		$(prorab_echo)mkdir -p $$(dir $$@)
 		$(prorab_echo)$$(CC) -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -o "$$@" $(CFLAGS) $(CPPFLAGS) $(this_cflags) $$<
