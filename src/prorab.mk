@@ -184,6 +184,8 @@ ifneq ($(prorab_included),true)
 
         $(eval prorab_obj_dir := obj/)
 
+
+
         $(eval prorab_this_cpp_objs := $(addprefix $(prorab_this_dir)$(prorab_obj_dir)cpp/,$(patsubst %.cpp,%.o,$(filter %.cpp,$(this_srcs)))))
         $(eval prorab_this_c_objs := $(addprefix $(prorab_this_dir)$(prorab_obj_dir)c/,$(patsubst %.c,%.o,$(filter %.c,$(this_srcs)))))
 
@@ -202,8 +204,7 @@ ifneq ($(prorab_included),true)
 		$(prorab_echo)$$(CC) -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -o "$$@" $(CFLAGS) $(CPPFLAGS) $(this_cflags) $$<
 
         #include rules for header dependencies
-        include $(wildcard $(addsuffix *.d,$(dir $(addprefix $(prorab_this_dir)$(prorab_obj_dir)cpp/,$(this_srcs)))))
-        include $(wildcard $(addsuffix *.d,$(dir $(addprefix $(prorab_this_dir)$(prorab_obj_dir)c/,$(this_srcs)))))
+        include $(wildcard $(addsuffix *.d,$(dir $(prorab_this_objs))))
 
         #link rule
         $(prorab_this_name): $(prorab_this_objs) $(prorab_this_makefile)
