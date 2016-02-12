@@ -87,10 +87,6 @@ ifneq ($(prorab_included),true)
     endif
 
 
-
-    prorab_obj_dir := obj/
-
-
     prorab_echo := @
 
 
@@ -185,6 +181,8 @@ ifneq ($(prorab_included),true)
     define prorab-private-common-rules
 
         all: $(prorab_this_name)
+
+        $(eval prorab_obj_dir := obj/)
 
         $(eval prorab_this_cpp_objs := $(addprefix $(prorab_this_dir)$(prorab_obj_dir)cpp/,$(patsubst %.cpp,%.o,$(filter %.cpp,$(this_srcs)))))
         $(eval prorab_this_c_objs := $(addprefix $(prorab_this_dir)$(prorab_obj_dir)c/,$(patsubst %.c,%.o,$(filter %.c,$(this_srcs)))))
