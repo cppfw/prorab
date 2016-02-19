@@ -74,7 +74,7 @@ this_ldflags += -I../src -DDEBUG
 
 $(eval $(prorab-build-app))
 
-$(prorab-clear-this-vars)
+$(eval $(prorab-clear-this-vars))
 
 this_name := AnotherppName
 this_ldflags += -I../another_src
