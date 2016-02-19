@@ -10,7 +10,7 @@ install::
 
 $(eval $(prorab-build-deb))
 
-$(prorab-clear-this-vars)
+$(eval $(prorab-clear-this-vars))
 
 
 $(eval $(prorab-build-subdirs))
