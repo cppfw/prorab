@@ -8,7 +8,7 @@ in several subdirectories of the project and at the same time there can be
 a main makefile in root directory of the project which builds all those subprojects.
 And parallel building is still supported in that case.
 
-Also, **prorab** provides some predefined rules for easy building of C++ applications
+Also, **prorab** provides some predefined rules for easy building of C/C++ applications
 and libraries.
 
 
