@@ -136,7 +136,7 @@ ifneq ($(prorab_included),true)
         all: $(prorab_this_symbolic_name)
 
         install:: $(prorab_this_symbolic_name)
-		@install -d $(DESTDIR)$(PREFIX)/lib/
+		$(prorab_echo)install -d $(DESTDIR)$(PREFIX)/lib/
 		$(prorab_echo)(cd $(DESTDIR)$(PREFIX)/lib/; ln -f -s $(notdir $(prorab_this_name)) $(notdir $(prorab_this_symbolic_name)))
 
         clean::
