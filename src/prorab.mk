@@ -55,7 +55,7 @@ ifneq ($(prorab_included),true)
 
 
 
-    .PHONY: clean all install distclean deb test
+    .PHONY: clean all install uninstall distclean deb test
 
 
     #define the very first default target
@@ -69,7 +69,7 @@ ifneq ($(prorab_included),true)
     #directory of prorab.mk
     prorab_dir := $(dir $(lastword $(MAKEFILE_LIST)))
 
-    #initialize standard vars for "install" target
+    #initialize standard vars for "install" and "uninstall" targets
     ifeq ($(PREFIX),) #PREFIX is environment variable, but if it is not set, then set default value
         PREFIX := /usr/local
     endif
@@ -113,6 +113,9 @@ ifneq ($(prorab_included),true)
         install:: $(prorab_this_name)
 		$(prorab_echo)install -d $(DESTDIR)$(PREFIX)/bin/
 		$(prorab_echo)install $(prorab_this_name) $(DESTDIR)$(PREFIX)/bin/
+
+        uninstall::
+		$(prorab_echo)rm -f $(DESTDIR)$(PREFIX)/bin/$(notdir $(prorab_this_name))
     endef
 
 
@@ -139,16 +142,27 @@ ifneq ($(prorab_included),true)
 		$(prorab_echo)install -d $(DESTDIR)$(PREFIX)/lib/
 		$(prorab_echo)(cd $(DESTDIR)$(PREFIX)/lib/; ln -f -s $(notdir $(prorab_this_name)) $(notdir $(prorab_this_symbolic_name)))
 
+        uninstall::
+		$(prorab_echo)rm -f $(DESTDIR)$(PREFIX)/lib/$(notdir $(prorab_this_symbolic_name))
+
         clean::
 		$(prorab_echo)rm -f $(prorab_this_symbolic_name)
     endef
 
-    #foreach is used to filter out all files which are not inside of a directory
+    
     define prorab-private-lib-install-headers-rule
+        #foreach is used to filter out all files which are not inside of a directory
+        $(eval prorab_private_headers := $(foreach v,$(patsubst $(prorab_this_dir)%,%,$(shell find $(prorab_this_dir) -type f -name "*.hpp" -o -name "*.h")),$(if $(findstring /,$(v)),$(v),)))
+
         install::
-		$(prorab_echo)for i in $(foreach v,$(patsubst $(prorab_this_dir)%,%,$(shell find $(prorab_this_dir) -type f -name "*.hpp" -o -name "*.h")),$(if $(findstring /,$(v)),$(v),)); do \
+		$(prorab_echo)for i in $(prorab_private_headers); do \
 		    install -d $(DESTDIR)$(PREFIX)/include/$$$${i%/*}; \
 		    install $(prorab_this_dir)$$$$i $(DESTDIR)$(PREFIX)/include/$$$$i; \
+		done
+
+        uninstall::
+		$(prorab_echo)for i in $(dir $(prorab_private_headers)); do \
+		    rm -rf $(DESTDIR)$(PREFIX)/include/$$$$i; \
 		done
     endef
 
@@ -178,6 +192,10 @@ ifneq ($(prorab_included),true)
 		$(if $(filter macosx,$(prorab_os)), \
 		        $(prorab_echo)install_name_tool -id "$(PREFIX)/lib/$(notdir $(prorab_this_name))" $(DESTDIR)$(PREFIX)/lib/$(notdir $(prorab_this_name)) \
 		    )
+
+        uninstall::
+		$(prorab_echo)rm -f $(DESTDIR)$(PREFIX)/lib/$(notdir $(prorab_this_staticlib))
+		$(prorab_echo)rm -f $(DESTDIR)$(PREFIX)/lib/$(notdir $(prorab_this_name))
     endef
 
     define prorab-private-lib-static-library-rule
@@ -308,6 +326,8 @@ ifneq ($(prorab_included),true)
 		$(prorab_echo)install -d $(DESTDIR)$(PREFIX)/share/doc/lib$(this_name)-doc
 		$(prorab_echo)install $(prorab_this_dir)doxygen/* $(DESTDIR)$(PREFIX)/share/doc/lib$(this_name)-doc || true #ignore error, not all systems have doxygen
 
+        uninstall::
+		$(prorab_echo)rm -rf $(DESTDIR)$(PREFIX)/share/doc/lib$(this_name)-doc
     endef
 
 
