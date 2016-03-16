@@ -1,3 +1,9 @@
+prorab (1.7.0) stable; urgency=medium
+
+  * added 'uninstall' target
+
+ -- Ivan Gagis <igagis@gmail.com>  Wed, 16 Mar 2016 17:26:17 +0200
+
 prorab (1.6.0) stable; urgency=medium
 
   * Support sources from upper directories
