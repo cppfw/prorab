@@ -1,3 +1,9 @@
+prorab (1.7.5) unstable; urgency=medium
+
+  * bintray version fix
+
+ -- Ivan Gagis <igagis@gmail.com>  Wed, 29 Jun 2016 18:15:17 +0300
+
 prorab (1.7.4) stable; urgency=medium
 
   * cocoapods deploy: redirect error to stdout
