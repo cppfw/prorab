@@ -1,3 +1,33 @@
+prorab (1.7.6) unstable; urgency=medium
+
+  * cygwin support
+
+ -- Ivan Gagis <igagis@gmail.com>  Sun, 31 Jul 2016 21:20:49 +0300
+
+prorab (1.7.5) unstable; urgency=medium
+
+  * bintray version fix
+
+ -- Ivan Gagis <igagis@gmail.com>  Wed, 29 Jun 2016 18:15:17 +0300
+
+prorab (1.7.4) stable; urgency=medium
+
+  * cocoapods deploy: redirect error to stdout
+
+ -- Ivan Gagis <igagis@gmail.com>  Sun, 17 Apr 2016 13:29:48 +0300
+
+prorab (1.7.3) stable; urgency=medium
+
+  * cut secret token from logs of cocoapods
+
+ -- Ivan Gagis <igagis@gmail.com>  Sun, 17 Apr 2016 13:24:05 +0300
+
+prorab (1.7.2) stable; urgency=medium
+
+  * cut secret token from logs
+
+ -- Ivan Gagis <igagis@gmail.com>  Sun, 17 Apr 2016 12:50:40 +0300
+
 prorab (1.7.1) stable; urgency=medium
 
   * homebrew remove tests

@@ -42,8 +42,9 @@ git config --global credential.helper store
 
 #clone tap repo
 repo=https://$HOMEBREW_GITHUB_USERNAME:$HOMEBREW_GITHUB_ACCESS_TOKEN@github.com/$username/$tapname.git
-#echo "repo = $repo"
-git clone $repo >> git.log 2> git_error.log
+cutSecret="sed -n -e s/$HOMEBREW_GITHUB_ACCESS_TOKEN/<secret>/p"
+#echo "git clone $repo | $cutSecret"
+git clone $repo 2>&1 | $cutSecret
 
 recipes=$(ls homebrew/*.rb)
 
@@ -68,4 +69,4 @@ do
     (cd $tapname && git add $specfilename && git commit -a -m"new version of $f")
 done
 
-(cd $tapname; git push  >> git.log 2> git_error.log)
+(cd $tapname; git push 2>&1 | $cutSecret)

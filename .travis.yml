@@ -26,6 +26,9 @@ script:
     sudo make install;
   fi
 
+before_deploy:
+  - ./src/prorab-apply-version.sh `./src/prorab-deb-version.sh debian/changelog` travis_bintray.json.in
+
 deploy:
 - provider: bintray
   skip_cleanup: true
