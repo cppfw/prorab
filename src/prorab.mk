@@ -82,7 +82,10 @@ ifneq ($(prorab_included),true)
         prorab_os := windows
     else ifeq ($(prorab_private_os), Darwin)
         prorab_os := macosx
+    else ifeq ($(prorab_private_os), Linux)
+        prorab_os := linux
     else
+        $(info Warning: unknown OS, assuming linux)
         prorab_os := linux
     endif
 
