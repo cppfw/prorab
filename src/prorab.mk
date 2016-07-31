@@ -76,7 +76,9 @@ ifneq ($(prorab_included),true)
 
     #Detect operating system
     prorab_private_os := $(shell uname)
-    ifeq ($(patsubst MINGW%,MINGW,$(prorab_private_os)), MINGW)
+    prorab_private_os := $(patsubst MINGW%,WINDOWS,$(prorab_private_os))
+    prorab_private_os := $(patsubst CYGWIN%,WINDOWS,$(prorab_private_os))
+    ifeq ($(patsubst MINGW%,MINGW %,$(prorab_private_os)), WINDOWS)
         prorab_os := windows
     else ifeq ($(prorab_private_os), Darwin)
         prorab_os := macosx
