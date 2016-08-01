@@ -1,3 +1,9 @@
+prorab (1.7.7) unstable; urgency=medium
+
+  * refactoring
+
+ -- Ivan Gagis <igagis@gmail.com>  Mon, 01 Aug 2016 14:29:44 +0300
+
 prorab (1.7.6) unstable; urgency=medium
 
   * cygwin support
