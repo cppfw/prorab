@@ -24,8 +24,12 @@ echo "Deploying to cocoapods..."
 
 #update version numbers
 version=$(prorab-deb-version.sh debian/changelog)
-#echo $version
+
+echo "current package version is $version, applying it to podspec..."
+
 prorab-apply-version.sh $version cocoapods/*.podspec.in
+
+echo "version $version applied to podspec"
 
 cutSecret="sed -n -e s/$HOMEBREW_GITHUB_ACCESS_TOKEN/<secret>/p"
 

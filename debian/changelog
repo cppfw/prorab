@@ -1,3 +1,9 @@
+prorab (1.7.9) unstable; urgency=medium
+
+  * more echoes from scripts
+
+ -- Ivan Gagis <igagis@gmail.com>  Wed, 03 Aug 2016 15:02:41 +0300
+
 prorab (1.7.8) unstable; urgency=medium
 
   * echoes added when deploying to cocoapods
