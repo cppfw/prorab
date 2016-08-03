@@ -20,6 +20,7 @@ while true; do
     esac
 done
 
+echo "Deploying to cocoapods..."
 
 #update version numbers
 version=$(prorab-deb-version.sh debian/changelog)
@@ -32,3 +33,5 @@ cutSecret="sed -n -e s/$HOMEBREW_GITHUB_ACCESS_TOKEN/<secret>/p"
 #on it. And 'pod lint' uses framework integration by default which will fail to copy
 #some header files to the right places.
 pod repo push $1 cocoapods/*.podspec --use-libraries --allow-warnings 2>&1 | $cutSecret
+
+echo "Deploying to cocoapods done!"

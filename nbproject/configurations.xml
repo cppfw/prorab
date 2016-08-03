@@ -28,7 +28,7 @@
       <itemPath>nbproject/private/launcher.properties</itemPath>
       <itemPath>makefile</itemPath>
       <itemPath>homebrew/prorab.rb.in</itemPath>
-      <itemPath>travis_bintray.json</itemPath>
+      <itemPath>travis_bintray.json.in</itemPath>
     </logicalFolder>
   </logicalFolder>
   <sourceFolderFilter>^(nbproject)$</sourceFolderFilter>
