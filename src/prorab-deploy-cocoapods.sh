@@ -8,10 +8,10 @@ while true; do
     case $1 in
         --help)
             echo "Usage:"
-            echo "\t$(basename $0) <repo-name>"
+            echo "	$(basename $0) <repo-name>"
             echo " "
             echo "Example:"
-            echo "\t$(basename $0) igagis"
+            echo "	$(basename $0) igagis"
             exit 0
         ;;
         *)
@@ -34,7 +34,7 @@ echo "version $version applied to podspec"
 #Make sure HOMEBREW_GITHUB_ACCESS_TOKEN is set
 [ -z "$HOMEBREW_GITHUB_ACCESS_TOKEN" ] && echo "Error: HOMEBREW_GITHUB_ACCESS_TOKEN is not set" && exit 1;
 
-cutSecret="sed -n -e s/$HOMEBREW_GITHUB_ACCESS_TOKEN/<secret>/p"
+cutSecret="sed -e s/$HOMEBREW_GITHUB_ACCESS_TOKEN/<secret>/"
 
 #Need to pass --use-libraries because before pushing the spec it will run 'pod lint'
 #on it. And 'pod lint' uses framework integration by default which will fail to copy
