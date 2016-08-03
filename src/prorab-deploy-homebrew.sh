@@ -75,4 +75,4 @@ do
     (cd $tapname && git add $specfilename && git commit -a -m"new version of $f")
 done
 
-(cd $tapname; git push 2>&1 | $cutSecret)
+(cd $tapname; set -o pipefail && git push 2>&1 | $cutSecret)
