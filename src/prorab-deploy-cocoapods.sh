@@ -31,6 +31,9 @@ prorab-apply-version.sh $version cocoapods/*.podspec.in
 
 echo "version $version applied to podspec"
 
+#Make sure HOMEBREW_GITHUB_ACCESS_TOKEN is set
+[ -z "$HOMEBREW_GITHUB_ACCESS_TOKEN" ] && echo "Error: HOMEBREW_GITHUB_ACCESS_TOKEN is not set" && exit 1;
+
 cutSecret="sed -n -e s/$HOMEBREW_GITHUB_ACCESS_TOKEN/<secret>/p"
 
 #Need to pass --use-libraries because before pushing the spec it will run 'pod lint'
