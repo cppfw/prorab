@@ -42,7 +42,13 @@ git config --global credential.helper store
 
 #clone tap repo
 repo=https://$HOMEBREW_GITHUB_USERNAME:$HOMEBREW_GITHUB_ACCESS_TOKEN@github.com/$username/$tapname.git
+
+#Make sure HOMEBREW_GITHUB_ACCESS_TOKEN is set
+[ -z "$HOMEBREW_GITHUB_ACCESS_TOKEN" ] && echo "Error: HOMEBREW_GITHUB_ACCESS_TOKEN is not set" && exit 1;
+
 cutSecret="sed -n -e s/$HOMEBREW_GITHUB_ACCESS_TOKEN/<secret>/p"
+
+
 #echo "git clone $repo | $cutSecret"
 git clone $repo 2>&1 | $cutSecret
 
