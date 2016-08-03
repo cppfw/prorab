@@ -46,7 +46,7 @@ repo=https://$HOMEBREW_GITHUB_USERNAME:$HOMEBREW_GITHUB_ACCESS_TOKEN@github.com/
 #Make sure HOMEBREW_GITHUB_ACCESS_TOKEN is set
 [ -z "$HOMEBREW_GITHUB_ACCESS_TOKEN" ] && echo "Error: HOMEBREW_GITHUB_ACCESS_TOKEN is not set" && exit 1;
 
-cutSecret="sed -n -e s/$HOMEBREW_GITHUB_ACCESS_TOKEN/<secret>/p"
+cutSecret="sed -e s/$HOMEBREW_GITHUB_ACCESS_TOKEN/<secret>/"
 
 
 #echo "git clone $repo | $cutSecret"
