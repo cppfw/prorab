@@ -6,7 +6,7 @@
     <df root="src" name="1">
       <in>prorab-deb-prepare.sh</in>
     </df>
-    <df root="tests" name="3">
+    <df root="tests" name="2">
       <df name="app">
         <df name="src">
           <in>test.cpp</in>
