@@ -162,7 +162,7 @@ ifneq ($(prorab_included),true)
         install::
 		$(prorab_echo)for i in $(prorab_private_headers); do \
 		    install -d $(DESTDIR)$(PREFIX)/include/$$$${i%/*}; \
-		    install -m=644 $(prorab_this_dir)$$$$i $(DESTDIR)$(PREFIX)/include/$$$$i; \
+		    install -m 644 $(prorab_this_dir)$$$$i $(DESTDIR)$(PREFIX)/include/$$$$i; \
 		done
 
         uninstall::
@@ -192,7 +192,7 @@ ifneq ($(prorab_included),true)
 
         install:: $(prorab_this_staticlib) $(prorab_this_name)
 		$(prorab_echo)install -d $(DESTDIR)$(PREFIX)/lib/
-		$(prorab_echo)install -m=644 $(prorab_this_staticlib) $(DESTDIR)$(PREFIX)/lib/
+		$(prorab_echo)install -m 644 $(prorab_this_staticlib) $(DESTDIR)$(PREFIX)/lib/
 		$(prorab_echo)install $(prorab_this_name) $(DESTDIR)$(PREFIX)/lib/
 		$(if $(filter macosx,$(prorab_os)), \
 		        $(prorab_echo)install_name_tool -id "$(PREFIX)/lib/$(notdir $(prorab_this_name))" $(DESTDIR)$(PREFIX)/lib/$(notdir $(prorab_this_name)) \
@@ -329,7 +329,7 @@ ifneq ($(prorab_included),true)
 
         install:: $(prorab_this_dir)doxygen
 		$(prorab_echo)install -d $(DESTDIR)$(PREFIX)/share/doc/lib$(this_name)-doc
-		$(prorab_echo)install -m=644 $(prorab_this_dir)doxygen/* $(DESTDIR)$(PREFIX)/share/doc/lib$(this_name)-doc || true #ignore error, not all systems have doxygen
+		$(prorab_echo)install -m 644 $(prorab_this_dir)doxygen/* $(DESTDIR)$(PREFIX)/share/doc/lib$(this_name)-doc || true #ignore error, not all systems have doxygen
 
         uninstall::
 		$(prorab_echo)rm -rf $(DESTDIR)$(PREFIX)/share/doc/lib$(this_name)-doc
