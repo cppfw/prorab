@@ -1,3 +1,9 @@
+prorab (1.8.1) unstable; urgency=medium
+
+  * no execution permission where not needed
+
+ -- Ivan Gagis <igagis@gmail.com>  Tue, 09 Aug 2016 23:50:11 +0300
+
 prorab (1.8.0) unstable; urgency=medium
 
   * prorab-deb-prepare.sh script added
