@@ -1,3 +1,10 @@
+prorab (1.8.0) unstable; urgency=medium
+
+  * prorab-deb-prepare.sh script added
+  * deb target removed from prorab.mk
+
+ -- Ivan Gagis <igagis@gmail.com>  Tue, 09 Aug 2016 23:05:03 +0300
+
 prorab (1.7.14) unstable; urgency=medium
 
   * more verbosity added
