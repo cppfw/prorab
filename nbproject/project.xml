@@ -12,7 +12,7 @@
             <sourceRootList>
                 <sourceRootElem>src</sourceRootElem>
                 <sourceRootElem>doc</sourceRootElem>
-                <sourceRootElem>test</sourceRootElem>
+                <sourceRootElem>tests</sourceRootElem>
             </sourceRootList>
             <confList>
                 <confElem>

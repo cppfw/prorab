@@ -1,17 +1,13 @@
 include src/prorab.mk
 
-
-install::
-#install prorab.mk
-	$(prorab_echo)install -d $(DESTDIR)$(PREFIX)/include
-	$(prorab_echo)install $(prorab_this_dir)src/prorab.mk $(DESTDIR)$(PREFIX)/include
-	$(prorab_echo)install -d $(DESTDIR)$(PREFIX)/bin
-	$(prorab_echo)install $(prorab_this_dir)src/*.sh $(DESTDIR)$(PREFIX)/bin
-
-$(eval $(prorab-build-deb))
+$(eval $(prorab-build-subdirs))
 
 $(eval $(prorab-clear-this-vars))
 
 
-$(eval $(prorab-build-subdirs))
-
+#install prorab.mk and *.sh
+install::
+	$(prorab_echo)install -d $(DESTDIR)$(PREFIX)/include
+	$(prorab_echo)install $(prorab_this_dir)src/prorab.mk $(DESTDIR)$(PREFIX)/include
+	$(prorab_echo)install -d $(DESTDIR)$(PREFIX)/bin
+	$(prorab_echo)install $(prorab_this_dir)src/*.sh $(DESTDIR)$(PREFIX)/bin

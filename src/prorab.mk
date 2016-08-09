@@ -334,25 +334,6 @@ ifneq ($(prorab_included),true)
         uninstall::
 		$(prorab_echo)rm -rf $(DESTDIR)$(PREFIX)/share/doc/lib$(this_name)-doc
     endef
-
-
-
-    define prorab-build-deb
-        $(if $(filter true, $(prorab_private_deb_target_set)), $(error more than one 'prorab-build-deb' detected, only one is allowed in a makefile))
-
-        $(eval prorab_private_deb_target_set := true)
-
-        deb: $(prorab_this_dir)debian/control $(patsubst %.install.in, %$(this_soname).install, $(shell ls $(prorab_this_dir)debian/*.install.in 2>/dev/null))
-		$(prorab_echo)(cd $(prorab_this_dir); dpkg-buildpackage)
-
-        $(prorab_this_dir)debian/control: $(prorab_this_dir)debian/control.in $(prorab_this_makefile) $(this_soname_dependency)
-		@echo "Generating $$@..."
-		$(prorab_echo)sed -e "s/\$$$$(soname)/$(this_soname)/g" $$(filter %debian/control.in, $$^) > $$@
-
-        %$(this_soname).install: %.install.in $(prorab_this_makefile) $(this_soname_dependency)
-		@echo "Generating $$@..."
-		$(prorab_echo)cp $$< $$@
-    endef
 endif #~once
 
 

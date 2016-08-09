@@ -4,18 +4,21 @@
     <df root="doc" name="0">
     </df>
     <df root="src" name="1">
+      <in>prorab-deb-prepare.sh</in>
     </df>
-    <df root="test" name="2">
+    <df root="tests" name="3">
       <df name="app">
         <df name="src">
           <in>test.cpp</in>
           <in>test1.c</in>
+          <in>test1.h</in>
         </df>
       </df>
       <df name="lib">
         <df name="src">
           <in>test.c</in>
           <in>test.cpp</in>
+          <in>test.h</in>
         </df>
       </df>
     </df>
@@ -35,7 +38,7 @@
   <sourceRootList>
     <Elem>src</Elem>
     <Elem>doc</Elem>
-    <Elem>test</Elem>
+    <Elem>tests</Elem>
   </sourceRootList>
   <projectmakefile>makefile</projectmakefile>
   <confs>
@@ -69,13 +72,19 @@
           <preBuildCommand></preBuildCommand>
         </preBuild>
       </makefileType>
-      <item path="test/app/src/test.cpp" ex="false" tool="1" flavor2="0">
+      <item path="src/prorab-deb-prepare.sh" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="test/app/src/test1.c" ex="false" tool="0" flavor2="0">
+      <item path="tests/app/src/test.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="test/lib/src/test.c" ex="false" tool="0" flavor2="0">
+      <item path="tests/app/src/test1.c" ex="false" tool="0" flavor2="0">
       </item>
-      <item path="test/lib/src/test.cpp" ex="false" tool="1" flavor2="0">
+      <item path="tests/app/src/test1.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/lib/src/test.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="tests/lib/src/test.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="tests/lib/src/test.h" ex="false" tool="3" flavor2="0">
       </item>
     </conf>
   </confs>
