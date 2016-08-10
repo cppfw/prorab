@@ -50,10 +50,6 @@ ifneq ($(prorab_included),true)
     this_ldlibs :=
     this_srcs :=
 
-    #variables used with prorab-apply-version rule
-    this_version_files :=
-
-
 
     .PHONY: clean all install uninstall distclean deb test
 
@@ -316,7 +312,7 @@ ifneq ($(prorab_included),true)
         doc:: $(prorab_this_dir)doxygen
 
         $(prorab_this_dir)doxygen.cfg: $(prorab_this_dir)doxygen.cfg.in $(prorab_this_dir)../debian/changelog
-		$(prorab_echo)prorab-apply-version.sh $$(shell prorab-deb-version.sh $(prorab_this_dir)../debian/changelog) $$(firstword $$^)
+		$(prorab_echo)prorab-apply-version.sh -v $$(shell prorab-deb-version.sh $(prorab_this_dir)../debian/changelog) $$(firstword $$^)
 
         $(prorab_this_dir)doxygen: $(prorab_this_dir)doxygen.cfg
 		@echo "Building docs..."
@@ -333,6 +329,14 @@ ifneq ($(prorab_included),true)
 
         uninstall::
 		$(prorab_echo)rm -rf $(DESTDIR)$(PREFIX)/share/doc/lib$(this_name)-doc
+    endef
+
+
+    define prorab-pkg-config
+        install:: $(shell ls $(prorab_this_dir)*.pc.in)
+		$(prorab_echo)prorab-apply-version.sh -v `prorab-deb-version.sh $(prorab_this_dir)../debian/changelog` $(prorab_this_dir)*.pc.in
+		$(prorab_echo)install -d $(DESTDIR)$(PREFIX)/lib/pkgconfig
+		$(prorab_echo)install -m 644 $(prorab_this_dir)*.pc $(DESTDIR)$(PREFIX)/lib/pkgconfig
     endef
 endif #~once
 

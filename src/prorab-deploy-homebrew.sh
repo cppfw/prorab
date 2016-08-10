@@ -32,7 +32,7 @@ tapname="homebrew-${tap[1]}"
 #update version numbers
 version=$(prorab-deb-version.sh debian/changelog)
 #echo $version
-prorab-apply-version.sh $version homebrew/*.in
+prorab-apply-version.sh -v $version homebrew/*.in
 
 #clean if needed
 rm -rf $tapname

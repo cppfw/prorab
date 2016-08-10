@@ -27,7 +27,7 @@ version=$(prorab-deb-version.sh debian/changelog)
 
 echo "current package version is $version, applying it to podspec..."
 
-prorab-apply-version.sh $version cocoapods/*.podspec.in
+prorab-apply-version.sh -v $version cocoapods/*.podspec.in
 
 echo "version $version applied to podspec"
 

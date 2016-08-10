@@ -22,14 +22,15 @@ script:
 - if [ "$TRAVIS_OS_NAME" == "linux" ]; then
     make &&
     make test &&
-    src/prorab-deb-prepare.sh && dpkg-buildpackage -uc -us;
+    src/prorab-deb-prepare.sh &&
+    dpkg-buildpackage -uc -us;
   fi
 - if [ "$TRAVIS_OS_NAME" == "osx" ]; then
     sudo make install;
   fi
 
 before_deploy:
-  - ./src/prorab-apply-version.sh `./src/prorab-deb-version.sh debian/changelog` travis_bintray.json.in
+  - ./src/prorab-apply-version.sh -v `./src/prorab-deb-version.sh debian/changelog` travis_bintray.json.in
 
 deploy:
 - provider: bintray

@@ -1,0 +1,9 @@
+Name: morda   # human-readable name
+Description: C++ OpenGL GUI library
+Version: $(version)
+URL: https://github.com/igagis/morda
+Requires:
+Conflicts:
+Libs: -lmorda
+Libs.private:
+Cflags:
