@@ -1,3 +1,9 @@
+prorab (1.8.2) unstable; urgency=medium
+
+  * pkg-config rule
+
+ -- Ivan Gagis <igagis@gmail.com>  Wed, 10 Aug 2016 13:12:09 +0300
+
 prorab (1.8.1) unstable; urgency=medium
 
   * no execution permission where not needed
