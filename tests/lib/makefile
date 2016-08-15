@@ -4,7 +4,6 @@ this_name := tests
 
 this_soname := 0
 
-this_srcs += src/test.cpp
-this_srcs += src/test.c
+this_srcs += $(call prorab-src-dir,src)
 
 $(eval $(prorab-build-lib))

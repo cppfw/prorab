@@ -338,6 +338,10 @@ ifneq ($(prorab_included),true)
 		$(prorab_echo)install -d $(DESTDIR)$(PREFIX)/lib/pkgconfig
 		$(prorab_echo)install -m 644 $(prorab_this_dir)*.pc $(DESTDIR)$(PREFIX)/lib/pkgconfig
     endef
+
+    #define function to find all source files from specified directory recursively
+    prorab-src-dir = $(patsubst $(prorab_this_dir)%,%,$(shell find $(patsubst %/,%,$(prorab_this_dir)$1) -type f -name "*.cpp" -o -name "*.c"))
+
 endif #~once
 
 
