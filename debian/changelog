@@ -1,3 +1,9 @@
+prorab (1.8.3) unstable; urgency=medium
+
+  * added function to find all sources within given directory
+
+ -- Ivan Gagis <igagis@gmail.com>  Mon, 15 Aug 2016 16:33:19 +0300
+
 prorab (1.8.2) unstable; urgency=medium
 
   * pkg-config rule
