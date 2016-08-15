@@ -24,7 +24,6 @@ include prorab.mk
 Basically, all makefiles in the project are supposed to use **prorab** and have this include directive as a first include.
 
 Right after inclusion of *prorab.mk* there will be following variables defined:
-- *prorab_dir* - directory where *prorab.mk* is located.
 - *prorab_this_dir* - directory where this makefile resides.
 - *prorab_os* - operating system where makefile is run, can be *linux*, *macosx*, *windows*.
 - *prorab_lib_extension* - typical extension for dynamically linked libraries in the OS (.dll, .so, .dylib).
