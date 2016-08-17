@@ -242,7 +242,7 @@ ifneq ($(prorab_included),true)
         #link rule
         $(prorab_this_name): $(prorab_this_objs) $(prorab_this_makefile)
 		@echo "Linking $$@..."
-		$(prorab_echo)$$(CXX) $$(filter %.o,$$^) -o "$$@" $(this_ldlibs) $(this_ldflags) $(LDLIBS) $(LDFLAGS) $(prorab_private_ldflags)
+		$(prorab_echo)$$(CC) $$(filter %.o,$$^) -o "$$@" $(this_ldlibs) $(this_ldflags) $(LDLIBS) $(LDFLAGS) $(prorab_private_ldflags)
 
         #clean rule
         clean::

@@ -1,3 +1,9 @@
+prorab (1.8.4) unstable; urgency=medium
+
+  * use CC for linking
+
+ -- Ivan Gagis <igagis@gmail.com>  Wed, 17 Aug 2016 15:37:32 +0300
+
 prorab (1.8.3) unstable; urgency=medium
 
   * added function to find all sources within given directory

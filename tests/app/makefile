@@ -5,4 +5,6 @@ this_name := tests
 this_srcs += src/test.cpp
 this_srcs += ../app/../app/src/test1.c
 
+this_ldlibs += -lstdc++
+
 $(eval $(prorab-build-app))
