@@ -1,3 +1,9 @@
+prorab (1.8.5) unstable; urgency=medium
+
+  * prorab-build-static-lib rules added
+
+ -- Ivan Gagis <igagis@gmail.com>  Thu, 18 Aug 2016 16:13:35 +0300
+
 prorab (1.8.4) unstable; urgency=medium
 
   * use CC for linking
