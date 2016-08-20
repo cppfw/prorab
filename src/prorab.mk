@@ -50,7 +50,7 @@ ifneq ($(prorab_included),true)
     this_srcs :=
 
 
-    .PHONY: clean all install uninstall distclean deb test
+    .PHONY: clean all install uninstall distclean doc
 
 
     #define the very first default target
@@ -58,8 +58,6 @@ ifneq ($(prorab_included),true)
 
     #define distclean target which does same as clean. This is to make some older versions of debhelper happy.
     distclean: clean
-
-    test::
 
     #directory of prorab.mk
     prorab_dir := $(dir $(lastword $(MAKEFILE_LIST)))
