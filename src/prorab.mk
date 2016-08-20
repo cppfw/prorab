@@ -50,11 +50,13 @@ ifneq ($(prorab_included),true)
     this_srcs :=
 
 
-    .PHONY: clean all install uninstall distclean doc
-
+    .PHONY: clean all install uninstall distclean doc phony
 
     #define the very first default target
     all:
+
+    #define dummy phony target
+    phony:
 
     #define distclean target which does same as clean. This is to make some older versions of debhelper happy.
     distclean: clean
@@ -225,6 +227,16 @@ ifneq ($(prorab_included),true)
         #need empty line here to avoid merging with adjacent macro instantiations
     endef
 
+    define prorab-private-flags-file-rules
+        #need empty line here to avoid merging with adjacent macro instantiations
+
+        $1: $(if $(shell echo '$2' | cmp $1 2>/dev/null), phony,)
+		$(prorab_echo)mkdir -p $$(dir $$@)
+		$(prorab_echo)touch $$@
+		$(prorab_echo)echo '$2' > $$@
+
+        #need empty line here to avoid merging with adjacent macro instantiations
+    endef
 
     define prorab-private-compile-rules
         #need empty line here to avoid merging with adjacent macro instantiations
@@ -242,17 +254,27 @@ ifneq ($(prorab_included),true)
         $(eval prorab_this_c_objs := $(addprefix $(prorab_this_dir)$(prorab_obj_dir)c/$(prorab_private_objspacer),$(patsubst %.c,%.o,$(filter %.c,$(this_srcs)))))
         $(eval prorab_this_objs := $(prorab_this_cpp_objs) $(prorab_this_c_objs))
 
+        $(eval prorab_cxxflags := $(CXXFLAGS) $(CPPFLAGS) $(this_cxxflags))
+        $(eval prorab_cflags := $(CFLAGS) $(CPPFLAGS) $(this_cflags))
+
+        $(eval prorab_cxxflags_file := $(prorab_this_dir)$(prorab_obj_dir)cxx_flags.txt)
+        $(eval prorab_cflags_file := $(prorab_this_dir)$(prorab_obj_dir)c_flags.txt)
+
+        #compile command line flags dependency
+        $(call prorab-private-flags-file-rules, $(prorab_cxxflags_file), $(prorab_cxxflags))
+        $(call prorab-private-flags-file-rules, $(prorab_cflags_file), $(prorab_cflags))
+
         #compile .cpp static pattern rule
-        $(prorab_this_cpp_objs): $(prorab_this_dir)$(prorab_obj_dir)cpp/$(prorab_private_objspacer)%.o: $(prorab_this_dir)%.cpp $(prorab_this_makefile)
+        $(prorab_this_cpp_objs): $(prorab_this_dir)$(prorab_obj_dir)cpp/$(prorab_private_objspacer)%.o: $(prorab_this_dir)%.cpp $(prorab_this_makefile) $(prorab_cxxflags_file)
 		@echo "Compiling $$<..."
 		$(prorab_echo)mkdir -p $$(dir $$@)
-		$(prorab_echo)$$(CXX) -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -o "$$@" $(CXXFLAGS) $(CPPFLAGS) $(this_cxxflags) $$<
+		$(prorab_echo)$$(CXX) -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -o "$$@" $(prorab_cxxflags) $$<
 
         #compile .c static pattern rule
-        $(prorab_this_c_objs): $(prorab_this_dir)$(prorab_obj_dir)c/$(prorab_private_objspacer)%.o: $(prorab_this_dir)%.c $(prorab_this_makefile)
+        $(prorab_this_c_objs): $(prorab_this_dir)$(prorab_obj_dir)c/$(prorab_private_objspacer)%.o: $(prorab_this_dir)%.c $(prorab_this_makefile) $(prorab_cflags_file)
 		@echo "Compiling $$<..."
 		$(prorab_echo)mkdir -p $$(dir $$@)
-		$(prorab_echo)$$(CC) -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -o "$$@" $(CFLAGS) $(CPPFLAGS) $(this_cflags) $$<
+		$(prorab_echo)$$(CC) -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -o "$$@" $(prorab_cflags) $$<
 
         #include rules for header dependencies
         include $(wildcard $(addsuffix *.d,$(dir $(prorab_this_objs))))
@@ -266,12 +288,17 @@ ifneq ($(prorab_included),true)
     define prorab-private-link-rules
         #need empty line here to avoid merging with adjacent macro instantiations
 
+        $(eval prorab_ldflags := $(this_ldlibs) $(this_ldflags) $(LDLIBS) $(LDFLAGS) $(prorab_private_ldflags))
+        $(eval prorab_ldflags_file := $(prorab_this_dir)$(prorab_obj_dir)ldflags.txt)
+
+        $(call prorab-private-flags-file-rules, $(prorab_ldflags_file), $(prorab_ldflags))
+
         all: $(prorab_this_name)
 
         #link rule
-        $(prorab_this_name): $(prorab_this_objs) $(prorab_this_makefile)
+        $(prorab_this_name): $(prorab_this_objs) $(prorab_this_makefile) $(prorab_ldflags_file)
 		@echo "Linking $$@..."
-		$(prorab_echo)$$(CC) $$(filter %.o,$$^) -o "$$@" $(this_ldlibs) $(this_ldflags) $(LDLIBS) $(LDFLAGS) $(prorab_private_ldflags)
+		$(prorab_echo)$$(CC) $$(filter %.o,$$^) -o "$$@" $(prorab_ldflags)
 
         clean::
 		$(prorab_echo)rm -f $(prorab_this_name)
