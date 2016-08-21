@@ -257,12 +257,12 @@ ifneq ($(prorab_included),true)
         $(eval prorab_cxxflags := $(CXXFLAGS) $(CPPFLAGS) $(this_cxxflags))
         $(eval prorab_cflags := $(CFLAGS) $(CPPFLAGS) $(this_cflags))
 
-        $(eval prorab_cxxflags_file := $(prorab_this_dir)$(prorab_obj_dir)cxx_flags.txt)
-        $(eval prorab_cflags_file := $(prorab_this_dir)$(prorab_obj_dir)c_flags.txt)
+        $(eval prorab_cxxflags_file := $(prorab_this_dir)$(prorab_obj_dir)cxxflags.txt)
+        $(eval prorab_cflags_file := $(prorab_this_dir)$(prorab_obj_dir)cflags.txt)
 
         #compile command line flags dependency
-        $(call prorab-private-flags-file-rules, $(prorab_cxxflags_file), $(prorab_cxxflags))
-        $(call prorab-private-flags-file-rules, $(prorab_cflags_file), $(prorab_cflags))
+        $(call prorab-private-flags-file-rules, $(prorab_cxxflags_file),$(CXX) $(prorab_cxxflags))
+        $(call prorab-private-flags-file-rules, $(prorab_cflags_file),$(CC) $(prorab_cflags))
 
         #compile .cpp static pattern rule
         $(prorab_this_cpp_objs): $(prorab_this_dir)$(prorab_obj_dir)cpp/$(prorab_private_objspacer)%.o: $(prorab_this_dir)%.cpp $(prorab_this_makefile) $(prorab_cxxflags_file)
@@ -291,7 +291,7 @@ ifneq ($(prorab_included),true)
         $(eval prorab_ldflags := $(this_ldlibs) $(this_ldflags) $(LDLIBS) $(LDFLAGS) $(prorab_private_ldflags))
         $(eval prorab_ldflags_file := $(prorab_this_dir)$(prorab_obj_dir)ldflags.txt)
 
-        $(call prorab-private-flags-file-rules, $(prorab_ldflags_file), $(prorab_ldflags))
+        $(call prorab-private-flags-file-rules, $(prorab_ldflags_file),$(CC) $(prorab_ldflags))
 
         all: $(prorab_this_name)
 
