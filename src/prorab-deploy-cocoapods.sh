@@ -10,6 +10,8 @@ while true; do
             echo "Usage:"
             echo "	$(basename $0) <repo-name>"
             echo " "
+            echo "Environment variable PRORAB_GIT_ACCESS_TOKEN can be set to git access token, so that it will be stripped out from the script output."
+            echo " "
             echo "Example:"
             echo "	$(basename $0) igagis"
             exit 0
@@ -31,10 +33,10 @@ prorab-apply-version.sh -v $version cocoapods/*.podspec.in
 
 echo "version $version applied to podspec"
 
-#Make sure HOMEBREW_GITHUB_ACCESS_TOKEN is set
-[ -z "$HOMEBREW_GITHUB_ACCESS_TOKEN" ] && echo "Error: HOMEBREW_GITHUB_ACCESS_TOKEN is not set" && exit 1;
+#Make sure PRORAB_GIT_ACCESS_TOKEN is set
+[ -z "$PRORAB_GIT_ACCESS_TOKEN" ] && echo "Error: PRORAB_GIT_ACCESS_TOKEN is not set" && exit 1;
 
-cutSecret="sed -e s/$HOMEBREW_GITHUB_ACCESS_TOKEN/<secret>/"
+cutSecret="sed -e s/$PRORAB_GIT_ACCESS_TOKEN/<secret>/"
 
 #Need to pass --use-libraries because before pushing the spec it will run 'pod lint'
 #on it. And 'pod lint' uses framework integration by default which will fail to copy

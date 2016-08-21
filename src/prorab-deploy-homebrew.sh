@@ -10,7 +10,7 @@ while true; do
             echo "Usage:"
             echo "\t$(basename $0) <tap-name>"
             echo " "
-            echo "GitHub username and access token should be in HOMEBREW_GITHUB_USERNAME and HOMEBREW_GITHUB_ACCESS_TOKEN environment variable."
+            echo "GitHub username and access token should be in PRORAB_GIT_USERNAME and PRORAB_GIT_ACCESS_TOKEN environment variables."
             echo " "
             echo "Example:"
             echo "\t$(basename $0) igagis/tap"
@@ -41,12 +41,12 @@ git config --global credential.helper store
 
 
 #clone tap repo
-repo=https://$HOMEBREW_GITHUB_USERNAME:$HOMEBREW_GITHUB_ACCESS_TOKEN@github.com/$username/$tapname.git
+repo=https://$PRORAB_GIT_USERNAME:$PRORAB_GIT_ACCESS_TOKEN@github.com/$username/$tapname.git
 
-#Make sure HOMEBREW_GITHUB_ACCESS_TOKEN is set
-[ -z "$HOMEBREW_GITHUB_ACCESS_TOKEN" ] && echo "Error: HOMEBREW_GITHUB_ACCESS_TOKEN is not set" && exit 1;
+#Make sure PRORAB_GIT_ACCESS_TOKEN is set
+[ -z "$PRORAB_GIT_ACCESS_TOKEN" ] && echo "Error: PRORAB_GIT_ACCESS_TOKEN is not set" && exit 1;
 
-cutSecret="sed -e s/$HOMEBREW_GITHUB_ACCESS_TOKEN/<secret>/"
+cutSecret="sed -e s/$PRORAB_GIT_ACCESS_TOKEN/<secret>/"
 
 
 #echo "git clone $repo | $cutSecret"
