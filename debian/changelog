@@ -1,3 +1,9 @@
+prorab (1.9.2) unstable; urgency=medium
+
+  * deployment fix
+
+ -- Ivan Gagis <igagis@gmail.com>  Sun, 21 Aug 2016 16:40:35 +0300
+
 prorab (1.9.1) unstable; urgency=medium
 
   * HOMEBREW vars renamed to PRORAB vars

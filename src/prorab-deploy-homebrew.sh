@@ -46,6 +46,9 @@ repo=https://$PRORAB_GIT_USERNAME:$PRORAB_GIT_ACCESS_TOKEN@github.com/$username/
 #Make sure PRORAB_GIT_ACCESS_TOKEN is set
 [ -z "$PRORAB_GIT_ACCESS_TOKEN" ] && echo "Error: PRORAB_GIT_ACCESS_TOKEN is not set" && exit 1;
 
+#Make sure PRORAB_GIT_USERNAME is set
+[ -z "$PRORAB_GIT_USERNAME" ] && echo "Error: PRORAB_GIT_USERNAME is not set" && exit 1;
+
 cutSecret="sed -e s/$PRORAB_GIT_ACCESS_TOKEN/<secret>/"
 
 
