@@ -1,3 +1,9 @@
+prorab (1.9.0) unstable; urgency=medium
+
+  * command line flags dependency added
+
+ -- Ivan Gagis <igagis@gmail.com>  Sun, 21 Aug 2016 15:51:31 +0300
+
 prorab (1.8.5) unstable; urgency=medium
 
   * prorab-build-static-lib rules added
