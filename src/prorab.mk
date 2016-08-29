@@ -95,7 +95,11 @@ ifneq ($(prorab_included),true)
     endif
 
 
-    prorab_echo := @
+    ifeq ($(verbose),)
+        prorab_echo := @
+    else
+        prorab_echo :=
+    endif
 
     prorab_obj_dir := obj/
 
