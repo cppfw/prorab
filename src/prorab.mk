@@ -39,6 +39,7 @@ ifneq ($(prorab_included),true)
     #define this directory for parent makefile
     prorab_this_makefile := $(word $(call prorab-num,$(call prorab-dec,$(MAKEFILE_LIST))),$(MAKEFILE_LIST))
     prorab_this_dir := $(dir $(prorab_this_makefile))
+    d = $(prorab_this_dir)
 
     #define local variables used by prorab
     this_name :=
