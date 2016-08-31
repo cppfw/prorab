@@ -1,3 +1,9 @@
+prorab (1.10.1) unstable; urgency=medium
+
+  * deploy to rasp bintray
+
+ -- Ivan Gagis <igagis@gmail.com>  Wed, 31 Aug 2016 23:01:52 +0300
+
 prorab (1.10.0) unstable; urgency=medium
 
   * Added 'd' alias for 'prorab_this_dir'
