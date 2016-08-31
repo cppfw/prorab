@@ -1,3 +1,9 @@
+prorab (1.10.2) unstable; urgency=medium
+
+  * use correct mirror in rasp chroot
+
+ -- Ivan Gagis <igagis@gmail.com>  Thu, 01 Sep 2016 00:44:31 +0300
+
 prorab (1.10.1) unstable; urgency=medium
 
   * deploy to rasp bintray
