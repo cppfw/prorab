@@ -1,3 +1,9 @@
+prorab (1.10.4) unstable; urgency=medium
+
+  * rasp chroot architecture
+
+ -- Ivan Gagis <igagis@gmail.com>  Thu, 01 Sep 2016 13:56:53 +0300
+
 prorab (1.10.3) unstable; urgency=medium
 
   * added some variable checks

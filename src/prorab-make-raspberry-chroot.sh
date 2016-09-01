@@ -26,4 +26,4 @@ sbuild-createchroot --arch=$chrootArch --foreign --setup-only $chrootDebVer $chr
 #receive GPG keys for repositories
 chroot $chrootDir apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 8B48AD6246925553 7638D0442B90D010 CBF8D6FD518E17E1 379CE192D401AB61
 
-echo "deb $chrootDebMirror $chrootDebVer main" > $chrootDir/etc/apt/sources.list
+echo "deb [arch=$chrootArch] $chrootDebMirror $chrootDebVer main" > $chrootDir/etc/apt/sources.list
