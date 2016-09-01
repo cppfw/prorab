@@ -1,3 +1,9 @@
+prorab (1.10.3) unstable; urgency=medium
+
+  * added some variable checks
+
+ -- Ivan Gagis <igagis@gmail.com>  Thu, 01 Sep 2016 13:17:58 +0300
+
 prorab (1.10.2) unstable; urgency=medium
 
   * use correct mirror in rasp chroot
