@@ -107,6 +107,8 @@ ifneq ($(prorab_included),true)
     define prorab-private-app-specific-rules
         #need empty line here to avoid merging with adjacent macro instantiations
 
+        $(if $(this_name),,$(error this_name is not defined))
+
         $(eval prorab_private_ldflags := )
 
         $(if $(filter windows,$(prorab_os)), \
@@ -131,6 +133,8 @@ ifneq ($(prorab_included),true)
 
     define prorab-private-dynamic-lib-specific-rules-nix-systems
         #need empty line here to avoid merging with adjacent macro instantiations
+
+        $(if $(this_soname),,$(error this_soname is not defined))
 
         $(if $(filter macosx,$(prorab_os)), \
                 $(eval prorab_this_symbolic_name := $(abspath $(prorab_this_dir)lib$(this_name)$(prorab_lib_extension))) \
@@ -186,6 +190,8 @@ ifneq ($(prorab_included),true)
     define prorab-private-dynamic-lib-specific-rules
         #need empty line here to avoid merging with adjacent macro instantiations
 
+        $(if $(this_name),,$(error this_name is not defined))
+
         $(if $(filter windows,$(prorab_os)), \
                 $(eval prorab_this_name := $(abspath $(prorab_this_dir)lib$(this_name)$(prorab_lib_extension))) \
                 $(eval prorab_private_ldflags := -shared -s) \
@@ -209,6 +215,8 @@ ifneq ($(prorab_included),true)
 
     define prorab-private-lib-static-library-rule
         #need empty line here to avoid merging with adjacent macro instantiations
+
+        $(if $(this_name),,$(error this_name is not defined))
 
         $(eval prorab_this_staticlib := $(abspath $(prorab_this_dir)lib$(this_name).a))
 
