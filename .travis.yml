@@ -31,8 +31,7 @@ script:
   fi
 
 before_deploy:
-  - ./src/prorab-apply-version.sh -v `./src/prorab-deb-version.sh debian/changelog` travis_bintray_deb.json.in
-  - ./src/prorab-apply-version.sh -v `./src/prorab-deb-version.sh debian/changelog` travis_bintray_rasp.json.in
+  - ./src/prorab-apply-version.sh -v `./src/prorab-deb-version.sh debian/changelog` travis_bintray_*.json.in
 
 deploy:
 - provider: bintray
@@ -41,6 +40,16 @@ deploy:
     tags: true
     condition: $TRAVIS_OS_NAME = linux
   file: travis_bintray_deb.json
+  user: igagis
+  key:
+    secure: lzwel5dBXpkklB4USNwKSjFLTYZ4nYHFVuQUY3PKwfz6srCGVcl8R6ryOn4GD6qUJiwdv+q8lXCnFAP5IwlOdsXKyndgVs4047eQbNUq6nrKHRI9xmIc3IY/h3D68vt+akortZFDxI2mBxQImpWaNML+rlI4Hts13WB5EL18UVZjthZZmViSvo1M/VuYy46NBvw6YIGOIYuM7t/dkewFcnOLrU+KLH9ANRRUoTymiw5jYvXGXEdqG/Lg7bLvm5TutyHqW6P+mSh97T5qAGANsbgeguF77jxmK4dS7GoIeBFKm43Iv6T9KoL+45Z9qe+5L7J3EXacEPEtQBmi5ta7jKnrSnzeeftXkhz5wxNStS988QhgGDeHlW585XfTtAyehjegOI2h3jBmpJDrWJHhxCDHA4H+younQYALtrRfr0paVtaehZ9Ov7q1bBnhVYA8+5BMTQPbIJqCv3nMoGuvHaVnllxGmghXG/cKKN0dMFFY87cxbVxrS0NvXvE6FQf3wl/g+4yazG5IcAj//eq6UOHNlRHT0VG6HDr7l/wJU3kxXHK4lrRo0jWqUsEfR7fmBnv/Nvgn4+p21mAWM63zwXaV+Inx75Tvc0NqnuiKmChGxWf1JcLuXmdc5cQ3LWjx4OrF8Lo8NEDiSulXm7f2rVSTGs5xgyd6T5WcdGSynnA=
+  dry-run: false
+- provider: bintray
+  skip_cleanup: true
+  on:
+    tags: true
+    condition: $TRAVIS_OS_NAME = linux
+  file: travis_bintray_ubu.json
   user: igagis
   key:
     secure: lzwel5dBXpkklB4USNwKSjFLTYZ4nYHFVuQUY3PKwfz6srCGVcl8R6ryOn4GD6qUJiwdv+q8lXCnFAP5IwlOdsXKyndgVs4047eQbNUq6nrKHRI9xmIc3IY/h3D68vt+akortZFDxI2mBxQImpWaNML+rlI4Hts13WB5EL18UVZjthZZmViSvo1M/VuYy46NBvw6YIGOIYuM7t/dkewFcnOLrU+KLH9ANRRUoTymiw5jYvXGXEdqG/Lg7bLvm5TutyHqW6P+mSh97T5qAGANsbgeguF77jxmK4dS7GoIeBFKm43Iv6T9KoL+45Z9qe+5L7J3EXacEPEtQBmi5ta7jKnrSnzeeftXkhz5wxNStS988QhgGDeHlW585XfTtAyehjegOI2h3jBmpJDrWJHhxCDHA4H+younQYALtrRfr0paVtaehZ9Ov7q1bBnhVYA8+5BMTQPbIJqCv3nMoGuvHaVnllxGmghXG/cKKN0dMFFY87cxbVxrS0NvXvE6FQf3wl/g+4yazG5IcAj//eq6UOHNlRHT0VG6HDr7l/wJU3kxXHK4lrRo0jWqUsEfR7fmBnv/Nvgn4+p21mAWM63zwXaV+Inx75Tvc0NqnuiKmChGxWf1JcLuXmdc5cQ3LWjx4OrF8Lo8NEDiSulXm7f2rVSTGs5xgyd6T5WcdGSynnA=
