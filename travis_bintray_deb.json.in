@@ -1,7 +1,7 @@
 {
 	"package": {
 		"name": "prorab",
-		"repo": "debrepo",
+		"repo": "deb",
 		"subject": "igagis"
 	},
 	
@@ -14,7 +14,7 @@
 			"includePattern": "../(.[^/]*(\\.deb)$)",
 			"uploadPattern": "$1",
 			"matrixParams": {
-				"deb_distribution": "debian",
+				"deb_distribution": "unstable",
 				"deb_component": "main",
 				"deb_architecture": "amd64"
 			}
