@@ -1,3 +1,9 @@
+prorab (1.10.7) unstable; urgency=medium
+
+  * deb ubu and rasp deployment
+
+ -- Ivan Gagis <igagis@gmail.com>  Wed, 14 Sep 2016 17:35:27 +0300
+
 prorab (1.10.6) unstable; urgency=medium
 
   * deb ubu and rasp deployment
