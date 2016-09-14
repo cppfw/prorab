@@ -1,3 +1,9 @@
+prorab (1.10.9) unstable; urgency=medium
+
+  * bintray deploy to single repo
+
+ -- Ivan Gagis <igagis@gmail.com>  Wed, 14 Sep 2016 23:42:17 +0300
+
 prorab (1.10.8) unstable; urgency=medium
 
   * bintray deploy to single repo
