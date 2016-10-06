@@ -108,7 +108,7 @@ $(eval $(call prorab-include,$(prorab_this_dir)../stuff/makefile))
 
 ##Echoing commands from recipes
 
-All commands in **prorab** recipes are prefixed with @ by default, but it is possible to make it to be verbose like this
+All commands in **prorab** recipes are prefixed with @ by default, but it is possible to make it to be verbose by setting the _verbose_ variable to _true_, like this:
 
 ```
 make verbose=true
