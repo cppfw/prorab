@@ -324,8 +324,11 @@ ifneq ($(prorab_included),true)
         #need empty line here to avoid merging with adjacent macro instantiations
 
         $(prorab-build-static-lib)
-        $(prorab-private-dynamic-lib-specific-rules)
-        $(prorab-private-link-rules)
+        $(if $(this_srcs), \
+                $(prorab-private-dynamic-lib-specific-rules) \
+                $(prorab-private-link-rules) \
+                , \
+            )
 
         #need empty line here to avoid merging with adjacent macro instantiations
     endef
