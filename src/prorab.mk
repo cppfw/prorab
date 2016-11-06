@@ -101,7 +101,6 @@ ifneq ($(prorab_included),true)
         prorab_echo := @
     endif
 
-    prorab_obj_dir := obj/
 
 
     define prorab-private-app-specific-rules
@@ -262,6 +261,8 @@ ifneq ($(prorab_included),true)
         $(eval prorab_private_objspacer:= )
         $(foreach var,$(prorab_private_numobjspacers), $(eval prorab_private_objspacer := $(prorab_private_objspacer)_prorab/))
 
+        $(eval prorab_obj_dir := obj_$(this_name)/)
+
         #Prepare list of object files
         $(eval prorab_this_cpp_objs := $(addprefix $(prorab_this_dir)$(prorab_obj_dir)cpp/$(prorab_private_objspacer),$(patsubst %.cpp,%.o,$(filter %.cpp,$(this_srcs)))))
         $(eval prorab_this_c_objs := $(addprefix $(prorab_this_dir)$(prorab_obj_dir)c/$(prorab_private_objspacer),$(patsubst %.c,%.o,$(filter %.c,$(this_srcs)))))
@@ -300,6 +301,8 @@ ifneq ($(prorab_included),true)
 
     define prorab-private-link-rules
         #need empty line here to avoid merging with adjacent macro instantiations
+
+        $(if $(prorab_obj_dir),,$(error prorab_obj_dir is not defined))
 
         $(eval prorab_ldflags := $(this_ldlibs) $(this_ldflags) $(LDLIBS) $(LDFLAGS) $(prorab_private_ldflags))
         $(eval prorab_ldflags_file := $(prorab_this_dir)$(prorab_obj_dir)ldflags.txt)
