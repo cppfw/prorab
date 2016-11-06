@@ -28,7 +28,6 @@ Right after inclusion of *prorab.mk* there will be following variables defined:
 - *d* - shorthand alias for *prorab_this_dir*
 - *prorab_os* - operating system where makefile is run, can be *linux*, *macosx*, *windows*.
 - *prorab_lib_extension* - typical extension for dynamically linked libraries in the OS (.dll, .so, .dylib).
-- *prorab_obj_dir* - directory where object files normally go to. Can be redefined. 
 
 ##Prorab definitions and variables naming conventions
 
