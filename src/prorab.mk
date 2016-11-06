@@ -261,31 +261,31 @@ ifneq ($(prorab_included),true)
         $(eval prorab_private_objspacer:= )
         $(foreach var,$(prorab_private_numobjspacers), $(eval prorab_private_objspacer := $(prorab_private_objspacer)_prorab/))
 
-        $(eval prorab_obj_dir := obj_$(this_name)/)
+        $(eval prorab_this_obj_dir := obj_$(this_name)/)
 
         #Prepare list of object files
-        $(eval prorab_this_cpp_objs := $(addprefix $(prorab_this_dir)$(prorab_obj_dir)cpp/$(prorab_private_objspacer),$(patsubst %.cpp,%.o,$(filter %.cpp,$(this_srcs)))))
-        $(eval prorab_this_c_objs := $(addprefix $(prorab_this_dir)$(prorab_obj_dir)c/$(prorab_private_objspacer),$(patsubst %.c,%.o,$(filter %.c,$(this_srcs)))))
+        $(eval prorab_this_cpp_objs := $(addprefix $(prorab_this_dir)$(prorab_this_obj_dir)cpp/$(prorab_private_objspacer),$(patsubst %.cpp,%.o,$(filter %.cpp,$(this_srcs)))))
+        $(eval prorab_this_c_objs := $(addprefix $(prorab_this_dir)$(prorab_this_obj_dir)c/$(prorab_private_objspacer),$(patsubst %.c,%.o,$(filter %.c,$(this_srcs)))))
         $(eval prorab_this_objs := $(prorab_this_cpp_objs) $(prorab_this_c_objs))
 
         $(eval prorab_cxxflags := $(CXXFLAGS) $(CPPFLAGS) $(this_cxxflags))
         $(eval prorab_cflags := $(CFLAGS) $(CPPFLAGS) $(this_cflags))
 
-        $(eval prorab_cxxflags_file := $(prorab_this_dir)$(prorab_obj_dir)cxxflags.txt)
-        $(eval prorab_cflags_file := $(prorab_this_dir)$(prorab_obj_dir)cflags.txt)
+        $(eval prorab_cxxflags_file := $(prorab_this_dir)$(prorab_this_obj_dir)cxxflags.txt)
+        $(eval prorab_cflags_file := $(prorab_this_dir)$(prorab_this_obj_dir)cflags.txt)
 
         #compile command line flags dependency
         $(call prorab-private-flags-file-rules, $(prorab_cxxflags_file),$(CXX) $(prorab_cxxflags))
         $(call prorab-private-flags-file-rules, $(prorab_cflags_file),$(CC) $(prorab_cflags))
 
         #compile .cpp static pattern rule
-        $(prorab_this_cpp_objs): $(prorab_this_dir)$(prorab_obj_dir)cpp/$(prorab_private_objspacer)%.o: $(prorab_this_dir)%.cpp $(prorab_this_makefile) $(prorab_cxxflags_file)
+        $(prorab_this_cpp_objs): $(prorab_this_dir)$(prorab_this_obj_dir)cpp/$(prorab_private_objspacer)%.o: $(prorab_this_dir)%.cpp $(prorab_this_makefile) $(prorab_cxxflags_file)
 		@echo "Compiling $$<..."
 		$(prorab_echo)mkdir -p $$(dir $$@)
 		$(prorab_echo)$$(CXX) -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -o "$$@" $(prorab_cxxflags) $$<
 
         #compile .c static pattern rule
-        $(prorab_this_c_objs): $(prorab_this_dir)$(prorab_obj_dir)c/$(prorab_private_objspacer)%.o: $(prorab_this_dir)%.c $(prorab_this_makefile) $(prorab_cflags_file)
+        $(prorab_this_c_objs): $(prorab_this_dir)$(prorab_this_obj_dir)c/$(prorab_private_objspacer)%.o: $(prorab_this_dir)%.c $(prorab_this_makefile) $(prorab_cflags_file)
 		@echo "Compiling $$<..."
 		$(prorab_echo)mkdir -p $$(dir $$@)
 		$(prorab_echo)$$(CC) -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -o "$$@" $(prorab_cflags) $$<
@@ -294,7 +294,7 @@ ifneq ($(prorab_included),true)
         include $(wildcard $(addsuffix *.d,$(dir $(prorab_this_objs))))
 
         clean::
-		$(prorab_echo)rm -rf $(prorab_this_dir)$(prorab_obj_dir)
+		$(prorab_echo)rm -rf $(prorab_this_dir)$(prorab_this_obj_dir)
 
         #need empty line here to avoid merging with adjacent macro instantiations
     endef
@@ -302,10 +302,10 @@ ifneq ($(prorab_included),true)
     define prorab-private-link-rules
         #need empty line here to avoid merging with adjacent macro instantiations
 
-        $(if $(prorab_obj_dir),,$(error prorab_obj_dir is not defined))
+        $(if $(prorab_this_obj_dir),,$(error prorab_this_obj_dir is not defined))
 
         $(eval prorab_ldflags := $(this_ldlibs) $(this_ldflags) $(LDLIBS) $(LDFLAGS) $(prorab_private_ldflags))
-        $(eval prorab_ldflags_file := $(prorab_this_dir)$(prorab_obj_dir)ldflags.txt)
+        $(eval prorab_ldflags_file := $(prorab_this_dir)$(prorab_this_obj_dir)ldflags.txt)
 
         $(call prorab-private-flags-file-rules, $(prorab_ldflags_file),$(CC) $(prorab_ldflags))
 
