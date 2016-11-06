@@ -1,3 +1,9 @@
+prorab (1.10.12) unstable; urgency=medium
+
+  * obj directory is deduced from this_name
+
+ -- Ivan Gagis <igagis@gmail.com>  Sun, 06 Nov 2016 20:54:57 +0200
+
 prorab (1.10.11) unstable; urgency=medium
 
   * do not link library if there are only headers
