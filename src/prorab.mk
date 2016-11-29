@@ -85,6 +85,8 @@ ifneq ($(prorab_included),true)
         prorab_os := linux
     endif
 
+    os := $(prorab_os)
+
     #set library extension
     ifeq ($(prorab_os), windows)
         prorab_lib_extension := .dll
@@ -94,6 +96,7 @@ ifneq ($(prorab_included),true)
         prorab_lib_extension := .so
     endif
 
+    soext := $(prorab_lib_extension)
 
     ifeq ($(verbose),true)
         prorab_echo :=
