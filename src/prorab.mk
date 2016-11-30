@@ -150,7 +150,7 @@ ifneq ($(prorab_included),true)
 
         #symbolic link to shared library rule
         $(prorab_this_symbolic_name): $(prorab_this_name) $(prorab_this_makefile)
-			@echo "Creating symbolic link $$(notdir $$@) -> $$(notdir $$<)..."
+			@echo "\\033[0;36mCreating symbolic link\\033[0m $$(notdir $$@) -> $$(notdir $$<)..."
 			$(prorab_echo)(cd $$(dir $$<); ln -f -s $$(notdir $$<) $$(notdir $$@))
 
         all: $(prorab_this_symbolic_name)
@@ -236,7 +236,7 @@ ifneq ($(prorab_included),true)
 
         #static library rule
         $(prorab_this_staticlib): $(prorab_this_objs) $(prorab_this_makefile)
-		@echo "Creating static library $$(notdir $$@)..."
+		@echo "\\033[0;33mCreating static library\\033[0m $$(notdir $$@)..."
 		$(prorab_echo)ar cr $$@ $$(filter %.o,$$^)
 
         #need empty line here to avoid merging with adjacent macro instantiations
@@ -283,13 +283,13 @@ ifneq ($(prorab_included),true)
 
         #compile .cpp static pattern rule
         $(prorab_this_cpp_objs): $(prorab_this_dir)$(prorab_this_obj_dir)cpp/$(prorab_private_objspacer)%.o: $(prorab_this_dir)%.cpp $(prorab_this_makefile) $(prorab_cxxflags_file)
-		@echo "Compiling $$<..."
+		@echo "\\033[1;34mCompiling\\033[0m $$<..."
 		$(prorab_echo)mkdir -p $$(dir $$@)
 		$(prorab_echo)$$(CXX) -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -o "$$@" $(prorab_cxxflags) $$<
 
         #compile .c static pattern rule
         $(prorab_this_c_objs): $(prorab_this_dir)$(prorab_this_obj_dir)c/$(prorab_private_objspacer)%.o: $(prorab_this_dir)%.c $(prorab_this_makefile) $(prorab_cflags_file)
-		@echo "Compiling $$<..."
+		@echo "\\033[1;35mCompiling\\033[0m $$<..."
 		$(prorab_echo)mkdir -p $$(dir $$@)
 		$(prorab_echo)$$(CC) -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -o "$$@" $(prorab_cflags) $$<
 
@@ -316,7 +316,7 @@ ifneq ($(prorab_included),true)
 
         #link rule
         $(prorab_this_name): $(prorab_this_objs) $(prorab_this_makefile) $(prorab_ldflags_file)
-		@echo "Linking $$@..."
+		@echo "\\033[0;31mLinking\\033[0m $$@..."
 		$(prorab_echo)$$(CC) $$(filter %.o,$$^) -o "$$@" $(prorab_ldflags)
 
         clean::
