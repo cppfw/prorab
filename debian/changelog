@@ -1,3 +1,9 @@
+prorab (1.10.14) unstable; urgency=medium
+
+  * terminal output coloring added
+
+ -- Ivan Gagis <igagis@gmail.com>  Thu, 01 Dec 2016 13:41:14 +0200
+
 prorab (1.10.13) unstable; urgency=medium
 
   * added  variable short aliases
