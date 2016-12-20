@@ -1,3 +1,9 @@
+prorab (1.10.15) unstable; urgency=medium
+
+  * homebrew deploy script improved
+
+ -- Ivan Gagis <igagis@gmail.com>  Wed, 21 Dec 2016 00:24:05 +0200
+
 prorab (1.10.14) unstable; urgency=medium
 
   * terminal output coloring added
