@@ -5,26 +5,32 @@
 
 
 while true; do
-    case $1 in
-        --help)
-            echo "Usage:"
-            echo "\t$(basename $0) <tap-name>"
-            echo " "
-            echo "GitHub username and access token should be in PRORAB_GIT_USERNAME and PRORAB_GIT_ACCESS_TOKEN environment variables."
-            echo " "
-            echo "Example:"
-            echo "\t$(basename $0) igagis/tap"
-            exit 0
-        ;;
-        *)
-            break
-        ;;
-    esac
+	case $1 in
+		--help)
+			echo "Usage:"
+			echo "\t$(basename $0) <tap-name>"
+			echo " "
+			echo "GitHub username and access token should be in PRORAB_GIT_USERNAME and PRORAB_GIT_ACCESS_TOKEN environment variables."
+			echo " "
+			echo "Example:"
+			echo "\t$(basename $0) igagis/tap"
+			exit 0
+			;;
+		-t)
+			shift
+			tapname=$1
+			shift
+			;;
+		*)
+			infiles="$infiles $1"
+			shift
+			;;
+	esac
 done
 
 
 #parse homebrew tap name
-tap=(${1//\// })
+tap=(${tapname//\// })
 
 username="${tap[0]}"
 tapname="homebrew-${tap[1]}"
@@ -32,7 +38,7 @@ tapname="homebrew-${tap[1]}"
 #update version numbers
 version=$(prorab-deb-version.sh debian/changelog)
 #echo $version
-prorab-apply-version.sh -v $version homebrew/*.in
+prorab-apply-version.sh -v $version $infiles
 
 #clean if needed
 rm -rf $tapname
@@ -55,27 +61,27 @@ cutSecret="sed -e s/$PRORAB_GIT_ACCESS_TOKEN/<secret>/"
 #echo "git clone $repo | $cutSecret"
 git clone $repo 2>&1 | $cutSecret
 
-recipes=$(ls homebrew/*.rb)
 
-#echo "$recipes"
+#echo "$infiles"
 
-for f in $recipes
+for fin in $infiles
 do
-    url=$(awk '/\ *url\ *"http.*\.tar.gz"$/{print $2}' $f | sed -n -e 's/^"\(.*\)"$/\1/p')
+	f=$(echo $fin | sed -n -e 's/\(.*\)\.in$/\1/p')
+	url=$(awk '/\ *url\ *"http.*\.tar.gz"$/{print $2}' $f | sed -n -e 's/^"\(.*\)"$/\1/p')
 #    echo "url = $url"
-    filename=$(echo $url | sed -n -e 's/.*\/\([^\/]*\.tar\.gz\)$/\1/p')
-    curl -L -O $url
-    echo "downloaded $filename"
-    sha=($(shasum -a 256 $filename))
-    sha=${sha[0]}
-    echo "calculated sha256 = $sha"
-    sedcommand="s/\$(sha256)/$sha/"
+	filename=$(echo $url | sed -n -e 's/.*\/\([^\/]*\.tar\.gz\)$/\1/p')
+	curl -L -O $url
+	echo "downloaded $filename"
+	sha=($(shasum -a 256 $filename))
+	sha=${sha[0]}
+	echo "calculated sha256 = $sha"
+	sedcommand="s/\$(sha256)/$sha/"
 #    echo "sedcommand = $sedcommand"
-    sed $sedcommand $f > $f.out
-    mv $f.out $f
-    cp $f $tapname
-    specfilename=$(echo $f | sed -n -e 's/^homebrew\/\(.*\)$/\1/p')
-    (cd $tapname && git add $specfilename && git commit -a -m"new version of $f")
+	sed $sedcommand $f > $f.out
+	mv $f.out $f
+	cp $f $tapname
+	specfilename=$(echo $f | sed -n -e 's/^homebrew\/\(.*\)$/\1/p')
+	(cd $tapname && git add $specfilename && git commit -a -m"new version of $f")
 done
 
 (cd $tapname; set -o pipefail && git push 2>&1 | $cutSecret)
