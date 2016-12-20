@@ -4,16 +4,16 @@
 #It assumes that homebrew recipes to deploy are in 'homebrew' directory.
 
 
-while true; do
+while [[ $# > 0 ]] ; do
 	case $1 in
 		--help)
 			echo "Usage:"
-			echo "\t$(basename $0) <tap-name>"
+			echo "\t$(basename $0) -t <tap-name> <recipe-file-name.rb.in> ..."
 			echo " "
 			echo "GitHub username and access token should be in PRORAB_GIT_USERNAME and PRORAB_GIT_ACCESS_TOKEN environment variables."
 			echo " "
 			echo "Example:"
-			echo "\t$(basename $0) igagis/tap"
+			echo "\t$(basename $0) -t igagis/tap homebrew/*.rb.in"
 			exit 0
 			;;
 		-t)
@@ -27,6 +27,12 @@ while true; do
 			;;
 	esac
 done
+
+[ -z "$tapname" ] && echo "Error: -t option is not given" && exit 1;
+
+if [ -z "$infiles" ]; then
+	infiles=$(ls homebrew/*.rb.in)
+fi
 
 
 #parse homebrew tap name
