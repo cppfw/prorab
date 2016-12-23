@@ -4,4 +4,6 @@ Non-recursive **GNU make**-based build system.
 
 Provides rules for C/C++ library/application, doxygen docs. Allows hierarchical makefile inclusion.
 
-See **[WiKi](wiki/HomePage.md)** for installation instructions and tutorials.
+## Installation and tutorials
+
+See **[WiKi](wiki/HomePage.md)**
