@@ -10,7 +10,7 @@ But before we have to define some input variables if needed:
 - *this_ldlibs* - libs passed to linker, ok to use += right a way.
 - *this_srcs* - list of sources, ok to use += right a way.
 
-After invokation of *prorab-build-app* there are following variables defined:
+After invocation of *prorab-build-app* there are following variables defined:
 - *prorab_this_name* - resulting name of the binary file (for example on Windows it will have .exe extension appended)
 - *prorab_this_objs* - list of generated object files
 
