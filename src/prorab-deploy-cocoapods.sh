@@ -29,7 +29,7 @@ while [[ $# > 0 ]] ; do
 done
 
 if [ -z "$infiles" ]; then
-	infiles=$(ls cocoapods/*.rb.in)
+	infiles=$(ls cocoapods/*.podspec.in)
 fi
 
 echo "Deploying to cocoapods..."

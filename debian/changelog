@@ -1,3 +1,9 @@
+prorab (1.10.17) unstable; urgency=medium
+
+  * fixing deploy to cocoapods script
+
+ -- Ivan Gagis <igagis@gmail.com>  Wed, 11 Jan 2017 15:14:22 +0200
+
 prorab (1.10.16) unstable; urgency=medium
 
   * deploy to cocoapods script improved
