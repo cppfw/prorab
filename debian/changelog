@@ -1,3 +1,9 @@
+prorab (1.10.18) unstable; urgency=medium
+
+  * colors sdjustment, Linking color is now bold green
+
+ -- Ivan Gagis <igagis@gmail.com>  Wed, 18 Jan 2017 14:28:06 +0200
+
 prorab (1.10.17) unstable; urgency=medium
 
   * fixing deploy to cocoapods script

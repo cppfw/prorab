@@ -316,7 +316,7 @@ ifneq ($(prorab_included),true)
 
         #link rule
         $(prorab_this_name): $(prorab_this_objs) $(prorab_this_makefile) $(prorab_ldflags_file)
-		@echo "\\033[0;31mLinking\\033[0m $$@..."
+		@echo "\\033[1;32mLinking\\033[0m $$@..."
 		$(prorab_echo)$$(CC) $$(filter %.o,$$^) -o "$$@" $(prorab_ldflags)
 
         clean::
