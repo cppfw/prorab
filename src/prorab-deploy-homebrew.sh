@@ -50,7 +50,7 @@ prorab-apply-version.sh -v $version $infiles
 rm -rf $tapname
 
 git config --global credential.helper store
-
+[ $? != 0 ] && echo "Error: 'git config --global credential.helper store' failed" && exit 1;
 
 #clone tap repo
 repo=https://$PRORAB_GIT_USERNAME:$PRORAB_GIT_ACCESS_TOKEN@github.com/$username/$tapname.git
@@ -66,7 +66,7 @@ cutSecret="sed -e s/$PRORAB_GIT_ACCESS_TOKEN/<secret>/"
 
 #echo "git clone $repo | $cutSecret"
 git clone $repo 2>&1 | $cutSecret
-
+[ $? != 0 ] && echo "Error: 'git clone' failed" && exit 1;
 
 #echo "$infiles"
 

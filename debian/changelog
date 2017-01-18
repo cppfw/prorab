@@ -1,3 +1,9 @@
+prorab (1.10.19) unstable; urgency=medium
+
+  * error checking in homebrew deploy script
+
+ -- Ivan Gagis <igagis@gmail.com>  Wed, 18 Jan 2017 14:50:59 +0200
+
 prorab (1.10.18) unstable; urgency=medium
 
   * colors sdjustment, Linking color is now bold green
