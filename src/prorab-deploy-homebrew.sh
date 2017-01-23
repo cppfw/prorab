@@ -28,9 +28,12 @@ while [[ $# > 0 ]] ; do
 	esac
 done
 
+echo "Deploying to homebrew repo..."
+
 [ -z "$tapname" ] && echo "Error: -t option is not given" && exit 1;
 
 if [ -z "$infiles" ]; then
+	echo "No input files specified, taking all files from 'homebrew' folder..."
 	infiles=$(ls homebrew/*.rb.in)
 fi
 
@@ -41,7 +44,10 @@ tap=(${tapname//\// })
 username="${tap[0]}"
 tapname="homebrew-${tap[1]}"
 
+echo "username: $(username), tapname: $(tapname)"
+
 #update version numbers
+echo "getting version from Debian changelog"
 version=$(prorab-deb-version.sh debian/changelog)
 #echo $version
 prorab-apply-version.sh -v $version $infiles
@@ -49,9 +55,12 @@ prorab-apply-version.sh -v $version $infiles
 #clean if needed
 rm -rf $tapname
 
+echo "Setting git credentials helper mode to store credentials for unlimited time..."
 git config --global credential.helper store
 [ $? != 0 ] && echo "Error: 'git config --global credential.helper store' failed" && exit 1;
 
+
+echo "Cloning tap repo from github..."
 #clone tap repo
 repo=https://$PRORAB_GIT_USERNAME:$PRORAB_GIT_ACCESS_TOKEN@github.com/$username/$tapname.git
 

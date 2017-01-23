@@ -1,3 +1,9 @@
+prorab (1.10.20) unstable; urgency=medium
+
+  * added echoes to deployment to homebrew script
+
+ -- Ivan Gagis <igagis@gmail.com>  Mon, 23 Jan 2017 18:29:06 +0200
+
 prorab (1.10.19) unstable; urgency=medium
 
   * error checking in homebrew deploy script
