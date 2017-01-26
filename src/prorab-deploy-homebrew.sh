@@ -44,7 +44,7 @@ tap=(${tapname//\// })
 username="${tap[0]}"
 tapname="homebrew-${tap[1]}"
 
-echo "username: $(username), tapname: $(tapname)"
+echo "username: ${username}, tapname: ${tapname}"
 
 #update version numbers
 echo "getting version from Debian changelog"
