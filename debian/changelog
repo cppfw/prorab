@@ -1,3 +1,9 @@
+prorab (1.10.22) unstable; urgency=medium
+
+  * install formware when creating raspberry chroot
+
+ -- Ivan Gagis <igagis@gmail.com>  Wed, 08 Feb 2017 00:49:11 +0200
+
 prorab (1.10.21) unstable; urgency=medium
 
   * deploy to homebrew fi
