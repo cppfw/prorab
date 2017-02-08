@@ -5,12 +5,44 @@ if [ "$(id -u)" != "0" ]; then
    exit 1
 fi
 
+while [[ $# > 0 ]] ; do
+	case $1 in
+		--help)
+			echo "Usage:"
+			echo "\t$(basename $0) -d <deb-ver> <path-to-chroot-dir> ..."
+			echo " "
+			echo "Example:"
+			echo "\t$(basename $0) -d jessie /srv/chroot/rasp-armhf"
+			exit 0
+			;;
+		-d)
+			shift
+			chrootDebVer=$1
+			shift
+			;;
+		*)
+			chrootDir=$1
+			shift
+			;;
+	esac
+done
+
+if [ -z "$chrootDir" ]; then
+	echo "error: path-to-chroot-dir is not given"
+	exit 1
+fi
+
+chrootArch=armhf
+
+if [ -z "$chrootDebVer" ]; then
+	chrootDebVer=jessie
+fi
+
+chrootDebMirror=http://archive.raspbian.org/raspbian
+
+
 apt-get install -qq -y debootstrap qemu-user-static binfmt-support sbuild
 
-chrootDir=$1
-chrootArch=armhf
-chrootDebVer=jessie
-chrootDebMirror=http://archive.raspbian.org/raspbian
 
 mkdir $chrootDir
 
