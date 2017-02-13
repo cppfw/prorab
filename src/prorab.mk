@@ -307,17 +307,18 @@ ifneq ($(prorab_included),true)
 
         $(if $(prorab_this_obj_dir),,$(error prorab_this_obj_dir is not defined))
 
-        $(eval prorab_ldflags := $(this_ldlibs) $(this_ldflags) $(LDLIBS) $(LDFLAGS) $(prorab_private_ldflags))
-        $(eval prorab_ldflags_file := $(prorab_this_dir)$(prorab_this_obj_dir)ldflags.txt)
+        $(eval prorab_ldflags := $(this_ldflags) $(LDFLAGS) $(prorab_private_ldflags))
+        $(eval prorab_ldlibs := $(this_ldlibs) $(LDLIBS))
+        $(eval prorab_ldargs_file := $(prorab_this_dir)$(prorab_this_obj_dir)ldargs.txt)
 
-        $(call prorab-private-flags-file-rules, $(prorab_ldflags_file),$(CC) $(prorab_ldflags))
+        $(call prorab-private-flags-file-rules, $(prorab_ldargs_file),$(CC) $(prorab_ldflags))
 
         all: $(prorab_this_name)
 
         #link rule
-        $(prorab_this_name): $(prorab_this_objs) $(prorab_this_makefile) $(prorab_ldflags_file)
+        $(prorab_this_name): $(prorab_this_objs) $(prorab_this_makefile) $(prorab_ldargs_file)
 		@echo "\\033[1;32mLinking\\033[0m $$@..."
-		$(prorab_echo)$$(CC) $$(filter %.o,$$^) -o "$$@" $(prorab_ldflags)
+		$(prorab_echo)$$(CC) $(prorab_ldflags) $$(filter %.o,$$^) $(prorab_ldlibs) -o "$$@"
 
         clean::
 		$(prorab_echo)rm -f $(prorab_this_name)
