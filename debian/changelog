@@ -1,3 +1,9 @@
+prorab (1.10.25) unstable; urgency=medium
+
+  * bugfix: ldlibs and ldflags are saved to ldargs.txt
+
+ -- Ivan Gagis <igagis@gmail.com>  Mon, 13 Feb 2017 21:13:59 +0200
+
 prorab (1.10.24) unstable; urgency=medium
 
   * bugfix: LDFLAGS goes before objects and LDLIBS goes after

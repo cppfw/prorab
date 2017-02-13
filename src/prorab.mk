@@ -242,7 +242,7 @@ ifneq ($(prorab_included),true)
         #need empty line here to avoid merging with adjacent macro instantiations
     endef
 
-    define prorab-private-flags-file-rules
+    define prorab-private-args-file-rules
         #need empty line here to avoid merging with adjacent macro instantiations
 
         $1: $(if $(shell echo '$2' | cmp $1 2>/dev/null), phony,)
@@ -271,27 +271,27 @@ ifneq ($(prorab_included),true)
         $(eval prorab_this_c_objs := $(addprefix $(prorab_this_dir)$(prorab_this_obj_dir)c/$(prorab_private_objspacer),$(patsubst %.c,%.o,$(filter %.c,$(this_srcs)))))
         $(eval prorab_this_objs := $(prorab_this_cpp_objs) $(prorab_this_c_objs))
 
-        $(eval prorab_cxxflags := $(CXXFLAGS) $(CPPFLAGS) $(this_cxxflags))
-        $(eval prorab_cflags := $(CFLAGS) $(CPPFLAGS) $(this_cflags))
+        $(eval prorab_cxxargs := $(CXXFLAGS) $(CPPFLAGS) $(this_cxxflags))
+        $(eval prorab_cargs := $(CFLAGS) $(CPPFLAGS) $(this_cflags))
 
-        $(eval prorab_cxxflags_file := $(prorab_this_dir)$(prorab_this_obj_dir)cxxflags.txt)
-        $(eval prorab_cflags_file := $(prorab_this_dir)$(prorab_this_obj_dir)cflags.txt)
+        $(eval prorab_cxxargs_file := $(prorab_this_dir)$(prorab_this_obj_dir)cxxargs.txt)
+        $(eval prorab_cargs_file := $(prorab_this_dir)$(prorab_this_obj_dir)cargs.txt)
 
         #compile command line flags dependency
-        $(call prorab-private-flags-file-rules, $(prorab_cxxflags_file),$(CXX) $(prorab_cxxflags))
-        $(call prorab-private-flags-file-rules, $(prorab_cflags_file),$(CC) $(prorab_cflags))
+        $(call prorab-private-args-file-rules, $(prorab_cxxargs_file),$(CXX) $(prorab_cxxargs))
+        $(call prorab-private-args-file-rules, $(prorab_cargs_file),$(CC) $(prorab_cargs))
 
         #compile .cpp static pattern rule
-        $(prorab_this_cpp_objs): $(prorab_this_dir)$(prorab_this_obj_dir)cpp/$(prorab_private_objspacer)%.o: $(prorab_this_dir)%.cpp $(prorab_this_makefile) $(prorab_cxxflags_file)
+        $(prorab_this_cpp_objs): $(prorab_this_dir)$(prorab_this_obj_dir)cpp/$(prorab_private_objspacer)%.o: $(prorab_this_dir)%.cpp $(prorab_this_makefile) $(prorab_cxxargs_file)
 		@echo "\\033[1;34mCompiling\\033[0m $$<..."
 		$(prorab_echo)mkdir -p $$(dir $$@)
-		$(prorab_echo)$$(CXX) -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -o "$$@" $(prorab_cxxflags) $$<
+		$(prorab_echo)$$(CXX) -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -o "$$@" $(prorab_cxxargs) $$<
 
         #compile .c static pattern rule
-        $(prorab_this_c_objs): $(prorab_this_dir)$(prorab_this_obj_dir)c/$(prorab_private_objspacer)%.o: $(prorab_this_dir)%.c $(prorab_this_makefile) $(prorab_cflags_file)
+        $(prorab_this_c_objs): $(prorab_this_dir)$(prorab_this_obj_dir)c/$(prorab_private_objspacer)%.o: $(prorab_this_dir)%.c $(prorab_this_makefile) $(prorab_cargs_file)
 		@echo "\\033[1;35mCompiling\\033[0m $$<..."
 		$(prorab_echo)mkdir -p $$(dir $$@)
-		$(prorab_echo)$$(CC) -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -o "$$@" $(prorab_cflags) $$<
+		$(prorab_echo)$$(CC) -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -o "$$@" $(prorab_cargs) $$<
 
         #include rules for header dependencies
         include $(wildcard $(addsuffix *.d,$(dir $(prorab_this_objs))))
@@ -311,7 +311,7 @@ ifneq ($(prorab_included),true)
         $(eval prorab_ldlibs := $(this_ldlibs) $(LDLIBS))
         $(eval prorab_ldargs_file := $(prorab_this_dir)$(prorab_this_obj_dir)ldargs.txt)
 
-        $(call prorab-private-flags-file-rules, $(prorab_ldargs_file),$(CC) $(prorab_ldflags))
+        $(call prorab-private-args-file-rules, $(prorab_ldargs_file),$(CC) $(prorab_ldflags) $(prorab_ldlibs))
 
         all: $(prorab_this_name)
 
