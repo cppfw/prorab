@@ -149,7 +149,7 @@ ifneq ($(prorab_included),true)
             )
 
         #symbolic link to shared library rule
-        $(prorab_this_symbolic_name): $(prorab_this_name) $(prorab_this_makefile)
+        $(prorab_this_symbolic_name): $(prorab_this_name)
 			@echo "\\033[0;36mCreating symbolic link\\033[0m $$(notdir $$@) -> $$(notdir $$<)..."
 			$(prorab_echo)(cd $$(dir $$<); ln -f -s $$(notdir $$<) $$(notdir $$@))
 
@@ -235,7 +235,7 @@ ifneq ($(prorab_included),true)
 		$(prorab_echo)rm -f $(DESTDIR)$(PREFIX)/lib/$(notdir $(prorab_this_staticlib))
 
         #static library rule
-        $(prorab_this_staticlib): $(prorab_this_objs) $(prorab_this_makefile)
+        $(prorab_this_staticlib): $(prorab_this_objs)
 		@echo "\\033[0;33mCreating static library\\033[0m $$(notdir $$@)..."
 		$(prorab_echo)ar cr $$@ $$(filter %.o,$$^)
 
@@ -282,13 +282,13 @@ ifneq ($(prorab_included),true)
         $(call prorab-private-args-file-rules, $(prorab_cargs_file),$(CC) $(prorab_cargs))
 
         #compile .cpp static pattern rule
-        $(prorab_this_cpp_objs): $(prorab_this_dir)$(prorab_this_obj_dir)cpp/$(prorab_private_objspacer)%.o: $(prorab_this_dir)%.cpp $(prorab_this_makefile) $(prorab_cxxargs_file)
+        $(prorab_this_cpp_objs): $(prorab_this_dir)$(prorab_this_obj_dir)cpp/$(prorab_private_objspacer)%.o: $(prorab_this_dir)%.cpp $(prorab_cxxargs_file)
 		@echo "\\033[1;34mCompiling\\033[0m $$<..."
 		$(prorab_echo)mkdir -p $$(dir $$@)
 		$(prorab_echo)$$(CXX) -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -o "$$@" $(prorab_cxxargs) $$<
 
         #compile .c static pattern rule
-        $(prorab_this_c_objs): $(prorab_this_dir)$(prorab_this_obj_dir)c/$(prorab_private_objspacer)%.o: $(prorab_this_dir)%.c $(prorab_this_makefile) $(prorab_cargs_file)
+        $(prorab_this_c_objs): $(prorab_this_dir)$(prorab_this_obj_dir)c/$(prorab_private_objspacer)%.o: $(prorab_this_dir)%.c $(prorab_cargs_file)
 		@echo "\\033[1;35mCompiling\\033[0m $$<..."
 		$(prorab_echo)mkdir -p $$(dir $$@)
 		$(prorab_echo)$$(CC) -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -o "$$@" $(prorab_cargs) $$<
@@ -316,7 +316,7 @@ ifneq ($(prorab_included),true)
         all: $(prorab_this_name)
 
         #link rule
-        $(prorab_this_name): $(prorab_this_objs) $(prorab_this_makefile) $(prorab_ldargs_file)
+        $(prorab_this_name): $(prorab_this_objs) $(prorab_ldargs_file)
 		@echo "\\033[1;32mLinking\\033[0m $$@..."
 		$(prorab_echo)$$(CC) $(prorab_ldflags) $$(filter %.o,$$^) $(prorab_ldlibs) -o "$$@"
 
