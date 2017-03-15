@@ -16,7 +16,7 @@
 			"matrixParams": {
 				"deb_distribution": "unstable",
 				"deb_component": "main",
-				"deb_architecture": "amd64"
+				"deb_architecture": "all"
 			}
 		}
 	],

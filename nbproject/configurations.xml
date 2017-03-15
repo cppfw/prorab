@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configurationDescriptor version="97">
+<configurationDescriptor version="100">
   <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
     <df root="doc" name="0">
     </df>
     <df root="src" name="1">
+      <in>makefile</in>
       <in>prorab-deb-prepare.sh</in>
     </df>
     <df root="tests" name="2">
@@ -74,6 +75,8 @@
           <preBuildCommand></preBuildCommand>
         </preBuild>
       </makefileType>
+      <item path="src/makefile" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="src/prorab-deb-prepare.sh" ex="false" tool="3" flavor2="0">
       </item>
       <item path="tests/app/src/test.cpp" ex="false" tool="1" flavor2="0">
