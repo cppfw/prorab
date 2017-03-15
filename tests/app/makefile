@@ -1,4 +1,4 @@
-include $(prorab_this_dir)../../src/prorab.mk
+include $(d)../../src/prorab.mk
 
 
 include $(d)../common.mk
