@@ -40,16 +40,14 @@
         </df>
       </df>
       <df name="staticlib">
-        <df name="obj_tests">
-          <in>cargs.txt</in>
-          <in>cxxargs.txt</in>
-        </df>
         <df name="src">
+          <in>makefile</in>
           <in>test.c</in>
           <in>test.cpp</in>
           <in>test.h</in>
         </df>
       </df>
+      <in>common.mk</in>
     </df>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -116,6 +114,8 @@
       </item>
       <item path="tests/app/src/test1.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="tests/common.mk" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="tests/deb-prepare/src/soname.txt" ex="false" tool="3" flavor2="0">
       </item>
       <item path="tests/doxygen/src/test.hpp" ex="false" tool="3" flavor2="0">
@@ -132,15 +132,7 @@
       </item>
       <item path="tests/lib/src/test.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="tests/staticlib/obj_tests/cargs.txt"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="tests/staticlib/obj_tests/cxxargs.txt"
-            ex="false"
-            tool="3"
-            flavor2="0">
+      <item path="tests/staticlib/src/makefile" ex="false" tool="3" flavor2="0">
       </item>
       <item path="tests/staticlib/src/test.c" ex="false" tool="0" flavor2="0">
       </item>
