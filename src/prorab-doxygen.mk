@@ -1,4 +1,4 @@
-include prorab.mk
+include ./prorab.mk
 
 #once
 ifneq ($(prorab_doxygen_included),true)
