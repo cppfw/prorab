@@ -27,6 +27,8 @@ script:
     dpkg-buildpackage -uc -us;
   fi
 - if [ "$TRAVIS_OS_NAME" == "osx" ]; then
+    make &&
+    make test &&
     sudo make install;
   fi
 
