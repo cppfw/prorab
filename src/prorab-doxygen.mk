@@ -1,4 +1,4 @@
-include ./prorab.mk
+include $(dir $(word $(words $(MAKEFILE_LIST)), $(MAKEFILE_LIST)))prorab.mk
 
 #once
 ifneq ($(prorab_doxygen_included),true)
