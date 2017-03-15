@@ -31,6 +31,9 @@
           <in>test.h</in>
         </df>
       </df>
+      <df name="pkg-config">
+        <in>makefile</in>
+      </df>
       <df name="staticlib">
         <df name="src">
           <in>makefile</in>
@@ -115,6 +118,8 @@
       <item path="tests/lib/src/test.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="tests/lib/src/test.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/pkg-config/makefile" ex="false" tool="3" flavor2="0">
       </item>
       <item path="tests/staticlib/src/makefile" ex="false" tool="3" flavor2="0">
       </item>
