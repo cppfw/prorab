@@ -4,6 +4,7 @@ include prorab.mk
 ifneq ($(prorab_doxygen_included),true)
     prorab_doxygen_included := true
 
+    .PHONY: doc
 
     #doxygen docs are only possible for libraries, so install path is lib*-doc
     define prorab-build-doxygen

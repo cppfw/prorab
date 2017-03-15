@@ -1,23 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configurationDescriptor version="100">
   <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
-    <df root="doc" name="0">
+    <df root="src" name="0">
     </df>
-    <df root="src" name="1">
-      <in>makefile</in>
-      <in>prorab-deb-prepare.sh</in>
-      <in>prorab-doxygen.mk</in>
-      <in>prorab-pkg-config.mk</in>
-    </df>
-    <df root="tests" name="2">
+    <df root="tests" name="1">
       <df name="app">
+        <df name="obj_tests">
+          <in>cargs.txt</in>
+          <in>cxxargs.txt</in>
+          <in>ldargs.txt</in>
+        </df>
         <df name="src">
           <in>test.cpp</in>
           <in>test1.c</in>
           <in>test1.h</in>
         </df>
       </df>
+      <df name="deb-prepare">
+        <df name="src">
+          <in>soname.txt</in>
+        </df>
+      </df>
+      <df name="doxygen">
+        <df name="src">
+          <in>test.hpp</in>
+        </df>
+      </df>
       <df name="lib">
+        <df name="obj_tests">
+          <in>cargs.txt</in>
+          <in>cxxargs.txt</in>
+          <in>ldargs.txt</in>
+        </df>
+        <df name="src">
+          <in>test.c</in>
+          <in>test.cpp</in>
+          <in>test.h</in>
+        </df>
+      </df>
+      <df name="staticlib">
+        <df name="obj_tests">
+          <in>cargs.txt</in>
+          <in>cxxargs.txt</in>
+        </df>
         <df name="src">
           <in>test.c</in>
           <in>test.cpp</in>
@@ -42,7 +67,6 @@
   <sourceFolderFilter>^(nbproject)$</sourceFolderFilter>
   <sourceRootList>
     <Elem>src</Elem>
-    <Elem>doc</Elem>
     <Elem>tests</Elem>
   </sourceRootList>
   <projectmakefile>makefile</projectmakefile>
@@ -77,13 +101,11 @@
           <preBuildCommand></preBuildCommand>
         </preBuild>
       </makefileType>
-      <item path="src/makefile" ex="false" tool="3" flavor2="0">
+      <item path="tests/app/obj_tests/cargs.txt" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="src/prorab-deb-prepare.sh" ex="false" tool="3" flavor2="0">
+      <item path="tests/app/obj_tests/cxxargs.txt" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="src/prorab-doxygen.mk" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="src/prorab-pkg-config.mk" ex="false" tool="3" flavor2="0">
+      <item path="tests/app/obj_tests/ldargs.txt" ex="false" tool="3" flavor2="0">
       </item>
       <item path="tests/app/src/test.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -91,11 +113,37 @@
       </item>
       <item path="tests/app/src/test1.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="tests/deb-prepare/src/soname.txt" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/doxygen/src/test.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/lib/obj_tests/cargs.txt" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/lib/obj_tests/cxxargs.txt" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/lib/obj_tests/ldargs.txt" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="tests/lib/src/test.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="tests/lib/src/test.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="tests/lib/src/test.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/staticlib/obj_tests/cargs.txt"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="tests/staticlib/obj_tests/cxxargs.txt"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="tests/staticlib/src/test.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="tests/staticlib/src/test.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="tests/staticlib/src/test.h" ex="false" tool="3" flavor2="0">
       </item>
     </conf>
   </confs>

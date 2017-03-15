@@ -2,6 +2,7 @@ include $(d)../../src/prorab.mk
 
 #TODO: check that correct version is applied to the doxygen.cfg
 define this_rules :=
+.PHONY: test
 test::
 	@echo "\\033[1;34mexecuting test\\033[0m doc..."
 	$(prorab_echo)$(MAKE) -C $(d)/doc clean

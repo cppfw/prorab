@@ -3,6 +3,7 @@ include $(d)../../src/prorab.mk
 
 #TODO: check that correct soname is applied to control.in
 define this_rules :=
+.PHONY: test
 test::
 	@echo "\\033[1;34mexecuting test\\033[0m deb-prepare..."
 	$(prorab_echo)rm -f $(d)debian/libtest*.install

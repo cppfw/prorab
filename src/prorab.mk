@@ -53,7 +53,7 @@ ifneq ($(prorab_included),true)
     this_srcs :=
 
 
-    .PHONY: clean all install uninstall distclean doc phony
+    .PHONY: clean all install uninstall distclean phony
 
     #define the very first default target
     all:
