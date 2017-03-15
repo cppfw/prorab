@@ -3,7 +3,7 @@ include $(d)../../src/prorab.mk
 this_err := $(d)../../src/prorab-error.sh
 
 #TODO: check that correct soname is applied to control.in
-define this_rules :=
+define this_rules
 .PHONY: test
 test::
 	@echo "\\033[1;34mexecuting test\\033[0m deb-prepare..."
