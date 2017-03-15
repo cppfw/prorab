@@ -6,12 +6,8 @@
     </df>
     <df root="tests" name="1">
       <df name="app">
-        <df name="obj_tests">
-          <in>cargs.txt</in>
-          <in>cxxargs.txt</in>
-          <in>ldargs.txt</in>
-        </df>
         <df name="src">
+          <in>makefile</in>
           <in>test.cpp</in>
           <in>test1.c</in>
           <in>test1.h</in>
@@ -28,12 +24,8 @@
         </df>
       </df>
       <df name="lib">
-        <df name="obj_tests">
-          <in>cargs.txt</in>
-          <in>cxxargs.txt</in>
-          <in>ldargs.txt</in>
-        </df>
         <df name="src">
+          <in>makefile</in>
           <in>test.c</in>
           <in>test.cpp</in>
           <in>test.h</in>
@@ -102,11 +94,7 @@
       </makefileType>
       <item path="src/prorab-error.sh" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="tests/app/obj_tests/cargs.txt" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="tests/app/obj_tests/cxxargs.txt" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="tests/app/obj_tests/ldargs.txt" ex="false" tool="3" flavor2="0">
+      <item path="tests/app/src/makefile" ex="false" tool="3" flavor2="0">
       </item>
       <item path="tests/app/src/test.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -120,11 +108,7 @@
       </item>
       <item path="tests/doxygen/src/test.hpp" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="tests/lib/obj_tests/cargs.txt" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="tests/lib/obj_tests/cxxargs.txt" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="tests/lib/obj_tests/ldargs.txt" ex="false" tool="3" flavor2="0">
+      <item path="tests/lib/src/makefile" ex="false" tool="3" flavor2="0">
       </item>
       <item path="tests/lib/src/test.c" ex="false" tool="0" flavor2="0">
       </item>
