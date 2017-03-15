@@ -6,6 +6,8 @@
     <df root="src" name="1">
       <in>makefile</in>
       <in>prorab-deb-prepare.sh</in>
+      <in>prorab-doxygen.mk</in>
+      <in>prorab-pkg-config.mk</in>
     </df>
     <df root="tests" name="2">
       <df name="app">
@@ -78,6 +80,10 @@
       <item path="src/makefile" ex="false" tool="3" flavor2="0">
       </item>
       <item path="src/prorab-deb-prepare.sh" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/prorab-doxygen.mk" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/prorab-pkg-config.mk" ex="false" tool="3" flavor2="0">
       </item>
       <item path="tests/app/src/test.cpp" ex="false" tool="1" flavor2="0">
       </item>

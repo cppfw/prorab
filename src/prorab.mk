@@ -39,6 +39,8 @@ ifneq ($(prorab_included),true)
     #define this directory for parent makefile
     prorab_this_makefile := $(word $(call prorab-num,$(call prorab-dec,$(MAKEFILE_LIST))),$(MAKEFILE_LIST))
     prorab_this_dir := $(dir $(prorab_this_makefile))
+
+    #defining alias for prorab_this_dir, it should be deferred assignment to make it work with current prorab-include macro correctly.
     d = $(prorab_this_dir)
 
     #define local variables used by prorab
@@ -411,49 +413,6 @@ ifneq ($(prorab_included),true)
 
     prorab-clear-this-vars = $(foreach var,$(filter this_%,$(.VARIABLES)),$(eval $(var) := ))
 
-
-
-    #doxygen docs are only possible for libraries, so install path is lib*-doc
-    define prorab-build-doxygen
-        #need empty line here to avoid merging with adjacent macro instantiations
-
-        all: doc
-
-        doc:: $(prorab_this_dir)doxygen
-
-        $(prorab_this_dir)doxygen.cfg: $(prorab_this_dir)doxygen.cfg.in $(prorab_this_dir)../debian/changelog
-		$(prorab_echo)prorab-apply-version.sh -v $$(shell prorab-deb-version.sh $(prorab_this_dir)../debian/changelog) $$(firstword $$^)
-
-        $(prorab_this_dir)doxygen: $(prorab_this_dir)doxygen.cfg
-		@echo "Building docs..."
-		$(prorab_echo)(cd $(prorab_this_dir); doxygen doxygen.cfg || true)
-
-        clean::
-		$(prorab_echo)rm -rf $(prorab_this_dir)doxygen
-		$(prorab_echo)rm -rf $(prorab_this_dir)doxygen.cfg
-		$(prorab_echo)rm -rf $(prorab_this_dir)doxygen_sqlite3.db
-
-        install:: $(prorab_this_dir)doxygen
-		$(prorab_echo)install -d $(DESTDIR)$(PREFIX)/share/doc/lib$(this_name)-doc
-		$(prorab_echo)install -m 644 $(prorab_this_dir)doxygen/* $(DESTDIR)$(PREFIX)/share/doc/lib$(this_name)-doc || true #ignore error, not all systems have doxygen
-
-        uninstall::
-		$(prorab_echo)rm -rf $(DESTDIR)$(PREFIX)/share/doc/lib$(this_name)-doc
-
-        #need empty line here to avoid merging with adjacent macro instantiations
-    endef
-
-
-    define prorab-pkg-config
-        #need empty line here to avoid merging with adjacent macro instantiations
-
-        install:: $(shell ls $(prorab_this_dir)*.pc.in)
-		$(prorab_echo)prorab-apply-version.sh -v `prorab-deb-version.sh $(prorab_this_dir)../debian/changelog` $(prorab_this_dir)*.pc.in
-		$(prorab_echo)install -d $(DESTDIR)$(PREFIX)/lib/pkgconfig
-		$(prorab_echo)install -m 644 $(prorab_this_dir)*.pc $(DESTDIR)$(PREFIX)/lib/pkgconfig
-
-        #need empty line here to avoid merging with adjacent macro instantiations
-    endef
 
     #define function to find all source files from specified directory recursively
     #NOTE: removing trailing '/' or '/.' before invoking 'find'.
