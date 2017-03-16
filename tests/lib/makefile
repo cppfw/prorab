@@ -8,7 +8,7 @@ test::
 	$(this_executing_test)
 	$(prorab_echo)$(MAKE) -C $(d)/src clean
 	$(prorab_echo)$(MAKE) -C $(d)/src
-ifeq (($os), macosx)
+ifeq ($(os), macosx)
 	$(prorab_echo)if [ ! -f $(d)src/libtests.dylib ]; then $(this_err) "src/libtests.dylib file not found"; fi
 	$(prorab_echo)if [ ! -f $(d)src/libtests.0.dylib ]; then $(this_err) "src/libtests.0.dylib file not found"; fi
 else
