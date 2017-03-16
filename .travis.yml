@@ -24,6 +24,7 @@ script:
     src/prorab-deb-prepare.sh &&
     PATH=$PATH:$TRAVIS_BUILD_DIR/src dpkg-buildpackage -uc -us;
   fi
+# 'sudo make install' is needed because when deploying it will use prorab-deploy-homebrew.sh script.
 - if [ "$TRAVIS_OS_NAME" == "osx" ]; then
     make &&
     PATH=$PATH:$TRAVIS_BUILD_DIR/src make test &&
