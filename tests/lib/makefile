@@ -8,8 +8,13 @@ test::
 	$(this_executing_test)
 	$(prorab_echo)$(MAKE) -C $(d)/src clean
 	$(prorab_echo)$(MAKE) -C $(d)/src
+ifeq (($os), macosx)
+	$(prorab_echo)if [ ! -f $(d)src/libtests.dylib ]; then $(this_err) "src/libtests.dylib file not found"; fi
+	$(prorab_echo)if [ ! -f $(d)src/libtests.0.dylib ]; then $(this_err) "src/libtests.0.dylib file not found"; fi
+else
 	$(prorab_echo)if [ ! -f $(d)src/libtests.so ]; then $(this_err) "src/libtests.so file not found"; fi
 	$(prorab_echo)if [ ! -f $(d)src/libtests.so.0 ]; then $(this_err) "src/libtests.so.0 file not found"; fi
+endif
 	$(prorab_echo)if [ ! -f $(d)src/libtests.a ]; then $(this_err) "src/libtests.a file not found"; fi
 	$(prorab_echo)$(MAKE) -C $(d)/src clean
 	$(prorab_echo)if [ -f $(d)src/libtests.so ]; then $(this_err) "src/libtests.so file remained after clean"; fi
