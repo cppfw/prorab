@@ -13,6 +13,6 @@ test::
 	$(prorab_echo)if [ ! -f $(d)debian/libtesta4.install ]; then $(this_err) "debian/libtesta4.install file not found"; fi
 	$(prorab_echo)if [ ! -f $(d)debian/libtestb4.install ]; then $(this_err) "debian/libtestb4.install file not found"; fi
 	$(prorab_echo)cmp $(d)debian/control $(d)samples/control || $(this_err) "debian/control contents are not as expected";
-	$(this_passed_message)
+	$(this_pass)
 endef
 $(eval $(this_rules))

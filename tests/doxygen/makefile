@@ -14,6 +14,6 @@ test::
 	$(prorab_echo)$(MAKE) -C $(d)/doc clean
 	$(prorab_echo)if [ -f $(d)doc/doxygen.cfg ]; then $(this_err) "doc/doxygen.cfg file remained after clean"; fi
 	$(prorab_echo)if [ -d $(d)doc/doxygen ]; then $(this_err) "doc/doxygen directory remained after clean"; fi
-	$(this_passed_message)
+	$(this_pass)
 endef
 $(eval $(this_rules))

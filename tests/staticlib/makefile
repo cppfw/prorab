@@ -16,6 +16,6 @@ test::
 	$(prorab_echo)$(MAKE) -C $(d)/src clean
 	$(prorab_echo)if [ -f $(d)src/libtests.a ]; then $(this_err) "src/libtests.a file remained after clean"; fi
 	$(prorab_echo)if [ -d $(d)src/obj_tests ]; then $(this_err) "src/obj_tests directory remained after clean"; fi
-	$(this_passed_message)
+	$(this_pass)
 endef
 $(eval $(this_rules))
