@@ -5,7 +5,7 @@ include $(d)../common.mk
 define this_rules
 .PHONY: test
 test::
-	$(this_executing_test)
+	$(this_running) $(this_test)
 	$(prorab_echo)$(MAKE) -C $(d)/src clean
 	$(prorab_echo)$(MAKE) -C $(d)/src
 ifeq ($(os), macosx)

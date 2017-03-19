@@ -5,7 +5,7 @@ include $(d)../common.mk
 define this_rules
 .PHONY: test
 test::
-	$(this_executing_test)
+	$(this_running) $(this_test)
 	$(prorab_echo)rm -f $(d)debian/libtest*.install
 	$(prorab_echo)rm -f $(d)debian/control
 	$(prorab_echo)(cd $(d); ../../src/prorab-deb-prepare.sh)

@@ -5,7 +5,7 @@ include $(d)../common.mk
 define this_rules
 .PHONY: test
 test::
-	$(this_executing_test)
+	$(this_running) $(this_test)
 	$(prorab_echo)$(MAKE) -C $(d)/doc clean
 	$(prorab_echo)$(MAKE) -C $(d)/doc
 	$(prorab_echo)if [ ! -f $(d)doc/doxygen.cfg ]; then $(this_err) "doc/doxygen.cfg file not found"; fi
