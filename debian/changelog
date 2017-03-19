@@ -1,3 +1,9 @@
+prorab (1.10.30) unstable; urgency=medium
+
+  * prorab-passed.sh and prorab-running-test.sh scripts added
+
+ -- Ivan Gagis <igagis@gmail.com>  Sun, 19 Mar 2017 12:12:39 +0200
+
 prorab (1.10.29) unstable; urgency=medium
 
   * install target fix for make 3.81
