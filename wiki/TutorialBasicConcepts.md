@@ -1,4 +1,4 @@
-#Basic concepts
+# Basic concepts
 
 **prorab** is a *GNU make*-based build system. Essentially it just provides
 convenient definitions for writing clean makefiles.
@@ -12,7 +12,7 @@ Also, **prorab** provides some predefined rules for easy building of C/C++ appli
 and libraries.
 
 
-##Including prorab into the makefile
+## Including prorab into the makefile
 
 Including **prorab** in the make file is simple and obvious, just add the following directive
 in the beginning of the makefile
@@ -31,14 +31,14 @@ Right after inclusion of *prorab.mk* there will be following variables defined:
 - *prorab_lib_extension* - typical extension for dynamically linked libraries in the OS (.dll, .so, .dylib).
 - *soext* - shorthand alias for *prorab_lib_extension*
 
-##Prorab definitions and variables naming conventions
+## Prorab definitions and variables naming conventions
 
 All **prorab** definitions are named using kebab-case and start with **prorab-** prefix.
 Variables defined by **prorab** are named using underscore case and start with **prorab_** prefix.
 Input variables are named using underscore case and start with **this_** prefix.
 
 
-##Building subprojects with prorab
+## Building subprojects with prorab
 
 As said before, **prorab** allows 'cascading' of makefiles. Say, you have two subdirectories in your project: "app" and "test". And both those directories contain some subproject which can be built independently. So, in both those directories there are project makefiles.
 
@@ -53,7 +53,7 @@ $(eval $(prorab-build-subdirs))
 And that's it. This will invoke the same target on every subdirectory which has a makefile. Note, that parallel build is still supported.
 
 
-##Prorab definitions and input variables
+## Prorab definitions and input variables
 
 Before invoking most of the **prorab** definitions one has to set some input variables for the definition.
 For example:
@@ -85,7 +85,7 @@ $(eval $(prorab-build-app))
 ```
 
 
-##Including other makefiles
+## Including other makefiles
 
 In order to include some other makefile one can use *prorab-include* function. This function will check if the makefile was already included or not and only include it if necessary.
 
@@ -107,7 +107,7 @@ $(eval $(call prorab-include,$(prorab_this_dir)../stuff/makefile))
 ```
 
 
-##Echoing commands from recipes
+## Echoing commands from recipes
 
 All commands in **prorab** recipes are prefixed with @ by default, but it is possible to make it to be verbose by setting the _verbose_ variable to _true_, like this:
 
