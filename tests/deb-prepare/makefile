@@ -5,7 +5,7 @@ include $(d)../common.mk
 define this_rules
 .PHONY: test
 test::
-	$(this_running) $(this_test)
+	@$(this_running) $(this_test)
 	$(prorab_echo)rm -f $(d)debian/libtest*.install
 	$(prorab_echo)rm -f $(d)debian/control
 	$(prorab_echo)(cd $(d); ../../src/prorab-deb-prepare.sh)
@@ -13,6 +13,6 @@ test::
 	$(prorab_echo)if [ ! -f $(d)debian/libtesta4.install ]; then $(this_err) "debian/libtesta4.install file not found"; fi
 	$(prorab_echo)if [ ! -f $(d)debian/libtestb4.install ]; then $(this_err) "debian/libtestb4.install file not found"; fi
 	$(prorab_echo)cmp $(d)debian/control $(d)samples/control || $(this_err) "debian/control contents are not as expected";
-	$(this_pass)
+	@$(this_pass)
 endef
 $(eval $(this_rules))
