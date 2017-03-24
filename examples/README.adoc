@@ -1,0 +1,2 @@
+= Directory contents
+This directory contains various sample projects demonstrating usage of **prorab**.
