@@ -7,3 +7,7 @@ Provides rules for C/C++ library/application, doxygen docs. Allows hierarchical 
 ## Installation and tutorials
 
 See **[WiKi](wiki/HomePage.md)**
+
+## Questions
+
+In case of questions about **prorab** usage, please submit those as [Issue](https://github.com/igagis/prorab/issues).
