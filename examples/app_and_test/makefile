@@ -5,5 +5,5 @@
 include prorab.mk
 
 
-#This prorab macro includes all the makefile's in all subdirectories
+#This prorab macro includes all the makefiles it could find in subdirectories
 $(eval $(prorab-build-subdirs))
