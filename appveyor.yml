@@ -22,12 +22,12 @@ before_build:
 #  - nuget restore msvs_solution/msvs_solution.sln
 
 build_script:
-  - cmd: C:\cygwin64\bin\bash -e -l -c "ls && cd build && ./src/prorab-apply-version.sh -v `./src/prorab-deb-version.sh debian/changelog` cygwin/*.in"
-  - cmd: C:\cygwin64\bin\bash -e -l -c "cd build && cygport cygwin/*.cygport download"
-  - cmd: C:\cygwin64\bin\bash -e -l -c "cd build && cygport cygwin/*.cygport all"
+  - cmd: C:\cygwin64\bin\bash -e -l -c "./src/prorab-apply-version.sh -v `./src/prorab-deb-version.sh debian/changelog` cygwin/*.in"
+  - cmd: C:\cygwin64\bin\bash -e -l -c "cygport cygwin/*.cygport download"
+  - cmd: C:\cygwin64\bin\bash -e -l -c "cygport cygwin/*.cygport all"
 
 test_script:
-  - cmd: C:\cygwin64\bin\bash -e -l -c "cd build && make test"
+  - cmd: C:\cygwin64\bin\bash -e -l -c "make test"
 #  - ps: .\tests\autotest-appveyor.ps1
 
 #deploy:
