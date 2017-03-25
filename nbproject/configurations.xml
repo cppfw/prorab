@@ -54,6 +54,7 @@
       <itemPath>debian/changelog</itemPath>
       <itemPath>nbproject/private/launcher.properties</itemPath>
       <itemPath>makefile</itemPath>
+      <itemPath>cygwin/prorab.cygport.in</itemPath>
       <itemPath>homebrew/prorab.rb.in</itemPath>
       <itemPath>travis_bintray_deb.json.in</itemPath>
       <itemPath>travis_bintray_rasp.json.in</itemPath>

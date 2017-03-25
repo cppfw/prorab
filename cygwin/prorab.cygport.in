@@ -1,0 +1,16 @@
+# package name
+NAME="proab"
+VERSION=$(version)
+RELEASE=1
+
+# .hint generation
+CATEGORY="Devel"
+SUMMARY="A GNU make based build system"
+DESCRIPTION="A GNU make based build system.
+Non-recursive GNU make based build system for C/C++ applications and libraries."
+
+# source and patch files
+SRC_URI="https://github.com/igagis/prorab/archive/${VERSION}.tar.gz"
+#PATCH_URI="boffo-1.0-fix-whatever.patch"
+
+# use the standard src_compile, src_install and src_test
