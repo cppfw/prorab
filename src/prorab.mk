@@ -416,7 +416,8 @@ ifneq ($(prorab_included),true)
 
     #define function to find all source files from specified directory recursively
     #NOTE: removing trailing '/' or '/.' before invoking 'find'.
-    prorab-src-dir = $(patsubst $(prorab_this_dir)%,%,$(shell find $(patsubst %/.,%,$(patsubst %/,%,$(prorab_this_dir)$1)) -type f -name "*.cpp" -o -name "*.c"))
+    #NOTE: filter-out of empty strings from input path is needed when path is supplied with preceding or trailing spaces, to prevent searching sources from root directory also.
+    prorab-src-dir = $(patsubst $(d)%,%,$(shell find $(patsubst %/.,%,$(patsubst %/,%,$(d)$(filter-out ,$1))) -type f -name "*.cpp" -o -name "*.c"))
 
 endif #~once
 
