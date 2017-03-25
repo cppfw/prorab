@@ -4,7 +4,7 @@ version: "{branch}-{build}"
 clone_folder: c:\projects\build
 
 environment:
-  DEPS: make cygport g++ gcc
+  DEPS: make cygport gcc-g++
 
 install:
   - cmd: C:\cygwin64\setup-x86_64.exe -q -P lynx,wget
