@@ -30,8 +30,8 @@ build_script:
   - cmd: C:\cygwin\bin\bash -e -l -c "cygport cygwin/*.cygport all"
 
 test_script:
-  - cmd: C:\cygwin64\bin\bash -e -l -c "PATH=$PATH:~/ make test"
-  - cmd: C:\cygwin\bin\bash -e -l -c "PATH=$PATH:~/ make test"
+  - cmd: C:\cygwin64\bin\bash -e -l -c "PATH=$PATH:~/src make test"
+  - cmd: C:\cygwin\bin\bash -e -l -c "PATH=$PATH:~/src make test"
 
 #deploy:
 #  provider: NuGet
