@@ -2,6 +2,7 @@
 <configurationDescriptor version="100">
   <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
     <df root="src" name="0">
+      <in>prorab-deploy-cygwin.sh</in>
       <in>prorab-error.sh</in>
       <in>prorab-passed.sh</in>
       <in>prorab-running-test.sh</in>
@@ -99,6 +100,8 @@
           <preBuildCommand></preBuildCommand>
         </preBuild>
       </makefileType>
+      <item path="src/prorab-deploy-cygwin.sh" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="src/prorab-error.sh" ex="false" tool="3" flavor2="0">
       </item>
       <item path="src/prorab-passed.sh" ex="false" tool="3" flavor2="0">
