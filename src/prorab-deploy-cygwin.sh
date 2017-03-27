@@ -71,12 +71,21 @@ git clone $repo $repodir 2>&1 | $cutSecret
 
 #--- repo cloned ---
 
-#=== create directory tree if needed ===
-mkdir -p $repodir/x86/release
-mkdir -p $repodir/x86_64/release
-#---
+architectures="x86 x86_64"
 
 architecture=$(uname -m)
+
+for a in $architectures; do
+	if [[ "$architecture" == "$a" ]]; then architectureFound=true; break; fi
+done
+[ -z "$architectureFound" ] && source prorab-error.sh "Unknown architecture: $architecture";
+
+
+#=== create directory tree if needed ===
+for a in $architectures; do
+	mkdir -p $repodir/$a/release
+done
+#---
 
 #=== copy packages to repo and add them to git commit ===
 for fin in $infiles
@@ -84,6 +93,22 @@ do
 	dist=$(echo $fin | sed -n -e 's/\(.*\)\.cygport\.in$/\1/p')-$version-1.$architecture/dist
 	echo $dist
 	cp -r $dist/* $repodir/$architecture/release
-	(cd $reponame && git add 
 done 
 #---
+
+#run mksetupini for all architectures
+(
+cd $repodir
+for a in $architectures; do
+	mksetupini --arch $a --inifile=$a/setup.ini --releasearea=. &&
+	bzip2 <$a/setup.ini >$a/setup.bz2 &&
+	xz -6e <$a/setup.ini >$a/setup.xz
+done
+cd ..
+)
+
+(cd $repodir && git add .)
+
+#clean
+echo "Removing cloned repo..."
+rm -rf $repodir
