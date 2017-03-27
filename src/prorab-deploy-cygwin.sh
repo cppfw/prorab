@@ -102,20 +102,25 @@ do
 done 
 #---
 
-#run mksetupini for all architectures
 (
 cd $repodir
+
+#run mksetupini for all architectures
 for a in $architectures; do
 	mksetupini --arch $a --inifile=$a/setup.ini --releasearea=. --okmissing=required-package &&
 	bzip2 <$a/setup.ini >$a/setup.bz2 &&
 	xz -6e <$a/setup.ini >$a/setup.xz
 done
+
+git config user.email "prorab@prorab.org"
+git config user.name "Prorab Prorabov"
+
+git add .
+git commit -a -m"version $version of $packages"
+git push 2>&1 | $cutSecret
+
 cd ..
 )
-
-(cd $repodir && git add . && git commit -a -m"version $version of $packages")
-
-(cd $repodir; set -o pipefail && git push 2>&1 | $cutSecret)
 
 #clean
 echo "Removing cloned repo..."
