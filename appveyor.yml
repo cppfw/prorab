@@ -7,20 +7,21 @@ environment:
   PRORAB_GIT_USERNAME: igagis
   PRORAB_GIT_ACCESS_TOKEN:
     secure: mpW6B2ols1a2FkshjKjryBuvBt8A1TpU9WGn+/d6PIQiZlzA0Rpo1ETKpmy0bnvX
-  DEPS: make,gcc-g++
+  DEPS: make gcc-g++
 
 install:
-  - cmd: C:\cygwin64\setup-x86_64.exe -q -P wget,cygport,calm,%DEPS%
-  - cmd: C:\cygwin\setup-x86.exe -q -P wget,cygport,calm,%DEPS%
-  
-#WORKAROUND: setup python setuptools for mksetupini script to work
-  - cmd: C:\cygwin64\bin\bash -e -l -c "wget https://bootstrap.pypa.io/ez_setup.py -O - | python3"
-  - cmd: C:\cygwin\bin\bash -e -l -c "wget https://bootstrap.pypa.io/ez_setup.py -O - | python3"
-
-  - cmd: xcopy /S C:\projects\build C:\cygwin64\home\appveyor\
-  - cmd: xcopy /S C:\projects\build C:\cygwin\home\appveyor\
+  - cmd: C:\cygwin64\setup-x86_64.exe -q -P lynx,wget
+  - cmd: C:\cygwin\setup-x86.exe -q -P lynx,wget
+  - ps: (new-object net.webclient).DownloadFile('https://raw.githubusercontent.com/transcode-open/apt-cyg/master/apt-cyg', 'C:\cygwin64\bin\apt-cyg')
+  - cmd: copy C:\cygwin64\bin\apt-cyg C:\cygwin\bin\apt-cyg
+  - cmd: C:\cygwin64\bin\bash -e -l -c "chmod +x /bin/apt-cyg"
+  - cmd: C:\cygwin\bin\bash -e -l -c "chmod +x /bin/apt-cyg"
+  - cmd: C:\cygwin64\bin\bash -e -l -c "apt-cyg install cygport calm %DEPS%"
+  - cmd: C:\cygwin\bin\bash -e -l -c "apt-cyg install cygport calm %DEPS%"
 
 before_build:
+  - cmd: xcopy /S C:\projects\build C:\cygwin64\home\appveyor\
+  - cmd: xcopy /S C:\projects\build C:\cygwin\home\appveyor\
 
 build_script:
   - cmd: C:\cygwin64\bin\bash -e -l -c "./src/prorab-apply-version.sh -v `./src/prorab-deb-version.sh debian/changelog` cygwin/*.in"
