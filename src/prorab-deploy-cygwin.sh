@@ -91,8 +91,10 @@ done
 for fin in $infiles
 do
 	dist=$(echo $fin | sed -n -e 's/\(.*\)\.cygport\.in$/\1/p')-$version-1.$architecture/dist
+
 #	echo $dist
 	cp -r $dist/* $repodir/$architecture/release
+	[ $? -ne 0 ] && source prorab-error.sh "could not copy packages to cygwin repo directory tree";
 
 	f=$(echo $fin | sed -n -e 's/\(.*\)\.cygport\.in$/\1/p' | sed -n -e 's/.*\///p')
 
