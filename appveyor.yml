@@ -4,6 +4,9 @@ version: "{branch}-{build}"
 clone_folder: c:\projects\build
 
 environment:
+  GITHUB_GIT_USERNAME: igagis
+  GITHUB_GIT_ACCESS_TOKEN:
+    secure: mpW6B2ols1a2FkshjKjryBuvBt8A1TpU9WGn+/d6PIQiZlzA0Rpo1ETKpmy0bnvX
   DEPS: make cygport gcc-g++
 
 install:
