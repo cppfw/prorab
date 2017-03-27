@@ -71,20 +71,12 @@ git clone $repo $repodir 2>&1 | $cutSecret
 
 #--- repo cloned ---
 
-architectures="x86 x86_64"
 
 architecture=$(uname -m)
 
-for a in $architectures; do
-	if [[ "$architecture" == "$a" ]]; then architectureFound=true; break; fi
-done
-[ -z "$architectureFound" ] && source prorab-error.sh "Unknown architecture: $architecture";
-
 
 #=== create directory tree if needed ===
-for a in $architectures; do
-	mkdir -p $repodir/$a/release
-done
+mkdir -p $repodir/$architecture/release
 #---
 
 #=== copy packages to repo and add them to git commit ===
@@ -105,19 +97,19 @@ done
 (
 cd $repodir
 
-#run mksetupini for all architectures
-for a in $architectures; do
-	mksetupini --arch $a --inifile=$a/setup.ini --releasearea=. --okmissing=required-package &&
-	bzip2 <$a/setup.ini >$a/setup.bz2 &&
-	xz -6e <$a/setup.ini >$a/setup.xz
-done
+	#run mksetupini
+	mksetupini --arch $architecture --inifile=$architecture/setup.ini --releasearea=. --okmissing=required-package
+	[ $? -ne 0 ] && source prorab-error.sh "'mksetupini' failed";
 
-git config user.email "prorab@prorab.org"
-git config user.name "Prorab Prorabov"
+	bzip2 <$architecture/setup.ini >$architecture/setup.bz2
+	xz -6e <$architecture/setup.ini >$architecture/setup.xz
 
-git add .
-git commit -a -m"version $version of $packages"
-git push 2>&1 | $cutSecret
+	git config user.email "prorab@prorab.org"
+	git config user.name "Prorab Prorabov"
+
+	git add .
+	git commit -a -m"version $version of $packages"
+	git push 2>&1 | $cutSecret
 
 cd ..
 )
