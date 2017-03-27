@@ -41,5 +41,5 @@ test_script:
 deploy_script:
   - cmd: C:\cygwin64\bin\bash -e -l -c "make install"
   - cmd: C:\cygwin\bin\bash -e -l -c "make install"
-  - cmd: C:\cygwin64\bin\bash -e -l -c "prorab-deploy-cygwin.sh -r igagis/cygwin-repo"
+  - cmd: C:\cygwin64\bin\bash -e -l -c "PYTHONPATH=/usr/lib/python3.4 prorab-deploy-cygwin.sh -r igagis/cygwin-repo"
   - cmd: C:\cygwin\bin\bash -e -l -c "prorab-deploy-cygwin.sh -r igagis/cygwin-repo"
