@@ -7,17 +7,11 @@ environment:
   PRORAB_GIT_USERNAME: igagis
   PRORAB_GIT_ACCESS_TOKEN:
     secure: mpW6B2ols1a2FkshjKjryBuvBt8A1TpU9WGn+/d6PIQiZlzA0Rpo1ETKpmy0bnvX
-  DEPS: make cygport gcc-g++
+  DEPS: make,cygport,gcc-g++
 
 install:
-  - cmd: C:\cygwin64\setup-x86_64.exe -q -P lynx,wget
-  - cmd: C:\cygwin\setup-x86.exe -q -P lynx,wget
-  - ps: (new-object net.webclient).DownloadFile('https://raw.githubusercontent.com/transcode-open/apt-cyg/master/apt-cyg', 'C:\cygwin64\bin\apt-cyg')
-  - cmd: copy C:\cygwin64\bin\apt-cyg C:\cygwin\bin\apt-cyg
-  - cmd: C:\cygwin64\bin\bash -e -l -c "chmod +x /bin/apt-cyg"
-  - cmd: C:\cygwin\bin\bash -e -l -c "chmod +x /bin/apt-cyg"
-  - cmd: C:\cygwin64\bin\bash -e -l -c "apt-cyg install %DEPS%"
-  - cmd: C:\cygwin\bin\bash -e -l -c "apt-cyg install %DEPS%"
+  - cmd: C:\cygwin64\setup-x86_64.exe -q -P lynx,wget,%DEPS%
+  - cmd: C:\cygwin\setup-x86.exe -q -P lynx,wget,%DEPS%
   - cmd: xcopy /S C:\projects\build C:\cygwin64\home\appveyor\
   - cmd: xcopy /S C:\projects\build C:\cygwin\home\appveyor\
 
