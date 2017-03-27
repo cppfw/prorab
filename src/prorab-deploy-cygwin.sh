@@ -113,6 +113,8 @@ cd ..
 
 (cd $repodir && git add . && git commit -a -m"version $version of $packages")
 
+(cd $repodir; set -o pipefail && git push 2>&1 | $cutSecret)
+
 #clean
-#echo "Removing cloned repo..."
-#rm -rf $repodir
+echo "Removing cloned repo..."
+rm -rf $repodir
