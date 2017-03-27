@@ -22,7 +22,6 @@ install:
   - cmd: xcopy /S C:\projects\build C:\cygwin\home\appveyor\
 
 before_build:
-#  - nuget restore msvs_solution/msvs_solution.sln
 
 build_script:
   - cmd: C:\cygwin64\bin\bash -e -l -c "./src/prorab-apply-version.sh -v `./src/prorab-deb-version.sh debian/changelog` cygwin/*.in"
@@ -36,14 +35,8 @@ test_script:
   - cmd: C:\cygwin64\bin\bash -e -l -c "PATH=$PATH:~/src make test"
   - cmd: C:\cygwin\bin\bash -e -l -c "PATH=$PATH:~/src make test"
 
-#deploy:
-#  provider: NuGet
-#  api_key:
-#    secure: cvBwlGzXt2fwZB1AFv+aJZca9hCQf4hW/BYwKOjCjCx0WFD9L6g9e2IH7SZ+P0Qf
-#  skip_symbols: true
-#  artifact: /.*\.nupkg/
-#  on:
-#    appveyor_repo_tag: true
-#
-#artifacts:
-#  - path: .\nuget\*.nupkg
+deploy_script:
+  - cmd: C:\cygwin64\bin\bash -e -l -c "make install"
+  - cmd: C:\cygwin\bin\bash -e -l -c "make install"
+  - cmd: C:\cygwin64\bin\bash -e -l -c "prorab-deploy-cygwin.sh -r igagis/cygwin-repo"
+  - cmd: C:\cygwin\bin\bash -e -l -c "prorab-deploy-cygwin.sh -r igagis/cygwin-repo"
