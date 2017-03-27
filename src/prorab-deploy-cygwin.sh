@@ -100,7 +100,7 @@ done
 (
 cd $repodir
 for a in $architectures; do
-	mksetupini --arch $a --inifile=$a/setup.ini --releasearea=. &&
+	mksetupini --arch $a --inifile=$a/setup.ini --releasearea=. --okmissing=required-package &&
 	bzip2 <$a/setup.ini >$a/setup.bz2 &&
 	xz -6e <$a/setup.ini >$a/setup.xz
 done
@@ -110,5 +110,5 @@ cd ..
 (cd $repodir && git add .)
 
 #clean
-echo "Removing cloned repo..."
-rm -rf $repodir
+#echo "Removing cloned repo..."
+#rm -rf $repodir
