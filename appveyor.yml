@@ -10,8 +10,8 @@ environment:
   DEPS: make,gcc-g++
 
 install:
-  - cmd: C:\cygwin64\setup-x86_64.exe -q -P cygport,calm,%DEPS%
-  - cmd: C:\cygwin\setup-x86.exe -q -P cygport,calm,%DEPS%
+  - cmd: C:\cygwin64\setup-x86_64.exe -q -P cygport,calm,python3-setuptools,%DEPS%
+  - cmd: C:\cygwin\setup-x86.exe -q -P cygport,calm,python3-setuptools,%DEPS%
   - cmd: xcopy /S C:\projects\build C:\cygwin64\home\appveyor\
   - cmd: xcopy /S C:\projects\build C:\cygwin\home\appveyor\
 
