@@ -7,19 +7,14 @@ environment:
   PRORAB_GIT_USERNAME: igagis
   PRORAB_GIT_ACCESS_TOKEN:
     secure: mpW6B2ols1a2FkshjKjryBuvBt8A1TpU9WGn+/d6PIQiZlzA0Rpo1ETKpmy0bnvX
-  DEPS: make gcc-g++
+  DEPS: make,gcc-g++
 
 install:
-  - cmd: C:\cygwin64\setup-x86_64.exe -q -P lynx,wget
-  - cmd: C:\cygwin\setup-x86.exe -q -P lynx,wget
-  - ps: (new-object net.webclient).DownloadFile('https://raw.githubusercontent.com/transcode-open/apt-cyg/master/apt-cyg', 'C:\cygwin64\bin\apt-cyg')
-  - cmd: copy C:\cygwin64\bin\apt-cyg C:\cygwin\bin\apt-cyg
-  - cmd: C:\cygwin64\bin\bash -e -l -c "chmod +x /bin/apt-cyg"
-  - cmd: C:\cygwin\bin\bash -e -l -c "chmod +x /bin/apt-cyg"
-  - cmd: C:\cygwin64\bin\bash -e -l -c "apt-cyg install cygport calm %DEPS%"
-  - cmd: C:\cygwin\bin\bash -e -l -c "apt-cyg install cygport calm %DEPS%"
+  - cmd: C:\cygwin64\setup-x86_64.exe -q -P lynx,wget,cygport,calm,%DEPS%
+  - cmd: C:\cygwin\setup-x86.exe -q -P lynx,wget,cygport,calm,%DEPS%
+  
   - cmd: C:\cygwin64\bin\bash -e -l -c "ls /usr/lib/python3.4/site-packages/"
-  - cmd: C:\cygwin64\bin\bash -e -l -c "apt-cyg listfiles python3-setuptools"
+  - cmd: C:\cygwin64\bin\bash -e -l -c "ls /usr/lib/python3.6/site-packages/"
   
 
 before_build:
