@@ -18,6 +18,9 @@ install:
   - cmd: C:\cygwin\bin\bash -e -l -c "chmod +x /bin/apt-cyg"
   - cmd: C:\cygwin64\bin\bash -e -l -c "apt-cyg install cygport calm %DEPS%"
   - cmd: C:\cygwin\bin\bash -e -l -c "apt-cyg install cygport calm %DEPS%"
+  - cmd: C:\cygwin64\bin\bash -e -l -c "ls /usr/lib/python3.4/site-packages/"
+  - cmd: C:\cygwin\bin\bash -e -l -c "ls /usr/lib/python3.4/site-packages/"
+  
 
 before_build:
   - cmd: xcopy /S C:\projects\build C:\cygwin64\home\appveyor\
