@@ -14,8 +14,8 @@ install:
   - cmd: C:\cygwin\setup-x86.exe -q -P wget,cygport,calm,%DEPS%
   
 #WORKAROUND: setup python setuptools for mksetupini script to work
-  - cmd: C:\cygwin64\bin\bash -e -l -c "wget https://bootstrap.pypa.io/ez_setup.py -O - | python"
-  - cmd: C:\cygwin\bin\bash -e -l -c "wget https://bootstrap.pypa.io/ez_setup.py -O - | python"
+  - cmd: C:\cygwin64\bin\bash -e -l -c "easy_install-3.4 setuptools"
+  - cmd: C:\cygwin\bin\bash -e -l -c "easy_install-3.4 setuptools"
 
   - cmd: xcopy /S C:\projects\build C:\cygwin64\home\appveyor\
   - cmd: xcopy /S C:\projects\build C:\cygwin\home\appveyor\
