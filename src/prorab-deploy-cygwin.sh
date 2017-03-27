@@ -93,6 +93,10 @@ do
 	dist=$(echo $fin | sed -n -e 's/\(.*\)\.cygport\.in$/\1/p')-$version-1.$architecture/dist
 #	echo $dist
 	cp -r $dist/* $repodir/$architecture/release
+
+	f=$(echo $fin | sed -n -e 's/\(.*\)\.cygport\.in$/\1/p' | sed -n -e 's/.*\///p')
+
+	if [ -z "$packages" ]; then packages="$f"; else packages="$packages, $f"; fi
 done 
 #---
 
@@ -107,8 +111,8 @@ done
 cd ..
 )
 
-(cd $repodir && git add .)
+(cd $repodir && git add . && git commit -a -m"version $version of $packages")
 
 #clean
-echo "Removing cloned repo..."
-rm -rf $repodir
+#echo "Removing cloned repo..."
+#rm -rf $repodir
