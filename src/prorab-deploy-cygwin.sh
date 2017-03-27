@@ -40,11 +40,11 @@ echo "Deploying to cygwin..."
 #update version numbers
 version=$(prorab-deb-version.sh debian/changelog)
 
-echo "current package version is $version, applying it to cygport files..."
-
-prorab-apply-version.sh -v $version $infiles
-
-echo "version $version applied to cygport files"
+#echo "current package version is $version, applying it to cygport files..."
+#
+#prorab-apply-version.sh -v $version $infiles
+#
+#echo "version $version applied to cygport files"
 
 
 
@@ -91,7 +91,7 @@ done
 for fin in $infiles
 do
 	dist=$(echo $fin | sed -n -e 's/\(.*\)\.cygport\.in$/\1/p')-$version-1.$architecture/dist
-	echo $dist
+#	echo $dist
 	cp -r $dist/* $repodir/$architecture/release
 done 
 #---
