@@ -15,6 +15,10 @@ install:
   
   - cmd: C:\cygwin64\bin\bash -e -l -c "ls /usr/lib/python3.4/site-packages/"
   - cmd: C:\cygwin64\bin\bash -e -l -c "ls /usr/lib/python3.6/site-packages/"
+  - cmd: C:\cygwin64\bin\bash -e -l -c "python3 -v /usr/bin/mksetupini"
+  - cmd: C:\cygwin64\bin\bash -e -l -c "cygcheck -s -v -r"
+  
+  
   
 
 before_build:
