@@ -10,8 +10,8 @@ environment:
   DEPS: make,gcc-g++
 
 install:
-  - cmd: C:\cygwin64\setup-x86_64.exe -q -P lynx,wget,cygport,calm,%DEPS%
-  - cmd: C:\cygwin\setup-x86.exe -q -P lynx,wget,cygport,calm,%DEPS%
+  - cmd: C:\cygwin64\setup-x86_64.exe -g -q -P lynx,wget,cygport,calm,%DEPS%
+  - cmd: C:\cygwin\setup-x86.exe -g -q -P lynx,wget,cygport,calm,%DEPS%
   
   - cmd: C:\cygwin64\bin\bash -e -l -c "ls /usr/lib/python3.4/site-packages/"
   - cmd: C:\cygwin64\bin\bash -e -l -c "ls /usr/lib/python3.6/site-packages/"
