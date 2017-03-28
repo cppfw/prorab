@@ -32,9 +32,4 @@ test_script:
 deploy_script:
   - cmd: C:\cygwin64\bin\bash -e -l -c "make install"
   - cmd: C:\cygwin\bin\bash -e -l -c "make install"
-  - cmd: if "%APPVEYOR_REPO_TAG%"=="true" (
-        C:\cygwin64\bin\bash -e -l -c "prorab-deploy-cygwin.sh -r igagis/cygwin-repo" &&
-        C:\cygwin\bin\bash -e -l -c "prorab-deploy-cygwin.sh -r igagis/cygwin-repo"
-    ) else (
-        echo Skipping deploy because not a tagged commit.
-    )
+  - cmd: if "%APPVEYOR_REPO_TAG%"=="true" (C:\cygwin64\bin\bash -e -l -c "prorab-deploy-cygwin.sh -r igagis/cygwin-repo" && C:\cygwin\bin\bash -e -l -c "prorab-deploy-cygwin.sh -r igagis/cygwin-repo") else (echo Skipping deploy because not a tagged commit.)
