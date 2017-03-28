@@ -15,4 +15,9 @@ src_compile() {
   cygmake
 }
 
-# use the standard src_install and src_test
+src_install() {
+  cd ${B}
+  cyginstall PREFIX=/usr
+}
+
+# use the standard src_test
