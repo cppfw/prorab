@@ -24,7 +24,6 @@ build_script:
   - cmd: C:\cygwin\bin\bash -e -l -c "./src/prorab-apply-version.sh -v `./src/prorab-deb-version.sh debian/changelog` cygwin/*.in"
   - cmd: C:\cygwin\bin\bash -e -l -c "cygport cygwin/*.cygport download"
   - cmd: C:\cygwin\bin\bash -e -l -c "cygport cygwin/*.cygport all"
-  - cmd: C:\cygwin\bin\bash -e -l -c "ls cygwin"
 
 test_script:
   - cmd: C:\cygwin64\bin\bash -e -l -c "PATH=$PATH:~/src make test"

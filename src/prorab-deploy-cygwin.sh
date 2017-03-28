@@ -83,7 +83,9 @@ mkdir -p $repodir/$architecture/release
 #=== copy packages to repo and add them to git commit ===
 for fin in $infiles
 do
-	dist=$(echo $fin | sed -n -e 's/\(.*\)\.cygport\.in$/\1/p')-$version-1.$architecture/dist
+	#note that sometimes arch is i686 instead of x86, but mksetupini script only accepts x86,
+	#so invoke $(uname -m) again here instead of using $architecture variable
+	dist=$(echo $fin | sed -n -e 's/\(.*\)\.cygport\.in$/\1/p')-$version-1.$(uname -m)/dist
 
 #	echo $dist
 	cp -r $dist/* $repodir/$architecture/release
