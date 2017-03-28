@@ -73,6 +73,7 @@ git clone $repo $repodir 2>&1 | $cutSecret
 
 
 architecture=$(uname -m)
+if [[ "$architecture" == "i686" || "$architecture" == "i386" ]]; then architecture="x86"; fi
 
 
 #=== create directory tree if needed ===
