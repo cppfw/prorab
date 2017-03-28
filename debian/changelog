@@ -1,3 +1,9 @@
+prorab (1.10.32) unstable; urgency=medium
+
+  * cygwin: install to prefix /usr
+
+ -- Ivan Gagis <igagis@gmail.com>  Tue, 28 Mar 2017 18:48:01 +0300
+
 prorab (1.10.31) unstable; urgency=medium
 
   * deploy to cygwin
