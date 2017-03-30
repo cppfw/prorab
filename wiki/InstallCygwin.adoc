@@ -2,5 +2,5 @@
 
 Use **Cygwin**'s `setup-x86.exe` or `setup-x86_64.exe` utility to install the **prorab** package from command line using special repository as follows:
 ....
-setup-x86_64.exe -X -q -s http://igagis.ga -P prorab
+setup-x86_64.exe -X -q -s http://igagis.crabdance.com -P prorab
 ....
