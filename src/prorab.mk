@@ -184,8 +184,7 @@ ifneq ($(prorab_included),true)
 
         uninstall::
 		$(prorab_echo)for i in $(prorab_private_headers); do \
-		    path=$$$$(echo $$$$i | sed -n -e "s/^\([^\/]*\).*/\1/p") && \
-		    echo $$$$path && \
+		    path=$$$$(echo $$$$i | cut -d "/" -f1) && \
 		    rm -rf $(DESTDIR)$(PREFIX)/include/$$$$path; \
 		done
 
