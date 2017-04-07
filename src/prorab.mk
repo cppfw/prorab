@@ -174,7 +174,8 @@ ifneq ($(prorab_included),true)
     define prorab-private-lib-install-headers-rule
         #need empty line here to avoid merging with adjacent macro instantiations
 
-        $(eval prorab_private_headers := $(patsubst $(d)%,%,$(shell find $(d) -type f -name "*.hpp" -o -name "*.h")))
+        #NOTE: need to remove leading / because on macosx find returns files with .// prefix if searching in ./ directory
+        $(eval prorab_private_headers := $(patsubst /%,%,$(patsubst $(d)%,%,$(shell find $(d) -type f -name "*.hpp" -o -name "*.h"))))
 
         install::
 		$(prorab_echo)for i in $(prorab_private_headers); do \
