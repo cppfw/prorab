@@ -179,9 +179,10 @@ ifneq ($(prorab_included),true)
         install::
 		$(prorab_echo)for i in $(prorab_private_headers); do \
 		    install -d $(DESTDIR)$(PREFIX)/include/$$$${i%/*}; \
-		    install -m 644 $(prorab_this_dir)$$$$i $(DESTDIR)$(PREFIX)/include/$$$$i; \
+		    install -m 644 $(d)$$$$i $(DESTDIR)$(PREFIX)/include/$$$$i; \
 		done
 
+        #TODO: do not remove by dirs
         uninstall::
 		$(prorab_echo)for i in $(dir $(prorab_private_headers)); do \
 		    rm -rf $(DESTDIR)$(PREFIX)/include/$$$$i; \
