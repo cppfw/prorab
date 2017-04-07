@@ -174,18 +174,18 @@ ifneq ($(prorab_included),true)
     define prorab-private-lib-install-headers-rule
         #need empty line here to avoid merging with adjacent macro instantiations
 
-        $(eval prorab_private_headers := $(patsubst $(d)%,./%,$(shell find $(d) -type f -name "*.hpp" -o -name "*.h")))
+        $(eval prorab_private_headers := $(patsubst $(d)%,%,$(shell find $(d) -type f -name "*.hpp" -o -name "*.h")))
 
         install::
 		$(prorab_echo)for i in $(prorab_private_headers); do \
-		    install -d $(DESTDIR)$(PREFIX)/include/$$$${i%/*}; \
+		    install -d $(DESTDIR)$(PREFIX)/include/$$$$(dirname $$$$i); \
 		    install -m 644 $(d)$$$$i $(DESTDIR)$(PREFIX)/include/$$$$i; \
 		done
 
-        #TODO: do not remove by dirs
         uninstall::
-		$(prorab_echo)for i in $(dir $(prorab_private_headers)); do \
-		    rm -rf $(DESTDIR)$(PREFIX)/include/$$$$i; \
+		$(prorab_echo)for i in $(prorab_private_headers); do \
+		    path=$$$$(echo $$$$i | sed -n -e "s/^\([^\/]*\).*/\1/p") && \
+		    rm -rf $(DESTDIR)$(PREFIX)/include/$$$$path; \
 		done
 
         #need empty line here to avoid merging with adjacent macro instantiations
