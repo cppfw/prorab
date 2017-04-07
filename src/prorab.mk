@@ -174,8 +174,7 @@ ifneq ($(prorab_included),true)
     define prorab-private-lib-install-headers-rule
         #need empty line here to avoid merging with adjacent macro instantiations
 
-        #foreach is used to filter out all files which are not inside of a directory
-        $(eval prorab_private_headers := $(foreach v,$(patsubst $(prorab_this_dir)%,%,$(shell find $(prorab_this_dir) -type f -name "*.hpp" -o -name "*.h")),$(if $(findstring /,$(v)),$(v),)))
+        $(eval prorab_private_headers := $(patsubst $(d)%,./%,$(shell find $(d) -type f -name "*.hpp" -o -name "*.h")))
 
         install::
 		$(prorab_echo)for i in $(prorab_private_headers); do \

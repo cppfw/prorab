@@ -18,6 +18,13 @@ else
 	$(prorab_echo)if [ ! -f $(d)src/libtests.so.0 ]; then $(this_err) "src/libtests.so.0 file not found"; fi
 endif
 	$(prorab_echo)if [ ! -f $(d)src/libtests.a ]; then $(this_err) "src/libtests.a file not found"; fi
+	$(prorab_echo)$(MAKE) -C $(d)/src install DESTDIR=tmp
+	$(prorab_echo)if [ ! -f $(d)src/tmp/usr/local/include/test.h ]; then $(this_err) "src/tmp/usr/local/include/test.h file not found"; fi
+	$(prorab_echo)if [ ! -f $(d)src/tmp/usr/local/include/test.hpp ]; then $(this_err) "src/tmp/usr/local/include/test.hpp file not found"; fi
+	$(prorab_echo)if [ ! -f $(d)src/tmp/usr/local/lib/libtests.a ]; then $(this_err) "src/tmp/usr/local/lib/libtests.a file not found"; fi
+	$(prorab_echo)if [ ! -f $(d)src/tmp/usr/local/lib/libtests.so ]; then $(this_err) "src/tmp/usr/local/lib/libtests.so file not found"; fi
+	$(prorab_echo)if [ ! -f $(d)src/tmp/usr/local/lib/libtests.so.0 ]; then $(this_err) "src/tmp/usr/local/lib/libtests.so.0 file not found"; fi
+	$(prorab_echo)rm -rf $(d)src/tmp
 	$(prorab_echo)$(MAKE) -C $(d)/src clean
 	$(prorab_echo)if [ -f $(d)src/libtests.so ]; then $(this_err) "src/libtests.so file remained after clean"; fi
 	$(prorab_echo)if [ -f $(d)src/libtests.so.0 ]; then $(this_err) "src/libtests.so.0 file remained after clean"; fi
