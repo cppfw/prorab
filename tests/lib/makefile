@@ -24,7 +24,7 @@ endif
 	$(prorab_echo)if [ ! -f $(d)src/tmp/usr/local/lib/libtests.a ]; then $(this_err) "src/tmp/usr/local/lib/libtests.a file not found"; fi
 ifeq ($(os), macosx)
 	$(prorab_echo)if [ ! -f $(d)src/tmp/usr/local/lib/libtests.dylib ]; then $(this_err) "src/tmp/usr/local/lib/libtests.dylib file not found"; fi
-        $(prorab_echo)if [ ! -f $(d)src/tmp/usr/local/lib/libtests.0.dylib ]; then $(this_err) "src/tmp/usr/local/lib/libtests.0.dylib file not found"; fi
+	$(prorab_echo)if [ ! -f $(d)src/tmp/usr/local/lib/libtests.0.dylib ]; then $(this_err) "src/tmp/usr/local/lib/libtests.0.dylib file not found"; fi
 else ifeq ($(os), windows)
 	$(prorab_echo)if [ ! -f $(d)src/tmp/usr/local/lib/libtests.dll ]; then $(this_err) "src/tmp/usr/local/lib/libtests.dll file not found"; fi
 else
