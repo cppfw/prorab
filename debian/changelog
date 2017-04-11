@@ -1,3 +1,9 @@
+prorab (1.10.34) unstable; urgency=medium
+
+  * use GNU make's wildcard instead of
+
+ -- Ivan Gagis <igagis@gmail.com>  Tue, 11 Apr 2017 12:58:12 +0300
+
 prorab (1.10.33) unstable; urgency=medium
 
   * headers uninstall target fix
