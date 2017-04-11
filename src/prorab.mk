@@ -92,15 +92,21 @@ ifneq ($(prorab_included),true)
     os := $(prorab_os)
 
     #set library extension
-    ifeq ($(prorab_os), windows)
+    ifeq ($(os), windows)
         prorab_lib_extension := .dll
-    else ifeq ($(prorab_os), macosx)
+    else ifeq ($(os), macosx)
         prorab_lib_extension := .dylib
     else
         prorab_lib_extension := .so
     endif
 
     soext := $(prorab_lib_extension)
+
+    ifeq ($(os), windows)
+        exeext := .exe
+    else
+        exeext :=
+    endif
 
     ifeq ($(verbose),true)
         prorab_echo :=
@@ -117,11 +123,7 @@ ifneq ($(prorab_included),true)
 
         $(eval prorab_private_ldflags := )
 
-        $(if $(filter windows,$(prorab_os)), \
-                $(eval prorab_this_name := $(abspath $(prorab_this_dir)$(this_name).exe)) \
-            , \
-                $(eval prorab_this_name := $(abspath $(prorab_this_dir)$(this_name))) \
-            )
+        $(eval prorab_this_name := $(abspath $(d)$(this_name)$(exeext)))
 
         $(eval prorab_this_symbolic_name := $(prorab_this_name))
 
