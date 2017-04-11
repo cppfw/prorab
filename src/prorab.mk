@@ -33,6 +33,8 @@ ifneq ($(prorab_included),true)
     prorab-gte = $(call prorab-gt,$1,$2)$(call prorab-eq,$1,$2) #greater or equals predicate
     prorab-sub = $(if $(call prorab-gte,$1,$2),$(filter-out xx,$(join $1,$2)),$(error subtraction goes negative)) #subtract one variable from another, negative result is clamped to zero
 
+    prorab-rwildcard = $(foreach dd,$(wildcard $(patsubst %.,%,$1)*),$(call prorab-rwildcard,$(dd)/,$2) $(filter $(subst *,%,$2),$(dd)))
+
     #calculate number of ../ in a file path
     prorab-calculate-stepups = $(foreach var,$(filter ..,$(subst /, ,$(dir $1))),x)
 
@@ -174,7 +176,7 @@ ifneq ($(prorab_included),true)
     define prorab-private-lib-install-headers-rule
         #need empty line here to avoid merging with adjacent macro instantiations
 
-        $(eval prorab_private_headers := $(patsubst $(d)%,%,$(shell find $(d) -type f -name "*.hpp" -o -name "*.h")))
+        $(eval prorab_private_headers := $(patsubst $(d)%,%,$(call prorab-rwildcard, $(d), *.h *.hpp)))
 
         install::
 		$(prorab_echo)for i in $(prorab_private_headers); do \
@@ -405,7 +407,7 @@ ifneq ($(prorab_included),true)
     define prorab-build-subdirs
         #need empty line here to avoid merging with adjacent macro instantiations
 
-        $(foreach path,$(wildcard $(prorab_this_dir)*/makefile),$(call prorab-include,$(path)))
+        $(foreach path,$(wildcard $(d)*/makefile),$(call prorab-include,$(path)))
 
         #need empty line here to avoid merging with adjacent macro instantiations
     endef
@@ -415,9 +417,8 @@ ifneq ($(prorab_included),true)
 
 
     #define function to find all source files from specified directory recursively
-    #NOTE: removing trailing '/' or '/.' before invoking 'find'.
     #NOTE: filter-out of empty strings from input path is needed when path is supplied with preceding or trailing spaces, to prevent searching sources from root directory also.
-    prorab-src-dir = $(patsubst $(d)%,%,$(shell find $(patsubst %/.,%,$(patsubst %/,%,$(d)$(filter-out ,$1))) -type f -name "*.cpp" -o -name "*.c"))
+    prorab-src-dir = $(call prorab-rwildcard, $(d)$(filter-out ,$1), *.cpp *.c)
 
 endif #~once
 
