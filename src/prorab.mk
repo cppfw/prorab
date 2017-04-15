@@ -420,7 +420,7 @@ ifneq ($(prorab_included),true)
 
     #define function to find all source files from specified directory recursively
     #NOTE: filter-out of empty strings from input path is needed when path is supplied with preceding or trailing spaces, to prevent searching sources from root directory also.
-    prorab-src-dir = $(call prorab-rwildcard, $(d)$(filter-out ,$1), *.cpp *.c)
+    prorab-src-dir = $(patsubst $(d)%, %, $(call prorab-rwildcard, $(d)$(filter-out ,$1), *.cpp *.c))
 
 endif #~once
 

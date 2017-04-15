@@ -10,6 +10,8 @@ this_name := nopapp
 #files under specified directory (which is 'src' in our case).
 this_srcs := $(call prorab-src-dir,src)
 
+$(info $(this_srcs))
+
 #Input variable defining all the libraries we chould link against.
 this_ldlibs += -lstdc++
 
