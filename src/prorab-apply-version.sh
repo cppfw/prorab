@@ -26,7 +26,7 @@ echo "Applying version $version to files..."
 for i in $infiles; do
 	echo "	$i"
 
-	outfile=$(echo $i | sed -e "s/\(.*\)\.in$/\1/")
+	outfile=$(echo $i | sed -e "s/\(.*\)\.in$/\1/" | sed -e "s/\$(version)/$version/g")
 
 	sed -e "s/\$(version)/$version/g" $i > $outfile
 done
