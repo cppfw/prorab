@@ -1,3 +1,9 @@
+prorab (1.10.38) unstable; urgency=medium
+
+  * Apply version to file name also
+
+ -- Ivan Gagis <igagis@gmail.com>  Mon, 24 Apr 2017 17:27:34 +0300
+
 prorab (1.10.37) unstable; urgency=medium
 
   * prorab-src-dir macro fixed
