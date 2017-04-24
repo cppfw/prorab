@@ -14,6 +14,10 @@ while [[ $# > 0 ]] ; do
 			version=$1
 			shift
 			;;
+		--filename-only)
+			filenameonly="true"
+			shift
+			;;
 		*)
 			infiles="$infiles $1"
 			shift
@@ -28,5 +32,9 @@ for i in $infiles; do
 
 	outfile=$(echo $i | sed -e "s/\(.*\)\.in$/\1/" | sed -e "s/\$(version)/$version/g")
 
-	sed -e "s/\$(version)/$version/g" $i > $outfile
+	if [ -z "$filenameonly" ]; then
+		sed -e "s/\$(version)/$version/g" $i > $outfile
+	else
+		cp $i $outfile
+	fi
 done
