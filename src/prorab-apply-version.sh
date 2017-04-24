@@ -5,7 +5,7 @@ while [[ $# > 0 ]] ; do
 		--help)
 			echo "Prorab apply version utility."
 			echo "Usage:"
-			echo "	prorab-apply-version.sh -v <version> <list-of-input-files>"
+			echo "	prorab-apply-version.sh -v <version> <list-of-input-files> [--filename-only]"
 			echo "Input files are files with '.in' extension"
 			exit
 			;;

@@ -1,3 +1,9 @@
+prorab (1.10.40) unstable; urgency=medium
+
+  * option to apply version to filename only
+
+ -- Ivan Gagis <igagis@gmail.com>  Mon, 24 Apr 2017 18:18:27 +0300
+
 prorab (1.10.39) unstable; urgency=medium
 
   * option to apply version to filename only
