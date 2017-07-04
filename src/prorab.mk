@@ -376,6 +376,7 @@ ifneq ($(prorab_included),true)
     define prorab-include
         #need empty line here to avoid merging with adjacent macro instantiations
 
+        #if makefile is already included do nothing
         $(if $(filter $(abspath $1),$(prorab_included_makefiles)), \
             , \
                 $(eval prorab_included_makefiles += $(abspath $1)) \
