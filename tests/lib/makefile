@@ -6,6 +6,7 @@ define this_rules
 .PHONY: test
 test::
 	@$(this_running) $(this_test)
+	$(prorab_echo)rm -rf $(d)tmp
 	$(prorab_echo)$(MAKE) -C $(d)src clean
 	$(prorab_echo)$(MAKE) -C $(d)src
 ifeq ($(os), macosx)
@@ -13,6 +14,7 @@ ifeq ($(os), macosx)
 	$(prorab_echo)if [ ! -f $(d)src/libtests.0.dylib ]; then $(this_err) "src/libtests.0.dylib file not found"; fi
 else ifeq ($(os), windows)
 	$(prorab_echo)if [ ! -f $(d)src/libtests.dll ]; then $(this_err) "src/libtests.dll file not found"; fi
+	$(prorab_echo)if [ ! -f $(d)src/libtests.dll.a ]; then $(this_err) "src/libtests.dll.a file not found"; fi
 else
 	$(prorab_echo)if [ ! -f $(d)src/libtests.so ]; then $(this_err) "src/libtests.so file not found"; fi
 	$(prorab_echo)if [ ! -f $(d)src/libtests.so.0 ]; then $(this_err) "src/libtests.so.0 file not found"; fi
@@ -29,7 +31,8 @@ ifeq ($(os), macosx)
 	$(prorab_echo)if [ ! -f $(d)tmp/usr/lib/libtests.dylib ]; then $(this_err) "tmp/usr/lib/libtests.dylib file not found"; fi
 	$(prorab_echo)if [ ! -f $(d)tmp/usr/lib/libtests.0.dylib ]; then $(this_err) "tmp/usr/lib/libtests.0.dylib file not found"; fi
 else ifeq ($(os), windows)
-	$(prorab_echo)if [ ! -f $(d)tmp/usr/lib/libtests.dll ]; then $(this_err) "tmp/usr/lib/libtests.dll file not found"; fi
+	$(prorab_echo)if [ ! -f $(d)tmp/usr/bin/libtests.dll ]; then $(this_err) "tmp/usr/bin/libtests.dll file not found"; fi
+	$(prorab_echo)if [ ! -f $(d)tmp/usr/lib/libtests.dll.a ]; then $(this_err) "tmp/usr/lib/libtests.dll.a file not found"; fi
 else
 	$(prorab_echo)if [ ! -f $(d)tmp/usr/lib/libtests.so ]; then $(this_err) "tmp/usr/lib/libtests.so file not found"; fi
 	$(prorab_echo)if [ ! -f $(d)tmp/usr/lib/libtests.so.0 ]; then $(this_err) "tmp/usr/lib/libtests.so.0 file not found"; fi
@@ -45,7 +48,8 @@ ifeq ($(os), macosx)
 	$(prorab_echo)if [ -f $(d)tmp/usr/lib/libtests.dylib ]; then $(this_err) "tmp/usr/lib/libtests.dylib file found"; fi
 	$(prorab_echo)if [ -f $(d)tmp/usr/lib/libtests.0.dylib ]; then $(this_err) "tmp/usr/lib/libtests.0.dylib file found"; fi
 else ifeq ($(os), windows)
-	$(prorab_echo)if [ -f $(d)tmp/usr/lib/libtests.dll ]; then $(this_err) "tmp/usr/lib/libtests.dll file found"; fi
+	$(prorab_echo)if [ -f $(d)tmp/usr/bin/libtests.dll ]; then $(this_err) "tmp/usr/bin/libtests.dll file found"; fi
+	$(prorab_echo)if [ -f $(d)tmp/usr/lib/libtests.dll.a ]; then $(this_err) "tmp/usr/lib/libtests.dll.a file found"; fi
 else
 	$(prorab_echo)if [ -f $(d)tmp/usr/lib/libtests.so ]; then $(this_err) "tmp/usr/lib/libtests.so file found"; fi
 	$(prorab_echo)if [ -f $(d)tmp/usr/lib/libtests.so.0 ]; then $(this_err) "tmp/usr/lib/libtests.so.0 file found"; fi
@@ -57,8 +61,11 @@ endif
 	$(prorab_echo)rm -rf $(d)tmp
 
 	$(prorab_echo)$(MAKE) -C $(d)src clean
+	$(prorab_echo)if [ -f $(d)src/libtests.a ]; then $(this_err) "src/libtests.a file remained after clean"; fi
 	$(prorab_echo)if [ -f $(d)src/libtests.so ]; then $(this_err) "src/libtests.so file remained after clean"; fi
 	$(prorab_echo)if [ -f $(d)src/libtests.so.0 ]; then $(this_err) "src/libtests.so.0 file remained after clean"; fi
+	$(prorab_echo)if [ -f $(d)src/libtests.dll ]; then $(this_err) "src/libtests.dll file remained after clean"; fi
+	$(prorab_echo)if [ -f $(d)src/libtests.dll.a ]; then $(this_err) "src/libtests.dll.a file remained after clean"; fi
 	$(prorab_echo)if [ -d $(d)src/obj_tests ]; then $(this_err) "src/obj_tests directory remained after clean"; fi
 	@$(this_pass)
 endef

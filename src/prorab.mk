@@ -200,23 +200,35 @@ ifneq ($(prorab_included),true)
 
         $(if $(this_name),,$(error this_name is not defined))
 
-        $(if $(filter windows,$(prorab_os)), \
-                $(eval prorab_this_name := $(abspath $(prorab_this_dir)lib$(this_name)$(prorab_lib_extension))) \
-                $(eval prorab_private_ldflags := -shared -s) \
+        $(if $(filter windows,$(os)), \
+                $(eval prorab_this_name := $(abspath $(d)lib$(this_name)$(soext))) \
+                $(eval prorab_private_ldflags := -shared -s -Wl,--out-implib=$(d)lib$(this_name)$(soext).a) \
                 $(eval prorab_this_symbolic_name := $(prorab_this_name)) \
             , \
                 $(prorab-private-dynamic-lib-specific-rules-nix-systems) \
             )
-
+        
+        #in Cygwin and MSYS the .dll files go to /usr/bin and .a and .dll.a files go to /usr/lib
         install:: $(prorab_this_name)
 		$(prorab_echo)install -d $(DESTDIR)$(PREFIX)/lib/
-		$(prorab_echo)install $(prorab_this_name) $(DESTDIR)$(PREFIX)/lib/
-		$(if $(filter macosx,$(prorab_os)), \
+		$(if $(filter windows,$(os)), \
+		        $(prorab_echo)install -d $(DESTDIR)$(PREFIX)/bin/ && \
+		                install $(prorab_this_name) $(DESTDIR)$(PREFIX)/bin/ && \
+		                install $(prorab_this_name).a $(DESTDIR)$(PREFIX)/lib/ \
+		    , \
+		        $(prorab_echo)install $(prorab_this_name) $(DESTDIR)$(PREFIX)/lib/ \
+		    )
+		$(if $(filter macosx,$(os)), \
 		        $(prorab_echo)install_name_tool -id "$(PREFIX)/lib/$(notdir $(prorab_this_name))" $(DESTDIR)$(PREFIX)/lib/$(notdir $(prorab_this_name)) \
 		    )
 
         uninstall::
-		$(prorab_echo)rm -f $(DESTDIR)$(PREFIX)/lib/$(notdir $(prorab_this_name))
+		$(if $(filter windows,$(os)), \
+		        $(prorab_echo)rm -f $(DESTDIR)$(PREFIX)/lib/$(notdir $(prorab_this_name).a) \
+		        $(prorab_echo)rm -f $(DESTDIR)$(PREFIX)/bin/$(notdir $(prorab_this_name))
+		    , \
+		        $(prorab_echo)rm -f $(DESTDIR)$(PREFIX)/lib/$(notdir $(prorab_this_name)) \
+		    )
 	
         #need empty line here to avoid merging with adjacent macro instantiations
     endef
@@ -327,6 +339,9 @@ ifneq ($(prorab_included),true)
 		$(prorab_echo)$$(CC) $(prorab_ldflags) $$(filter %.o,$$^) $(prorab_ldlibs) -o "$$@"
 
         clean::
+		$(if $(filter windows,$(os)), \
+		        $(prorab_echo)rm -f $(prorab_this_name).a
+		    )
 		$(prorab_echo)rm -f $(prorab_this_name)
 
         #need empty line here to avoid merging with adjacent macro instantiations
