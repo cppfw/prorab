@@ -1,6 +1,6 @@
 # Basic concepts
 
-**prorab** is a *GNU make*-based build system. Essentially it just provides
+**prorab** is a non-recursive *GNU make*-based build system. Essentially it just provides
 convenient definitions for writing clean makefiles.
 
 The main feature of **prorab** is that it allows having independent makefiles
