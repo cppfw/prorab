@@ -96,7 +96,7 @@ do
 	mv $f.out $f
 	cp $f $tapname
 	specfilename=$(echo $f | sed -n -e 's/^homebrew\/\(.*\)$/\1/p')
-	(cd $tapname && git add $specfilename && git commit -a -m"new version of $f")
+	(cd $tapname && git add $specfilename && git commit -a -m"version $version of $specfilename")
 done
 
 (cd $tapname; set -o pipefail && git push 2>&1 | $cutSecret)
