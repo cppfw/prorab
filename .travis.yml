@@ -1,3 +1,7 @@
+branches:
+  except:
+  - release
+
 language: cpp
 sudo: required
 dist: trusty
