@@ -46,7 +46,7 @@ apt-get install -qq -y debootstrap qemu-user-static binfmt-support sbuild
 
 mkdir $chrootDir
 
-debootstrap --foreign --no-check-gpg --include=fakeroot,build-essential,subversion --arch=$chrootArch $chrootDebVer $chrootDir $chrootDebMirror
+debootstrap --foreign --no-check-gpg --include=fakeroot,build-essential,subversion,dirmngr --arch=$chrootArch $chrootDebVer $chrootDir $chrootDebMirror
 
 cp /usr/bin/qemu-arm-static $chrootDir/usr/bin/
 
