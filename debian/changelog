@@ -1,3 +1,9 @@
+prorab (1.10.45) unstable; urgency=medium
+
+  * make stretch chroot for raspberry pi by default
+
+ -- Ivan Gagis <igagis@gmail.com>  Thu, 17 Aug 2017 14:03:35 +0300
+
 prorab (1.10.44) unstable; urgency=medium
 
   * cygwin deployment fixed
