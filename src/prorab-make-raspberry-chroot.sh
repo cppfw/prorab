@@ -12,7 +12,7 @@ while [[ $# > 0 ]] ; do
 			echo "\t$(basename $0) -d <deb-ver> <path-to-chroot-dir> ..."
 			echo " "
 			echo "Example:"
-			echo "\t$(basename $0) -d jessie /srv/chroot/rasp-armhf"
+			echo "\t$(basename $0) -d stretch /srv/chroot/rasp-armhf"
 			exit 0
 			;;
 		-d)
@@ -35,7 +35,7 @@ fi
 chrootArch=armhf
 
 if [ -z "$chrootDebVer" ]; then
-	chrootDebVer=jessie
+	chrootDebVer=stretch
 fi
 
 chrootDebMirror=http://archive.raspbian.org/raspbian
