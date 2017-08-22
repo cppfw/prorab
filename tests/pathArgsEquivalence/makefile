@@ -8,13 +8,15 @@ define this_rules
 test::
 	@$(this_running) $(this_test)
 	$(prorab_echo)$(MAKE) -C $(d)prj clean
-	$(prorab_echo)$(MAKE) -C $(d)prj > $(d)log.txt
-	$(prorab_echo)cat $(d)log.txt | sed -n -e "s/\(Compiling\).*/\1 /p" > $(d)log1.txt
-	$(prorab_echo)cat $(d)log.txt | sed -n -e "s/\(Linking\).*/\1 /p" >> $(d)log1.txt
+	$(prorab_echo)$(MAKE) -C $(d)prj verbose=true > $(d)log.txt
+	$(prorab_echo)cat $(d)log.txt | sed -n -e "s/\(Compiling\).*/\1 /p" > $(d)log1.txt #check that compiler is invoked
+	$(prorab_echo)cat $(d)log.txt | sed -n -e "s/\(Linking\).*/\1 /p" >> $(d)log1.txt #check that linker is invoked
+	$(prorab_echo)cat $(d)log.txt | sed -n -e "s/^g++ .* \(-I.\/app\/..\/app\).*/\1 /p" >> $(d)log1.txt #check that correct paths are passed to compiler
+	$(prorab_echo)cat $(d)log.txt | sed -n -e "s/^cc \(-L.\/app\/..\/app\).*/\1 /p" >> $(d)log1.txt #check that correct paths are passed to linker
 	$(prorab_echo)cmp $(d)log1.txt $(d)log1.txt.cmp || (echo "log1.txt = "; cat $(d)log1.txt; $(this_err) "initial compilation log is not as expected");
 	$(prorab_echo)$(prorab_echo)$(MAKE) -C $(d)prj/app > $(d)log.txt
-	$(prorab_echo)cat $(d)log.txt | sed -n -e "s/\(Compiling\).*/\1 /p" > $(d)log2.txt
-	$(prorab_echo)cat $(d)log.txt | sed -n -e "s/\(Linking\).*/\1 /p" >> $(d)log2.txt
+	$(prorab_echo)cat $(d)log.txt | sed -n -e "s/\(Compiling\).*/\1 /p" > $(d)log2.txt #check that compiler is NOT invoked
+	$(prorab_echo)cat $(d)log.txt | sed -n -e "s/\(Linking\).*/\1 /p" >> $(d)log2.txt #check that linker is NOT invoked
 	$(prorab_echo)cmp $(d)log2.txt $(d)log2.txt.cmp || (echo "log2.txt = "; cat $(d)log2.txt; $(this_err) "second compilation log is not as expected");
 	@$(this_pass)
 endef

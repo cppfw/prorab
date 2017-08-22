@@ -1,2 +1,4 @@
 [1;34mCompiling 
 [1;32mLinking 
+-I./app/../app 
+-L./app/../app 
