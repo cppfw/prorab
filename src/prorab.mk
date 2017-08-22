@@ -40,10 +40,10 @@ ifneq ($(prorab_included),true)
 
     #define this directory for parent makefile
     prorab_this_makefile := $(word $(call prorab-num,$(call prorab-dec,$(MAKEFILE_LIST))),$(MAKEFILE_LIST))
-    prorab_this_dir := $(dir $(prorab_this_makefile))
+    d := $(dir $(prorab_this_makefile))
 
-    #defining alias for prorab_this_dir, it should be deferred assignment to make it work with current prorab-include macro correctly.
-    d = $(prorab_this_dir)
+    #defining alias for 'd'
+    prorab_this_dir = $(d)
 
     #define local variables used by prorab
     this_name :=
@@ -144,12 +144,12 @@ ifneq ($(prorab_included),true)
 
         $(if $(this_soname),,$(error this_soname is not defined))
 
-        $(if $(filter macosx,$(prorab_os)), \
-                $(eval prorab_this_symbolic_name := $(abspath $(prorab_this_dir)lib$(this_name)$(prorab_lib_extension))) \
-                $(eval prorab_this_name := $(abspath $(prorab_this_dir)lib$(this_name).$(this_soname)$(prorab_lib_extension))) \
+        $(if $(filter macosx,$(os)), \
+                $(eval prorab_this_symbolic_name := $(abspath $(d)lib$(this_name)$(prorab_lib_extension))) \
+                $(eval prorab_this_name := $(abspath $(d)lib$(this_name).$(this_soname)$(prorab_lib_extension))) \
                 $(eval prorab_private_ldflags += -dynamiclib -Wl,-install_name,$(prorab_this_name),-headerpad_max_install_names,-undefined,dynamic_lookup,-compatibility_version,1.0,-current_version,1.0) \
             ,\
-                $(eval prorab_this_symbolic_name := $(abspath $(prorab_this_dir)lib$(this_name)$(prorab_lib_extension))) \
+                $(eval prorab_this_symbolic_name := $(abspath $(d)lib$(this_name)$(prorab_lib_extension))) \
                 $(eval prorab_this_name := $(prorab_this_symbolic_name).$(this_soname)) \
                 $(eval prorab_private_ldflags := -shared -Wl,-soname,$(notdir $(prorab_this_name))) \
             )
@@ -238,7 +238,7 @@ ifneq ($(prorab_included),true)
 
         $(if $(this_name),,$(error this_name is not defined))
 
-        $(eval prorab_this_staticlib := $(abspath $(prorab_this_dir)lib$(this_name).a))
+        $(eval prorab_this_staticlib := $(abspath $(d)lib$(this_name).a))
 
         all: $(prorab_this_staticlib)
 
@@ -285,28 +285,28 @@ ifneq ($(prorab_included),true)
         $(eval prorab_this_obj_dir := obj_$(this_name)/)
 
         #Prepare list of object files
-        $(eval prorab_this_cpp_objs := $(addprefix $(prorab_this_dir)$(prorab_this_obj_dir)cpp/$(prorab_private_objspacer),$(patsubst %.cpp,%.o,$(filter %.cpp,$(this_srcs)))))
-        $(eval prorab_this_c_objs := $(addprefix $(prorab_this_dir)$(prorab_this_obj_dir)c/$(prorab_private_objspacer),$(patsubst %.c,%.o,$(filter %.c,$(this_srcs)))))
+        $(eval prorab_this_cpp_objs := $(addprefix $(d)$(prorab_this_obj_dir)cpp/$(prorab_private_objspacer),$(patsubst %.cpp,%.o,$(filter %.cpp,$(this_srcs)))))
+        $(eval prorab_this_c_objs := $(addprefix $(d)$(prorab_this_obj_dir)c/$(prorab_private_objspacer),$(patsubst %.c,%.o,$(filter %.c,$(this_srcs)))))
         $(eval prorab_this_objs := $(prorab_this_cpp_objs) $(prorab_this_c_objs))
 
         $(eval prorab_cxxargs := $(CXXFLAGS) $(CPPFLAGS) $(this_cxxflags))
         $(eval prorab_cargs := $(CFLAGS) $(CPPFLAGS) $(this_cflags))
 
-        $(eval prorab_cxxargs_file := $(prorab_this_dir)$(prorab_this_obj_dir)cxxargs.txt)
-        $(eval prorab_cargs_file := $(prorab_this_dir)$(prorab_this_obj_dir)cargs.txt)
+        $(eval prorab_cxxargs_file := $(d)$(prorab_this_obj_dir)cxxargs.txt)
+        $(eval prorab_cargs_file := $(d)$(prorab_this_obj_dir)cargs.txt)
 
         #compile command line flags dependency
         $(call prorab-private-args-file-rules, $(prorab_cxxargs_file),$(CXX) $(prorab_cxxargs))
         $(call prorab-private-args-file-rules, $(prorab_cargs_file),$(CC) $(prorab_cargs))
 
         #compile .cpp static pattern rule
-        $(prorab_this_cpp_objs): $(prorab_this_dir)$(prorab_this_obj_dir)cpp/$(prorab_private_objspacer)%.o: $(prorab_this_dir)%.cpp $(prorab_cxxargs_file)
+        $(prorab_this_cpp_objs): $(d)$(prorab_this_obj_dir)cpp/$(prorab_private_objspacer)%.o: $(d)%.cpp $(prorab_cxxargs_file)
 		@printf "\\033[1;34mCompiling\\033[0m $$<...\n"
 		$(prorab_echo)mkdir -p $$(dir $$@)
 		$(prorab_echo)$$(CXX) -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -o "$$@" $(prorab_cxxargs) $$<
 
         #compile .c static pattern rule
-        $(prorab_this_c_objs): $(prorab_this_dir)$(prorab_this_obj_dir)c/$(prorab_private_objspacer)%.o: $(prorab_this_dir)%.c $(prorab_cargs_file)
+        $(prorab_this_c_objs): $(d)$(prorab_this_obj_dir)c/$(prorab_private_objspacer)%.o: $(d)%.c $(prorab_cargs_file)
 		@printf "\\033[1;35mCompiling\\033[0m $$<...\n"
 		$(prorab_echo)mkdir -p $$(dir $$@)
 		$(prorab_echo)$$(CC) -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -o "$$@" $(prorab_cargs) $$<
@@ -315,7 +315,7 @@ ifneq ($(prorab_included),true)
         include $(wildcard $(addsuffix *.d,$(dir $(prorab_this_objs))))
 
         clean::
-		$(prorab_echo)rm -rf $(prorab_this_dir)$(prorab_this_obj_dir)
+		$(prorab_echo)rm -rf $(d)$(prorab_this_obj_dir)
 
         #need empty line here to avoid merging with adjacent macro instantiations
     endef
@@ -327,7 +327,7 @@ ifneq ($(prorab_included),true)
 
         $(eval prorab_ldflags := $(this_ldflags) $(LDFLAGS) $(prorab_private_ldflags))
         $(eval prorab_ldlibs := $(this_ldlibs) $(LDLIBS))
-        $(eval prorab_ldargs_file := $(prorab_this_dir)$(prorab_this_obj_dir)ldargs.txt)
+        $(eval prorab_ldargs_file := $(d)$(prorab_this_obj_dir)ldargs.txt)
 
         $(call prorab-private-args-file-rules, $(prorab_ldargs_file),$(CC) $(prorab_ldflags) $(prorab_ldlibs))
 
@@ -405,16 +405,16 @@ ifneq ($(prorab_included),true)
     #for storing previous prorab_this_makefile when including other makefiles
     prorab_private_this_makefiles :=
 
-    #include file with correct prorab_this_dir
+    #include file with correct current directory
     define prorab-private-include
         #need empty line here to avoid merging with adjacent macro instantiations
 
         prorab_private_this_makefiles += $$(prorab_this_makefile)
         prorab_this_makefile := $1
-        prorab_this_dir := $$(dir $$(prorab_this_makefile))
+        d := $$(dir $$(prorab_this_makefile))
         include $1
         prorab_this_makefile := $$(lastword $$(prorab_private_this_makefiles))
-        prorab_this_dir := $$(dir $$(prorab_this_makefile))
+        d := $$(dir $$(prorab_this_makefile))
         prorab_private_this_makefiles := $$(wordlist 1,$$(call prorab-num,$$(call prorab-dec,$$(prorab_private_this_makefiles))),$$(prorab_private_this_makefiles))
 
         #need empty line here to avoid merging with adjacent macro instantiations
