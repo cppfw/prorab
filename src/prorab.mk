@@ -269,7 +269,7 @@ ifneq ($(prorab_included),true)
         $(foreach var,$(this_srcs),\
                 $(eval prorab_private_numobjspacers := $(call prorab-max,$(call prorab-calculate-stepups,$(var)),$(prorab_private_numobjspacers))) \
             )
-        $(eval prorab_private_objspacer:= )
+        $(eval prorab_private_objspacer := )
         $(foreach var,$(prorab_private_numobjspacers), $(eval prorab_private_objspacer := $(prorab_private_objspacer)_prorab/))
 
         $(eval prorab_this_obj_dir := obj_$(this_name)/)
@@ -279,19 +279,19 @@ ifneq ($(prorab_included),true)
         $(eval prorab_this_c_objs := $(addprefix $(d)$(prorab_this_obj_dir)c/$(prorab_private_objspacer),$(patsubst %.c,%.o,$(filter %.c,$(this_srcs)))))
         $(eval prorab_this_objs := $(prorab_this_cpp_objs) $(prorab_this_c_objs))
 
-        #we don't want to store equivalent paths in a different way, so substitute 'd' to empty string
-        $(eval prorab_private_temp_d := $(d))
-        $(eval d := )
         $(eval prorab_cxxargs := $(CXXFLAGS) $(CPPFLAGS) $(this_cxxflags))
         $(eval prorab_cargs := $(CFLAGS) $(CPPFLAGS) $(this_cflags))
-        $(eval d := $(prorab_private_temp_d))
 
         $(eval prorab_cxxargs_file := $(d)$(prorab_this_obj_dir)cxxargs.txt)
         $(eval prorab_cargs_file := $(d)$(prorab_this_obj_dir)cargs.txt)
 
         #compile command line flags dependency
-        $(call prorab-private-args-file-rules, $(prorab_cxxargs_file),$(CXX) $(prorab_cxxargs))
-        $(call prorab-private-args-file-rules, $(prorab_cargs_file),$(CC) $(prorab_cargs))
+        #we don't want to store equivalent paths in a different way, so substitute 'd' to empty string
+        $(eval prorab_private_temp_d := $(d))
+        $(eval d := )
+	$(call prorab-private-args-file-rules, $(prorab_cxxargs_file),$(CXX) $(CXXFLAGS) $(CPPFLAGS) $(this_cxxflags))
+        $(call prorab-private-args-file-rules, $(prorab_cargs_file),$(CC) $(CFLAGS) $(CPPFLAGS) $(this_cflags))
+        $(eval d := $(prorab_private_temp_d))
 
         #compile .cpp static pattern rule
         $(prorab_this_cpp_objs): $(d)$(prorab_this_obj_dir)cpp/$(prorab_private_objspacer)%.o: $(d)%.cpp $(prorab_cxxargs_file)
@@ -319,16 +319,16 @@ ifneq ($(prorab_included),true)
 
         $(if $(prorab_this_obj_dir),,$(error prorab_this_obj_dir is not defined))
 
+        $(eval prorab_ldflags := $(this_ldflags) $(LDFLAGS) $(prorab_private_ldflags))
+        $(eval prorab_ldlibs := $(this_ldlibs) $(LDLIBS))
+
+        $(eval prorab_ldargs_file := $(d)$(prorab_this_obj_dir)ldargs.txt)
+
         #we don't want to store equivalent paths in a different way, so substitute 'd' to empty string
         $(eval prorab_private_temp_d := $(d))
         $(eval d := )
-        $(eval prorab_ldflags := $(this_ldflags) $(LDFLAGS) $(prorab_private_ldflags))
-        $(eval prorab_ldlibs := $(this_ldlibs) $(LDLIBS))
+        $(call prorab-private-args-file-rules, $(prorab_ldargs_file),$(CC) $(this_ldflags) $(LDFLAGS) $(prorab_private_ldflags) $(this_ldlibs) $(LDLIBS))
         $(eval d := $(prorab_private_temp_d))
-	
-        $(eval prorab_ldargs_file := $(d)$(prorab_this_obj_dir)ldargs.txt)
-
-        $(call prorab-private-args-file-rules, $(prorab_ldargs_file),$(CC) $(prorab_ldflags) $(prorab_ldlibs))
 
         all: $(prorab_this_name)
 
