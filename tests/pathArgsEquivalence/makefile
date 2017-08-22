@@ -11,8 +11,8 @@ test::
 	$(prorab_echo)$(MAKE) -C $(d)prj verbose=true > $(d)log.txt
 	$(prorab_echo)cat $(d)log.txt | sed -n -e "s/\(Compiling\).*/\1 /p" > $(d)log1.txt #check that compiler is invoked
 	$(prorab_echo)cat $(d)log.txt | sed -n -e "s/\(Linking\).*/\1 /p" >> $(d)log1.txt #check that linker is invoked
-	$(prorab_echo)cat $(d)log.txt | sed -n -e "/^echo/b; s/.* \(-I\.\/app\/\.\.\/app\).*/\1 /p" >> $(d)log1.txt #check that correct paths are passed to compiler
-	$(prorab_echo)cat $(d)log.txt | sed -n -e "/^echo/b; s/.* \(-L\.\/app\/\.\.\/app\).*/\1 /p" >> $(d)log1.txt #check that correct paths are passed to linker
+	$(prorab_echo)cat $(d)log.txt | sed -e "s/^echo .*//" | sed -n -e "s/.* \(-I\.\/app\/\.\.\/app\).*/\1 /p" >> $(d)log1.txt #check that correct paths are passed to compiler
+	$(prorab_echo)cat $(d)log.txt | sed -e "s/^echo .*//" | sed -n -e "s/.* \(-L\.\/app\/\.\.\/app\).*/\1 /p" >> $(d)log1.txt #check that correct paths are passed to linker
 	$(prorab_echo)cmp $(d)log1.txt $(d)log1.txt.cmp || (echo "log1.txt = "; cat $(d)log1.txt; echo "log.txt = "; cat $(d)log.txt; $(this_err) "initial compilation log is not as expected");
 	$(prorab_echo)$(prorab_echo)$(MAKE) -C $(d)prj/app > $(d)log.txt
 	$(prorab_echo)cat $(d)log.txt | sed -n -e "s/\(Compiling\).*/\1 /p" > $(d)log2.txt #check that compiler is NOT invoked
