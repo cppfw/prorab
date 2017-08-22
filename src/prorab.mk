@@ -1,6 +1,5 @@
 # prorab - the build system
 
-
 #once
 ifneq ($(prorab_included),true)
     prorab_included := true
@@ -44,15 +43,6 @@ ifneq ($(prorab_included),true)
 
     #defining alias for 'd'
     prorab_this_dir = $(d)
-
-    #define local variables used by prorab
-    this_name :=
-    this_soname :=
-    this_cflags :=
-    this_cxxflags :=
-    this_ldflags :=
-    this_ldlibs :=
-    this_srcs :=
 
 
     .PHONY: clean all install uninstall distclean phony
@@ -151,7 +141,7 @@ ifneq ($(prorab_included),true)
             ,\
                 $(eval prorab_this_symbolic_name := $(abspath $(d)lib$(this_name)$(prorab_lib_extension))) \
                 $(eval prorab_this_name := $(prorab_this_symbolic_name).$(this_soname)) \
-                $(eval prorab_private_ldflags := -shared -Wl,-soname,$(notdir $(prorab_this_name))) \
+                $(eval prorab_private_ldflags = -shared -Wl,-soname,$(notdir $(prorab_this_name))) \
             )
 
         #symbolic link to shared library rule
@@ -202,7 +192,7 @@ ifneq ($(prorab_included),true)
 
         $(if $(filter windows,$(os)), \
                 $(eval prorab_this_name := $(abspath $(d)lib$(this_name)$(soext))) \
-                $(eval prorab_private_ldflags := -shared -s -Wl,--out-implib=$(d)lib$(this_name)$(soext).a) \
+                $(eval prorab_private_ldflags = -shared -s -Wl,--out-implib=$(d)lib$(this_name)$(soext).a) \
                 $(eval prorab_this_symbolic_name := $(prorab_this_name)) \
             , \
                 $(prorab-private-dynamic-lib-specific-rules-nix-systems) \
@@ -289,8 +279,12 @@ ifneq ($(prorab_included),true)
         $(eval prorab_this_c_objs := $(addprefix $(d)$(prorab_this_obj_dir)c/$(prorab_private_objspacer),$(patsubst %.c,%.o,$(filter %.c,$(this_srcs)))))
         $(eval prorab_this_objs := $(prorab_this_cpp_objs) $(prorab_this_c_objs))
 
+        #we don't want to store equivalent paths in a different way, so substitute 'd' to empty string
+        $(eval prorab_private_temp_d := $(d))
+        $(eval d := )
         $(eval prorab_cxxargs := $(CXXFLAGS) $(CPPFLAGS) $(this_cxxflags))
         $(eval prorab_cargs := $(CFLAGS) $(CPPFLAGS) $(this_cflags))
+        $(eval d := $(prorab_private_temp_d))
 
         $(eval prorab_cxxargs_file := $(d)$(prorab_this_obj_dir)cxxargs.txt)
         $(eval prorab_cargs_file := $(d)$(prorab_this_obj_dir)cargs.txt)
@@ -325,8 +319,13 @@ ifneq ($(prorab_included),true)
 
         $(if $(prorab_this_obj_dir),,$(error prorab_this_obj_dir is not defined))
 
+        #we don't want to store equivalent paths in a different way, so substitute 'd' to empty string
+        $(eval prorab_private_temp_d := $(d))
+        $(eval d := )
         $(eval prorab_ldflags := $(this_ldflags) $(LDFLAGS) $(prorab_private_ldflags))
         $(eval prorab_ldlibs := $(this_ldlibs) $(LDLIBS))
+        $(eval d := $(prorab_private_temp_d))
+	
         $(eval prorab_ldargs_file := $(d)$(prorab_this_obj_dir)ldargs.txt)
 
         $(call prorab-private-args-file-rules, $(prorab_ldargs_file),$(CC) $(prorab_ldflags) $(prorab_ldlibs))
@@ -448,3 +447,15 @@ $(if $(filter $(prorab_this_makefile),$(prorab_included_makefiles)), \
     )
 
 $(prorab-clear-this-vars)
+
+#define local variables used by prorab
+this_name :=
+this_soname :=
+
+#these use deferred assignment because we would like to substitute the value of $(d) in some cases
+this_cflags =
+this_cxxflags =
+this_ldflags =
+this_ldlibs =
+
+this_srcs :=

@@ -1,5 +1,5 @@
 # Prorab include. Should go first in every makefile.
-include prorab.mk
+include $(d)../../../../src/prorab.mk
 
 
 # here we can write some tests for our application.
