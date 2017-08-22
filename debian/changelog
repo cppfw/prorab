@@ -1,3 +1,9 @@
+prorab (1.10.47) unstable; urgency=medium
+
+  * fix
+
+ -- Ivan Gagis <igagis@gmail.com>  Tue, 22 Aug 2017 16:31:59 +0300
+
 prorab (1.10.46) unstable; urgency=medium
 
   * paths in compiler and linker aregemtns are stored without current
