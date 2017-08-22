@@ -1,3 +1,10 @@
+prorab (1.10.46) unstable; urgency=medium
+
+  * paths in compiler and linker aregemtns are stored without current
+    directory
+
+ -- Ivan Gagis <igagis@gmail.com>  Tue, 22 Aug 2017 15:20:11 +0300
+
 prorab (1.10.45) unstable; urgency=medium
 
   * make stretch chroot for raspberry pi by default
