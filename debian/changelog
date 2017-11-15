@@ -1,3 +1,9 @@
+prorab (1.10.51) unstable; urgency=medium
+
+  * create parent dirs for raspberry pi chroot if needed
+
+ -- Ivan Gagis <igagis@gmail.com>  Wed, 15 Nov 2017 17:07:51 +0200
+
 prorab (1.10.50) unstable; urgency=medium
 
   * allow debian prepare without .install.in files

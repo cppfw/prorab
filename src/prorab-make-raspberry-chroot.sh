@@ -47,7 +47,7 @@ chrootDebMirror=http://archive.raspbian.org/raspbian
 apt-get install -qq -y debootstrap qemu-user-static binfmt-support sbuild
 
 
-mkdir $chrootDir
+mkdir -p $chrootDir
 
 debootstrap --foreign --no-check-gpg --include=fakeroot,build-essential,subversion,dirmngr --arch=$chrootArch $chrootDebVer $chrootDir $chrootDebMirror
 
