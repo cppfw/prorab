@@ -1,3 +1,9 @@
+prorab (1.10.49) unstable; urgency=medium
+
+  * allow debian prepare without soname
+
+ -- Ivan Gagis <igagis@gmail.com>  Wed, 15 Nov 2017 16:39:35 +0200
+
 prorab (1.10.48) unstable; urgency=medium
 
   * use pipefail in all shell scripts
