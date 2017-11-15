@@ -1,5 +1,8 @@
 #!/bin/bash
 
+#we want exit immediately if any command fails and we want error in piped commands to be preserved
+set -eo pipefail
+
 #Script for quick deployment to homebrew.
 #It assumes that homebrew recipes to deploy are in 'homebrew' directory.
 
@@ -99,4 +102,4 @@ do
 	(cd $tapname && git add $specfilename && git commit -a -m"version $version of $specfilename")
 done
 
-(cd $tapname; set -o pipefail && git push 2>&1 | $cutSecret)
+(cd $tapname; git push 2>&1 | $cutSecret)

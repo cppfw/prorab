@@ -1,5 +1,8 @@
 #!/bin/bash
 
+#we want exit immediately if any command fails and we want error in piped commands to be preserved
+set -eo pipefail
+
 #Script for quick deployment to cocoapods.
 #It assumes that cocoapods specs to deploy are in 'cocoapods' directory.
 
@@ -55,7 +58,7 @@ do
 	#Need to pass --use-libraries because before pushing the spec it will run 'pod lint'
 	#on it. And 'pod lint' uses framework integration by default which will fail to copy
 	#some header files to the right places.
-	set -o pipefail && pod repo push $reponame $f --use-libraries --allow-warnings 2>&1 | $cutSecret
+	pod repo push $reponame $f --use-libraries --allow-warnings 2>&1 | $cutSecret
 done
 
 echo "Deploying to cocoapods done!"

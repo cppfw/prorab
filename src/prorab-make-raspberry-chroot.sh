@@ -1,5 +1,8 @@
 #!/bin/bash
 
+#we want exit immediately if any command fails and we want error in piped commands to be preserved
+set -eo pipefail
+
 if [ "$(id -u)" != "0" ]; then
    echo "error: this script must be run as root" 1>&2
    exit 1

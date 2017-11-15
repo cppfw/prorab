@@ -1,5 +1,8 @@
 #!/bin/bash
 
+#we want exit immediately if any command fails and we want error in piped commands to be preserved
+set -eo pipefail
+
 while [[ $# > 0 ]] ; do
 	case $1 in
 		--help)
