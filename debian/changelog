@@ -1,3 +1,9 @@
+prorab (1.10.48) unstable; urgency=medium
+
+  * use pipefail in all shell scripts
+
+ -- Ivan Gagis <igagis@gmail.com>  Wed, 15 Nov 2017 16:34:21 +0200
+
 prorab (1.10.47) unstable; urgency=medium
 
   * fix
