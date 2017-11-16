@@ -23,6 +23,11 @@ while [[ $# > 0 ]] ; do
 			chrootDebVer=$1
 			shift
 			;;
+		-p)
+			shift
+			packages=$1
+			shift
+			;;
 		*)
 			chrootDir=$1
 			shift
@@ -33,6 +38,12 @@ done
 if [ -z "$chrootDir" ]; then
 	echo "error: path-to-chroot-dir is not given"
 	exit 1
+fi
+
+if [ -z "$packages" ]; then
+	packages=
+else
+	packages=,$packages
 fi
 
 chrootArch=armhf
@@ -49,7 +60,7 @@ apt-get install -qq -y debootstrap qemu-user-static binfmt-support sbuild
 
 mkdir -p $chrootDir
 
-debootstrap --foreign --no-check-gpg --include=fakeroot,build-essential,subversion,dirmngr --arch=$chrootArch $chrootDebVer $chrootDir $chrootDebMirror
+debootstrap --foreign --no-check-gpg --include=fakeroot,build-essential,subversion,dirmngr$packages --arch=$chrootArch $chrootDebVer $chrootDir $chrootDebMirror
 
 cp /usr/bin/qemu-arm-static $chrootDir/usr/bin/
 
