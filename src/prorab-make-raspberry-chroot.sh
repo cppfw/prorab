@@ -60,16 +60,14 @@ apt-get install -qq -y debootstrap qemu-user-static binfmt-support sbuild
 
 mkdir -p $chrootDir
 
-#WORKAROUND: removing systemd-sysv from installation as described at https://www.notinventedhere.org/articles/linux/debootstrapping-debian-jessie-without-systemd.html
-#            because creating raspberry stretch chroot was failing on Ubuntu Trusty.
-
-debootstrap --foreign --variant=minbase --no-check-gpg --include=sysvinit-core,fakeroot,build-essential,subversion,dirmngr$packages --arch=$chrootArch $chrootDebVer $chrootDir $chrootDebMirror
+debootstrap --foreign --variant=minbase --no-check-gpg --include=fakeroot,build-essential,subversion,dirmngr$packages --arch=$chrootArch $chrootDebVer $chrootDir $chrootDebMirror
 
 cp /usr/bin/qemu-arm-static $chrootDir/usr/bin/
 
-sed -i -e 's/systemd//g' $chrootDir/debootstrap/required
-sed -i -e 's/systemd-sysv//g' $chrootDir/debootstrap/required
-echo " sysvinit-core " >> $chrootDir/debootstrap/required
+#sed -i -e 's/systemd//g' $chrootDir/debootstrap/required
+#sed -i -e 's/systemd-sysv//g' $chrootDir/debootstrap/required
+#echo " sysvinit-core " >> $chrootDir/debootstrap/required
+echo " systemd-sysv " >> $chrootDir/debootstrap/required
 
 chroot $chrootDir ./debootstrap/debootstrap --second-stage
 

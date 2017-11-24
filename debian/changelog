@@ -1,3 +1,9 @@
+prorab (1.10.55) unstable; urgency=medium
+
+  * workaround for raspberry pi chroot
+
+ -- Ivan Gagis <igagis@gmail.com>  Fri, 24 Nov 2017 12:32:31 +0200
+
 prorab (1.10.54) unstable; urgency=medium
 
   * workaround for raspberry pi chroot
