@@ -66,7 +66,6 @@ cp /usr/bin/qemu-arm-static $chrootDir/usr/bin/
 
 #sed -i -e 's/systemd//g' $chrootDir/debootstrap/required
 #sed -i -e 's/systemd-sysv//g' $chrootDir/debootstrap/required
-#echo " sysvinit-core " >> $chrootDir/debootstrap/required
 echo " systemd-sysv " >> $chrootDir/debootstrap/required
 
 chroot $chrootDir ./debootstrap/debootstrap --second-stage
