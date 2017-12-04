@@ -44,8 +44,8 @@ before_install:
 
     brew update > /dev/null &&
     brew tap igagis/tap &&
-    brew update > /dev/null;
-    brew install myci
+    brew update > /dev/null &&
+    brew install myci;
   fi
 - if [ "$BUILD_NAME" == "debian" ]; then
     echo "deb [arch=amd64] http://dl.bintray.com/igagis/deb unstable main" | sudo tee /etc/apt/sources.list.d/igagis.list > /dev/null &&
