@@ -87,11 +87,11 @@ before_install:
 
 script:
 - if [ "$BUILD_NAME" == "debian" ]; then
-    src/myci-deb-prepare.sh &&
+    myci-deb-prepare.sh &&
     sg sbuild -c "sbuild -n -A -d stretch-amd64-sbuild --run-lintian --debbuildopts '-us -uc'";
   fi
 - if [ "$BUILD_NAME" == "ubuntu" ]; then
-    src/myci-deb-prepare.sh &&
+    myci-deb-prepare.sh &&
     sg sbuild -c "sbuild -n -A -d xenial-amd64-sbuild --debbuildopts '-us -uc'";
   fi
 - if [ "$BUILD_NAME" == "macosx" ]; then
@@ -99,7 +99,7 @@ script:
     make install;
   fi
 - if [ "$BUILD_NAME" == "raspberry_pi" ]; then
-    sudo chroot /srv/chroot/rasp-armhf bash -c "cd /build && src/myci-deb-prepare.sh" &&
+    sudo chroot /srv/chroot/rasp-armhf bash -c "cd /build && myci-deb-prepare.sh" &&
     sudo chroot /srv/chroot/rasp-armhf bash -c "cd /build && dpkg-buildpackage -us -uc";
   fi
 
@@ -115,7 +115,7 @@ script:
 #  fi
 
 before_deploy:
-  - ./src/myci-apply-version.sh -v `./src/myci-deb-version.sh debian/changelog` travis_bintray_*.json.in
+  - myci-apply-version.sh -v `myci-deb-version.sh debian/changelog` travis_bintray_*.json.in
 
 deploy:
 - provider: bintray
