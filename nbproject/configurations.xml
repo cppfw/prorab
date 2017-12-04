@@ -45,6 +45,7 @@
       <itemPath>.travis.yml</itemPath>
       <itemPath>appveyor.yml</itemPath>
       <itemPath>debian/changelog</itemPath>
+      <itemPath>debian/control.in</itemPath>
       <itemPath>nbproject/private/launcher.properties</itemPath>
       <itemPath>makefile</itemPath>
       <itemPath>cygwin/prorab.cygport.in</itemPath>
