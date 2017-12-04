@@ -11,7 +11,7 @@
 
 	"files": [
 		{
-			"includePattern": "../(.[^/]*(\\.deb)$)",
+			"includePattern": "/srv/chroot/rasp-armhf/(.[^/]*(\\.deb)$)",
 			"uploadPattern": "$1",
 			"matrixParams": {
 				"deb_distribution": "unstable",
