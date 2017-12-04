@@ -15,8 +15,8 @@ environment:
   DEPS: make,gcc-g++,myci
 
 install:
-  - cmd: C:\cygwin64\setup-x86_64.exe -g -q -P cygport,calm,%DEPS%
-  - cmd: C:\cygwin\setup-x86.exe -g -q -P cygport,calm,%DEPS%
+  - cmd: C:\cygwin64\setup-x86_64.exe -g -q -X -s http://igagis.crabdance.com -s http://cygwin.mirror.constant.com -P cygport,calm,%DEPS%
+  - cmd: C:\cygwin\setup-x86.exe -g -q -X -s http://igagis.crabdance.com -s http://cygwin.mirror.constant.com -P cygport,calm,%DEPS%
 
 before_build:
   - cmd: xcopy /S C:\projects\build C:\cygwin64\home\appveyor\
