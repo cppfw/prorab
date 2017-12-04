@@ -15,7 +15,7 @@ ifneq ($(prorab_doxygen_included),true)
         doc:: $(prorab_this_dir)doxygen
 
         $(prorab_this_dir)doxygen.cfg: $(prorab_this_dir)doxygen.cfg.in $(prorab_this_dir)../debian/changelog
-		$(prorab_echo)prorab-apply-version.sh -v $$(shell prorab-deb-version.sh $(prorab_this_dir)../debian/changelog) $$(firstword $$^)
+		$(prorab_echo)myci-apply-version.sh -v $$(shell myci-deb-version.sh $(prorab_this_dir)../debian/changelog) $$(firstword $$^)
 
         $(prorab_this_dir)doxygen: $(prorab_this_dir)doxygen.cfg
 		@echo "Building docs..."

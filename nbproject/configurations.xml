@@ -2,10 +2,6 @@
 <configurationDescriptor version="100">
   <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
     <df root="src" name="0">
-      <in>prorab-deploy-cygwin.sh</in>
-      <in>prorab-error.sh</in>
-      <in>prorab-passed.sh</in>
-      <in>prorab-running-test.sh</in>
     </df>
     <df root="tests" name="1">
       <df name="app">
@@ -14,11 +10,6 @@
           <in>test.cpp</in>
           <in>test1.c</in>
           <in>test1.h</in>
-        </df>
-      </df>
-      <df name="deb-prepare">
-        <df name="src">
-          <in>soname.txt</in>
         </df>
       </df>
       <df name="doxygen">
@@ -100,14 +91,6 @@
           <preBuildCommand></preBuildCommand>
         </preBuild>
       </makefileType>
-      <item path="src/prorab-deploy-cygwin.sh" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="src/prorab-error.sh" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="src/prorab-passed.sh" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="src/prorab-running-test.sh" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="tests/app/src/makefile" ex="false" tool="3" flavor2="0">
       </item>
       <item path="tests/app/src/test.cpp" ex="false" tool="1" flavor2="0">
@@ -117,8 +100,6 @@
       <item path="tests/app/src/test1.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="tests/common.mk" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="tests/deb-prepare/src/soname.txt" ex="false" tool="3" flavor2="0">
       </item>
       <item path="tests/doxygen/src/test.hpp" ex="false" tool="3" flavor2="0">
       </item>

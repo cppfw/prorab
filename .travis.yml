@@ -25,10 +25,10 @@ before_install:
 
 script:
 - if [ "$TRAVIS_OS_NAME" == "linux" ]; then
-    src/prorab-deb-prepare.sh &&
+    src/myci-deb-prepare.sh &&
     PATH=$PATH:$TRAVIS_BUILD_DIR/src dpkg-buildpackage -uc -us;
   fi
-# 'sudo make install' is needed because when deploying it will use prorab-deploy-homebrew.sh script.
+# 'sudo make install' is needed because when deploying it will use myci-deploy-homebrew.sh script.
 - if [ "$TRAVIS_OS_NAME" == "osx" ]; then
     make &&
     PATH=$PATH:$TRAVIS_BUILD_DIR/src make test &&
@@ -36,7 +36,7 @@ script:
   fi
 
 before_deploy:
-  - ./src/prorab-apply-version.sh -v `./src/prorab-deb-version.sh debian/changelog` travis_bintray_*.json.in
+  - ./src/myci-apply-version.sh -v `./src/myci-deb-version.sh debian/changelog` travis_bintray_*.json.in
 
 deploy:
 - provider: bintray
@@ -71,7 +71,7 @@ deploy:
   dry-run: false
 - provider: script
   skip_cleanup: true
-  script: prorab-deploy-homebrew.sh -t igagis/tap
+  script: myci-deploy-homebrew.sh -t igagis/tap
   on:
     tags: true
     condition: $TRAVIS_OS_NAME = osx
