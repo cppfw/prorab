@@ -71,17 +71,20 @@ One can use *prorab-clear-this-vars* definition to clear all variables which hav
 
 ```
 this_name := AppName
-this_ldflags += -I../src -DDEBUG
+this_ldlibs += -lsomelib1
+this_cxxflags += -I../src -DDEBUG
+this_srcs := main1.cpp MyClass1.cpp
 
 $(eval $(prorab-build-app))
 
 $(eval $(prorab-clear-this-vars))
 
 this_name := AnotherppName
-this_ldflags += -I../another_src
+this_ldlibs += -lsomelib1
+this_cxxflags += -I../src -DDEBUG
+this_srcs := main2.cpp MyClass2.cpp
 
 $(eval $(prorab-build-app))
-
 ```
 
 
