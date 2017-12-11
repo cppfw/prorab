@@ -1,4 +1,4 @@
-#Building C++ library
+# Building C++ library
 
 To build a C++ library with prorab we can use a *prorab-build-lib* definition.
 
@@ -38,7 +38,7 @@ this_srcs += main.cpp myapp.cpp
 $(eval $(prorab-build-lib))
 ```
 
-##Install target
+## Install target
 
 **prorab** will define a *install* target for the library.
 
