@@ -1,4 +1,4 @@
-#Building C++ application
+# Building C++ application
 
 To build a C++ application with prorab we can use a *prorab-build-app* definition.
 
