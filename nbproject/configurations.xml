@@ -12,11 +12,6 @@
           <in>test1.h</in>
         </df>
       </df>
-      <df name="doxygen">
-        <df name="src">
-          <in>test.hpp</in>
-        </df>
-      </df>
       <df name="lib">
         <df name="src">
           <in>makefile</in>
@@ -24,9 +19,6 @@
           <in>test.cpp</in>
           <in>test.h</in>
         </df>
-      </df>
-      <df name="pkg-config">
-        <in>makefile</in>
       </df>
       <df name="staticlib">
         <df name="src">
@@ -102,8 +94,6 @@
       </item>
       <item path="tests/common.mk" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="tests/doxygen/src/test.hpp" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="tests/lib/src/makefile" ex="false" tool="3" flavor2="0">
       </item>
       <item path="tests/lib/src/test.c" ex="false" tool="0" flavor2="0">
@@ -111,8 +101,6 @@
       <item path="tests/lib/src/test.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="tests/lib/src/test.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="tests/pkg-config/makefile" ex="false" tool="3" flavor2="0">
       </item>
       <item path="tests/staticlib/src/makefile" ex="false" tool="3" flavor2="0">
       </item>

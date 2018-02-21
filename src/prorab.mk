@@ -297,13 +297,13 @@ ifneq ($(prorab_included),true)
         $(prorab_this_cpp_objs): $(d)$(prorab_this_obj_dir)cpp/$(prorab_private_objspacer)%.o: $(d)%.cpp $(prorab_cxxargs_file)
 		@printf "\\033[1;34mCompiling\\033[0m $$<...\n"
 		$(prorab_echo)mkdir -p $$(dir $$@)
-		$(prorab_echo)$$(CXX) -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -o "$$@" $(prorab_cxxargs) $$<
+		$(prorab_echo)$$(CXX) -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -MP -o "$$@" $(prorab_cxxargs) $$<
 
         #compile .c static pattern rule
         $(prorab_this_c_objs): $(d)$(prorab_this_obj_dir)c/$(prorab_private_objspacer)%.o: $(d)%.c $(prorab_cargs_file)
 		@printf "\\033[1;35mCompiling\\033[0m $$<...\n"
 		$(prorab_echo)mkdir -p $$(dir $$@)
-		$(prorab_echo)$$(CC) -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -o "$$@" $(prorab_cargs) $$<
+		$(prorab_echo)$$(CC) -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -MP -o "$$@" $(prorab_cargs) $$<
 
         #include rules for header dependencies
         include $(wildcard $(addsuffix *.d,$(dir $(prorab_this_objs))))
