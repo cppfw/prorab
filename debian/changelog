@@ -1,3 +1,9 @@
+prorab (1.11.0) unstable; urgency=medium
+
+  * stable version
+
+ -- Ivan Gagis <igagis@gmail.com>  Fri, 23 Feb 2018 17:58:01 +0200
+
 prorab (1.10.58) unstable; urgency=medium
 
   * use -MP feature of gcc
