@@ -1,0 +1,17 @@
+= prorab
+
+|====
+| link:https://github.com/igagis/prorab/releases[image:https://img.shields.io/github/tag/igagis/prorab.svg[releases]] | link:https://travis-ci.org/igagis/prorab[image:https://travis-ci.org/igagis/prorab.svg?branch=master[Travis CI status]] | link:https://ci.appveyor.com/project/igagis/prorab/branch/master[image:https://ci.appveyor.com/api/projects/status/mfg7o8pou6v2e6h5/branch/master?svg=true[Appveyor status]]
+|====
+
+Non-recursive **GNU make**-based build system.
+
+Provides rules for C/C++ library/application. Allows hierarchical makefile inclusion.
+
+== Installation and tutorials
+
+See **link:wiki/HomePage.md[WiKi]**
+
+== Questions
+
+In case of questions about **prorab** usage, please submit those as link:https://github.com/igagis/prorab/issues[Issue].
