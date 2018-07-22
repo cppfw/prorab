@@ -60,7 +60,7 @@ For example:
 
 ```
 this_name := AppName
-this_cflags += -I../src -DDEBUG
+this_cflags += -I$(d)../src -DDEBUG
 
 $(eval $(prorab-build-app))
 ```
@@ -72,16 +72,16 @@ One can use *prorab-clear-this-vars* definition to clear all variables which hav
 ```
 this_name := AppName
 this_ldlibs += -lsomelib1
-this_cxxflags += -I../src -DDEBUG
+this_cxxflags += -I$(d)../src -DDEBUG
 this_srcs := main1.cpp MyClass1.cpp
 
 $(eval $(prorab-build-app))
 
 $(eval $(prorab-clear-this-vars))
 
-this_name := AnotherppName
+this_name := AnotherAppName
 this_ldlibs += -lsomelib1
-this_cxxflags += -I../src -DDEBUG
+this_cxxflags += -I$(d)../src -DDEBUG
 this_srcs := main2.cpp MyClass2.cpp
 
 $(eval $(prorab-build-app))
