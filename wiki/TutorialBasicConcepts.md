@@ -99,12 +99,12 @@ Example:
 
 #add dependency on some other artifact, e.g. libstuff which is built by another makefile
 
-$(prorab_this_name): $(abspath $(prorab_this_dir)../stuff/libstuff$(prorab_lib_extension))
+$(prorab_this_name): $(abspath $(d)../stuff/libstuff$(soext))
 
 
 #include makefile for building libstuff
 
-$(eval $(call prorab-include,$(prorab_this_dir)../stuff/makefile))
+$(eval $(call prorab-include,$(d)../stuff/makefile))
 
 ...
 ```
