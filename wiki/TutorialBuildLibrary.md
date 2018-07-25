@@ -10,6 +10,8 @@ But before we have to define some input variables if needed:
 - *this_ldflags* - flags passed to linker, ok to use += right a way.
 - *this_ldlibs* - libs passed to linker, ok to use += right a way.
 - *this_srcs* - list of sources, ok to use += right a way.
+- *this_cc* - c compiler to use, if not set, then value from CC variable will be used.
+- *this_cxx* - c++ compiler to use, if not set, then value from CXX variable is used.
 
 Note: *this_ldlibs* and *this_ldflags* are separated because sometimes order of linker flags, object files and libraries matters. So, linker flags go first, then go object files and then go linker libs.
 
