@@ -292,21 +292,18 @@ ifneq ($(prorab_included),true)
         $(eval prorab_this_c_objs := $(addprefix $(d)$(prorab_this_obj_dir)c/$(prorab_private_objspacer),$(patsubst %.c,%.o,$(filter %.c,$(this_srcs)))))
         $(eval prorab_this_objs := $(prorab_this_cpp_objs) $(prorab_this_c_objs))
 
-        $(eval prorab_cxxargs := $(CXXFLAGS) $(CPPFLAGS) $(this_cxxflags))
-        $(eval prorab_cargs := $(CFLAGS) $(CPPFLAGS) $(this_cflags))
+        $(eval prorab_cxxargs := $(this_cppflags) $(this_cxxflags))
+        $(eval prorab_cargs := $(this_cppflags) $(this_cflags))
 
         $(eval prorab_cxxargs_file := $(d)$(prorab_this_obj_dir)cxxargs.txt)
         $(eval prorab_cargs_file := $(d)$(prorab_this_obj_dir)cargs.txt)
-
-        $(if $(this_cc),,$(eval this_cc := $(CC)))
-	$(if $(this_cxx),,$(eval this_cxx := $(CXX)))
 
         #compile command line flags dependency
         #we don't want to store equivalent paths in a different way, so substitute 'd' to empty string
         $(eval prorab_private_temp_d := $(d))
         $(eval d := )
-	$(call prorab-private-args-file-rules, $(prorab_cxxargs_file),$(this_cxx) $(CXXFLAGS) $(CPPFLAGS) $(this_cxxflags))
-        $(call prorab-private-args-file-rules, $(prorab_cargs_file),$(this_cc) $(CFLAGS) $(CPPFLAGS) $(this_cflags))
+	$(call prorab-private-args-file-rules, $(prorab_cxxargs_file),$(this_cxx) $(this_cppflags) $(this_cxxflags))
+        $(call prorab-private-args-file-rules, $(prorab_cargs_file),$(this_cc) $(this_cppflags) $(this_cflags))
         $(eval d := $(prorab_private_temp_d))
 
         #compile .cpp static pattern rule
@@ -337,17 +334,15 @@ ifneq ($(prorab_included),true)
 
         $(if $(prorab_this_obj_dir),,$(error prorab_this_obj_dir is not defined))
 
-        $(eval prorab_ldflags := $(this_ldflags) $(LDFLAGS) $(prorab_private_ldflags))
-        $(eval prorab_ldlibs := $(this_ldlibs) $(LDLIBS))
+        $(eval prorab_ldflags := $(this_ldflags) $(prorab_private_ldflags))
+        $(eval prorab_ldlibs := $(this_ldlibs))
 
         $(eval prorab_ldargs_file := $(d)$(prorab_this_obj_dir)ldargs.txt)
-
-        $(if $(this_cc),,$(eval this_cc := $(CC)))
 
         #we don't want to store equivalent paths in a different way, so substitute 'd' to empty string
         $(eval prorab_private_temp_d := $(d))
         $(eval d := )
-        $(call prorab-private-args-file-rules, $(prorab_ldargs_file),$(this_cc) $(this_ldflags) $(LDFLAGS) $(prorab_private_ldflags) $(this_ldlibs) $(LDLIBS))
+        $(call prorab-private-args-file-rules, $(prorab_ldargs_file),$(this_cc) $(this_ldflags) $(prorab_private_ldflags) $(this_ldlibs))
         $(eval d := $(prorab_private_temp_d))
 
         all: $(prorab_this_name)
@@ -462,9 +457,28 @@ ifneq ($(prorab_included),true)
 
     endef
 
+    define prorab-clear-this-vars
 
-    prorab-clear-this-vars = $(foreach var,$(filter this_%,$(.VARIABLES)),$(eval $(var) := ))
+        #need empty line here to avoid merging with adjacent macro instantiations
 
+        #clear all vars
+        $(foreach var,$(filter this_%,$(.VARIABLES)),$(eval $(var) := ))
+
+        #set default values for compilers
+        $(eval this_cc := $(CC))
+        $(eval this_cxx := $(CXX))
+
+        #set default values for flags
+        #NOTE: we need deferred assignment here because we wand that $(d) would be substituted after saving arguments to command line arguments dependency files.
+        $(eval this_cppflags = $(CPPFLAGS))
+        $(eval this_cflags = $(CFLAGS))
+        $(eval this_cxxflags = $(CXXFLAGS))
+        $(eval this_ldflags = $(LDFLAGS))
+        $(eval this_ldlibs = $(LDLIBS))
+
+        #need empty line here to avoid merging with adjacent macro instantiations
+
+    endef
 
     #define function to find all source files from specified directory recursively
     #NOTE: filter-out of empty strings from input path is needed when path is supplied with preceding or trailing spaces, to prevent searching sources from root directory also.
@@ -479,16 +493,4 @@ $(if $(filter $(prorab_this_makefile),$(prorab_included_makefiles)), \
         $(eval prorab_included_makefiles += $(abspath $(prorab_this_makefile))) \
     )
 
-$(prorab-clear-this-vars)
-
-#define local variables used by prorab
-this_name :=
-this_soname :=
-
-#these use deferred assignment because we would like to substitute the value of $(d) in some cases
-this_cflags =
-this_cxxflags =
-this_ldflags =
-this_ldlibs =
-
-this_srcs :=
+$(eval $(prorab-clear-this-vars))
