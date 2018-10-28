@@ -13,6 +13,12 @@
   echo "deb https://dl.bintray.com/igagis/ubu unstable main" | sudo tee /etc/apt/sources.list.d/igagis.list > /dev/null
   ```
 
+- Import APT key
+
+  ```
+  sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 379CE192D401AB61
+  ```
+
 - Update apt packages
 
   ```
