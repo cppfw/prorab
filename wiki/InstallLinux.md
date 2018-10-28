@@ -16,6 +16,7 @@
 - Import APT key
 
   ```
+  sudo apt install dirmngr
   sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 379CE192D401AB61
   ```
 
