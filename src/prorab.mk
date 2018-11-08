@@ -104,6 +104,14 @@ ifneq ($(prorab_included),true)
         prorab_echo := @
     endif
 
+    ifeq ($(autojobs),true)
+        ifeq ($(os),macosx)
+            MAKEFLAGS += -j$(shell sysctl -n hw.ncpu)
+        else
+            MAKEFLAGS += -j$(shell nproc)
+        endif
+    endif
+
 
 
     define prorab-private-app-specific-rules
@@ -168,7 +176,7 @@ ifneq ($(prorab_included),true)
 
     endef
 
-    
+
     define prorab-private-lib-install-headers-rule
 
         #need empty line here to avoid merging with adjacent macro instantiations
@@ -204,7 +212,7 @@ ifneq ($(prorab_included),true)
             , \
                 $(prorab-private-dynamic-lib-specific-rules-nix-systems) \
             )
-        
+
         #in Cygwin and MSYS the .dll files go to /usr/bin and .a and .dll.a files go to /usr/lib
         install:: $(prorab_this_name)
 		$(prorab_echo)install -d $(DESTDIR)$(PREFIX)/lib/
@@ -226,7 +234,7 @@ ifneq ($(prorab_included),true)
 		    , \
 		        $(prorab_echo)rm -f $(DESTDIR)$(PREFIX)/lib/$(notdir $(prorab_this_name)) \
 		    )
-	
+
         #need empty line here to avoid merging with adjacent macro instantiations
 
     endef
