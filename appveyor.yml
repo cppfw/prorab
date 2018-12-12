@@ -3,44 +3,28 @@ branches:
     - master
 
 
-os: Visual Studio 2015
+os: Visual Studio 2017
 version: "{branch}-{build}"
 
 clone_folder: c:\projects\build
 
 environment:
-  MYCI_GIT_USERNAME: igagis
-  MYCI_GIT_ACCESS_TOKEN:
-    secure: mpW6B2ols1a2FkshjKjryBuvBt8A1TpU9WGn+/d6PIQiZlzA0Rpo1ETKpmy0bnvX
-  DEPS: make,gcc-g++,myci
+  BASH: C:\msys64\usr\bin\env MSYSTEM=MINGW64 C:\msys64\usr\bin\bash
+  MYCI_BINTRAY_API_KEY:
+    secure: t04W/09OyK0B8CxJHydCkay+Fm3i6KkBciVXjzk0u09v6F9wtDn/dsuqd5eMIj8s
 
 install:
-  - cmd: C:\cygwin64\setup-x86_64.exe -g -q -X -s http://igagis.crabdance.com -s http://cygwin.mirror.constant.com -P cygport,calm,%DEPS%
-  - cmd: C:\cygwin\setup-x86.exe -g -q -X -s http://igagis.crabdance.com -s http://cygwin.mirror.constant.com -P cygport,calm,%DEPS%
+
 
 before_build:
-  - cmd: xcopy /S C:\projects\build C:\cygwin64\home\appveyor\
-  - cmd: xcopy /S C:\projects\build C:\cygwin\home\appveyor\
+
 
 build_script:
-# cyggport downloads tagged sources from github, so use cygport only for tagged commits, otherwise build with just make.
-  - cmd: if "%APPVEYOR_REPO_TAG%"=="true" (
-            C:\cygwin64\bin\bash -e -l -c "myci-apply-version.sh -v `myci-deb-version.sh debian/changelog` cygwin/*.in" &&
-            C:\cygwin64\bin\bash -e -l -c "cygport cygwin/*.cygport download" &&
-            C:\cygwin64\bin\bash -e -l -c "cygport cygwin/*.cygport all" &&
-            C:\cygwin\bin\bash -e -l -c "myci-apply-version.sh -v `myci-deb-version.sh debian/changelog` cygwin/*.in" &&
-            C:\cygwin\bin\bash -e -l -c "cygport cygwin/*.cygport download" &&
-            C:\cygwin\bin\bash -e -l -c "cygport cygwin/*.cygport all"
-        ) else (
-            C:\cygwin64\bin\bash -e -l -c "make" &&
-            C:\cygwin\bin\bash -e -l -c "make"
-        )
+  - cmd: "%BASH% -lc \"cd /c/projects/build/ && src/myci-apply-version.sh -v `src/myci-deb-version.sh debian/changelog` msys2/PKGBUILD.in\""
+  - cmd: "%BASH% -lc \"cd /c/projects/build/msys2 && makepkg --skipinteg\""
 
 test_script:
-  - cmd: C:\cygwin64\bin\bash -e -l -c "PATH=$PATH:~/src make test"
-  - cmd: C:\cygwin\bin\bash -e -l -c "PATH=$PATH:~/src make test"
+  - cmd: "%BASH% -lc \"cd /c/projects/build/ && make test\""
 
 deploy_script:
-  - cmd: C:\cygwin64\bin\bash -e -l -c "make install"
-  - cmd: C:\cygwin\bin\bash -e -l -c "make install"
-  - cmd: if "%APPVEYOR_REPO_TAG%"=="true" (C:\cygwin64\bin\bash -e -l -c "myci-deploy-cygwin.sh -r igagis/cygwin-repo" && C:\cygwin\bin\bash -e -l -c "myci-deploy-cygwin.sh -r igagis/cygwin-repo") else (echo Skipping deploy because not a tagged commit.)
+  - cmd: if "%APPVEYOR_REPO_TAG%"=="true" (%BASH% -lc "cd /c/projects/build && src/myci-deploy-pacman-bintray.sh -u igagis -r msys2 -p mingw/x86_64 msys2/*.tar.xz") else (echo Skipping deploy because not a tagged commit.)

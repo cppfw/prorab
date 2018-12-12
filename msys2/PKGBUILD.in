@@ -8,9 +8,12 @@ arch=('any')
 url="http://github.com/igagis/prorab"
 license=('MIT')
 groups=()
-depends=('curl')
-makedepends=('make' 'diffutils')
-checkdepends=()
+
+#Need 'diffutils' package for 'cmp' program
+depends=('make' 'diffutils')
+
+makedepends=('myci')
+checkdepends=('myci')
 optdepends=()
 provides=()
 conflicts=()
