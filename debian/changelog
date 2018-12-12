@@ -1,3 +1,9 @@
+prorab (1.11.3) unstable; urgency=medium
+
+  * deploying to msys2
+
+ -- Ivan Gagis <igagis@gmail.com>  Wed, 12 Dec 2018 17:13:02 +0200
+
 prorab (1.11.2) unstable; urgency=medium
 
   * autojobs option added
