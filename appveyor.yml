@@ -14,9 +14,9 @@ environment:
     secure: t04W/09OyK0B8CxJHydCkay+Fm3i6KkBciVXjzk0u09v6F9wtDn/dsuqd5eMIj8s
 
 install:
-  - cmd: "%BASH% -lc \"cat \\\"[pacman]\\\" >> /etc/pacman.conf\""
-  - cmd: "%BASH% -lc \"cat \\\"SigLevel = Optional TrustAll\\\" >> /etc/pacman.conf\""
-  - cmd: "%BASH% -lc \"cat \\\"Server = https://dl.bintray.com/igagis/msys2/mingw/$arch\\\" >> /etc/pacman.conf\""
+  - cmd: "%BASH% -lc \"echo '[pacman]' >> /etc/pacman.conf\""
+  - cmd: "%BASH% -lc \"echo 'SigLevel = Optional TrustAll' >> /etc/pacman.conf\""
+  - cmd: "%BASH% -lc \"echo 'Server = https://dl.bintray.com/igagis/msys2/mingw/$arch' >> /etc/pacman.conf\""
   - cmd: "%BASH% -lc \"pacman -Sy myci\""
 
 before_build:
