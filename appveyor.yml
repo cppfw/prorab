@@ -17,7 +17,7 @@ install:
   - cmd: "%BASH% -lc \"echo '[pacman]' >> /etc/pacman.conf\""
   - cmd: "%BASH% -lc \"echo 'SigLevel = Optional TrustAll' >> /etc/pacman.conf\""
   - cmd: "%BASH% -lc \"echo 'Server = https://dl.bintray.com/igagis/msys2/mingw/$arch' >> /etc/pacman.conf\""
-  - cmd: "%BASH% -lc \"pacman -Sy myci\""
+  - cmd: "%BASH% -lc \"pacman -Sy --noconfirm myci\""
 
 before_build:
 
