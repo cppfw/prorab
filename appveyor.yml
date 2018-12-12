@@ -27,7 +27,7 @@ build_script:
   - cmd: "%BASH% -lc \"cd /c/projects/build/msys2 && makepkg --skipinteg\""
 
 test_script:
-  - cmd: "%BASH% -lc \"cd /c/projects/build/ && make test\""
+  #pacman package build already performs tests
 
 deploy_script:
   - cmd: if "%APPVEYOR_REPO_TAG%"=="true" (%BASH% -lc "cd /c/projects/build && myci-deploy-pacman-bintray.sh -u igagis -r msys2 -p mingw/x86_64 msys2/*.tar.xz") else (echo Skipping deploy because not a tagged commit.)
