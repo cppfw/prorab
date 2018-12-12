@@ -1,0 +1,44 @@
+# Maintainer: Ivan Gagis <igagis@gmail.com>
+pkgname=prorab
+pkgver=$(version)
+pkgrel=1
+epoch=
+pkgdesc="non-recursive GNU make-based build system"
+arch=('any')
+url="http://github.com/igagis/prorab"
+license=('MIT')
+groups=()
+depends=('curl')
+makedepends=('make' 'diffutils')
+checkdepends=()
+optdepends=()
+provides=()
+conflicts=()
+replaces=()
+backup=()
+options=()
+install=
+changelog=
+source=("https://github.com/igagis/$pkgname/archive/$pkgver.tar.gz")
+noextract=()
+md5sums=()
+validpgpkeys=()
+
+prepare() {
+	cd "$pkgname-$pkgver"
+}
+
+build() {
+	cd "$pkgname-$pkgver"
+	make autojobs=true
+}
+
+check() {
+	cd "$pkgname-$pkgver"
+	make test
+}
+
+package() {
+	cd "$pkgname-$pkgver"
+	make DESTDIR="$pkgdir" PREFIX=/usr install
+}
