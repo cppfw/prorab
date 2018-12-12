@@ -23,11 +23,11 @@ before_build:
 
 
 build_script:
-  - cmd: "%BASH% -lc \"cd /c/projects/build/ && src/myci-apply-version.sh -v `src/myci-deb-version.sh debian/changelog` msys2/PKGBUILD.in\""
+  - cmd: "%BASH% -lc \"cd /c/projects/build/ && myci-apply-version.sh -v `myci-deb-version.sh debian/changelog` msys2/PKGBUILD.in\""
   - cmd: "%BASH% -lc \"cd /c/projects/build/msys2 && makepkg --skipinteg\""
 
 test_script:
   - cmd: "%BASH% -lc \"cd /c/projects/build/ && make test\""
 
 deploy_script:
-  - cmd: if "%APPVEYOR_REPO_TAG%"=="true" (%BASH% -lc "cd /c/projects/build && src/myci-deploy-pacman-bintray.sh -u igagis -r msys2 -p mingw/x86_64 msys2/*.tar.xz") else (echo Skipping deploy because not a tagged commit.)
+  - cmd: if "%APPVEYOR_REPO_TAG%"=="true" (%BASH% -lc "cd /c/projects/build && myci-deploy-pacman-bintray.sh -u igagis -r msys2 -p mingw/x86_64 msys2/*.tar.xz") else (echo Skipping deploy because not a tagged commit.)
