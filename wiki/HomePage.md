@@ -4,8 +4,7 @@
 # Installation
 - [Linux](InstallLinux.md)
 - [MacOSX](InstallMacOSX.md)
-- [Windows (Cygwin)](InstallCygwin.adoc)
-- [Windows (MSYS)](InstallMSYS.md)
+- [Windows (Msys2)](InstallMSYS.md)
 
 # Tutorials
 - [Basic concepts](TutorialBasicConcepts.md)
