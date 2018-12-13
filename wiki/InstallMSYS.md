@@ -1,11 +1,13 @@
-# Installation in Windows
+# Installation in Msys2 environment under Windows
 
-## MSYS environment
+- Add repository to `pacman` config, this needs to be done only once
 
-- Download latest prorab version from **[here](https://github.com/igagis/prorab/releases)** and unpack it.
+  ```
+  echo -e "[pacman]\nSigLevel = Optional TrustAll\nServer = https://dl.bintray.com/igagis/msys2/mingw/$arch" >> /etc/pacman.conf
+  ```
 
 - Install **prorab**
 
   ```
-  make install
+  pacman -Sy prorab
   ```
