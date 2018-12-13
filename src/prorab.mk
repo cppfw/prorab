@@ -370,21 +370,6 @@ ifneq ($(prorab_included),true)
 
     endef
 
-    #if there are no any sources in this_srcs then just install headers, no need to build binaries
-    define prorab-build-lib
-
-        #need empty line here to avoid merging with adjacent macro instantiations
-
-        $(prorab-build-static-lib)
-        $(if $(this_srcs), \
-                $(prorab-private-dynamic-lib-specific-rules) \
-                $(prorab-private-link-rules) \
-                , \
-            )
-
-        #need empty line here to avoid merging with adjacent macro instantiations
-
-    endef
 
     define prorab-build-static-lib
 
@@ -394,6 +379,23 @@ ifneq ($(prorab_included),true)
         $(if $(this_srcs), \
                 $(prorab-private-compile-rules) \
                 $(prorab-private-lib-static-library-rule) \
+                , \
+            )
+
+        #need empty line here to avoid merging with adjacent macro instantiations
+
+    endef
+
+
+    #if there are no any sources in this_srcs then just install headers, no need to build binaries
+    define prorab-build-lib
+
+        #need empty line here to avoid merging with adjacent macro instantiations
+
+        $(prorab-build-static-lib)
+        $(if $(this_srcs), \
+                $(prorab-private-dynamic-lib-specific-rules) \
+                $(prorab-private-link-rules) \
                 , \
             )
 
