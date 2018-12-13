@@ -310,7 +310,7 @@ ifneq ($(prorab_included),true)
         #we don't want to store equivalent paths in a different way, so substitute 'd' to empty string
         $(eval prorab_private_temp_d := $(d))
         $(eval d := )
-	$(call prorab-private-args-file-rules, $(prorab_cxxargs_file),$(this_cxx) $(this_cppflags) $(this_cxxflags))
+        $(call prorab-private-args-file-rules, $(prorab_cxxargs_file),$(this_cxx) $(this_cppflags) $(this_cxxflags))
         $(call prorab-private-args-file-rules, $(prorab_cargs_file),$(this_cc) $(this_cppflags) $(this_cflags))
         $(eval d := $(prorab_private_temp_d))
 
@@ -477,7 +477,7 @@ ifneq ($(prorab_included),true)
         $(eval this_cxx := $(CXX))
 
         #set default values for flags
-        #NOTE: we need deferred assignment here because we wand that $(d) would be substituted after saving arguments to command line arguments dependency files.
+        #NOTE: we need deferred assignment here because we want that $(d) would be substituted after saving arguments to command line arguments dependency files.
         $(eval this_cppflags = $(CPPFLAGS))
         $(eval this_cflags = $(CFLAGS))
         $(eval this_cxxflags = $(CXXFLAGS))
