@@ -22,26 +22,28 @@ backup=()
 options=()
 install=
 changelog=
-source=("https://github.com/igagis/$pkgname/archive/$pkgver.tar.gz")
+source=() # Do not download any sources
 noextract=()
 md5sums=()
 validpgpkeys=()
 
+rootDir=$(pwd)/.. # project root directory
+
 prepare() {
-	cd "$pkgname-$pkgver"
+	cd "$rootDir"
 }
 
 build() {
-	cd "$pkgname-$pkgver"
+	cd "$rootDir"
 	make autojobs=true
 }
 
 check() {
-	cd "$pkgname-$pkgver"
+	cd "$rootDir"
 	make test
 }
 
 package() {
-	cd "$pkgname-$pkgver"
+	cd "$rootDir"
 	make DESTDIR="$pkgdir" PREFIX=/usr install
 }

@@ -6,7 +6,7 @@ branches:
 os: Visual Studio 2017
 version: "{branch}-{build}"
 
-clone_folder: c:\projects\build
+clone_folder: c:\build
 
 environment:
   BASH: C:\msys64\usr\bin\env MSYSTEM=MINGW64 C:\msys64\usr\bin\bash
@@ -23,11 +23,11 @@ before_build:
 
 
 build_script:
-  - cmd: "%BASH% -lc \"cd /c/projects/build/ && myci-apply-version.sh -v `myci-deb-version.sh debian/changelog` msys2/PKGBUILD.in\""
-  - cmd: "%BASH% -lc \"cd /c/projects/build/msys2 && makepkg --skipinteg\""
+  - cmd: "%BASH% -lc \"cd /c/build/ && myci-apply-version.sh -v `myci-deb-version.sh debian/changelog` msys2/PKGBUILD.in\""
+  - cmd: "%BASH% -lc \"cd /c/build/msys2 && makepkg --skipinteg\""
 
 test_script:
   #pacman package build already performs tests
 
 deploy_script:
-  - cmd: if "%APPVEYOR_REPO_TAG%"=="true" (%BASH% -lc "cd /c/projects/build && myci-deploy-pacman-bintray.sh -u igagis -r msys2 -p mingw/x86_64 msys2/*.tar.xz") else (echo Skipping deploy because not a tagged commit.)
+  - cmd: if "%APPVEYOR_REPO_TAG%"=="true" (%BASH% -lc "cd /c/build && myci-deploy-pacman-bintray.sh -u igagis -r msys2 -p mingw/x86_64 msys2/*.tar.xz") else (echo Skipping deploy because not a tagged commit.)
