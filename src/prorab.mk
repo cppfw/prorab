@@ -126,12 +126,16 @@ ifneq ($(prorab_included),true)
 
         $(eval prorab_this_symbolic_name := $(prorab_this_name))
 
-        install:: $(prorab_this_name)
-		$(prorab_echo)install -d $(DESTDIR)$(PREFIX)/bin/
-		$(prorab_echo)install $(prorab_this_name) $(DESTDIR)$(PREFIX)/bin/
+        $(if $(filter $(this_no_install),true),, install:: $(prorab_this_name))
+		$(if $(filter $(this_no_install),true),, \
+                $(prorab_echo)install -d $(DESTDIR)$(PREFIX)/bin/ && \
+                        install $(prorab_this_name) $(DESTDIR)$(PREFIX)/bin/ \
+            )
 
-        uninstall::
-		$(prorab_echo)rm -f $(DESTDIR)$(PREFIX)/bin/$(notdir $(prorab_this_name))
+        $(if $(filter $(this_no_install),true),, uninstall::)
+		$(if $(filter $(this_no_install),true),, \
+                $(prorab_echo)rm -f $(DESTDIR)$(PREFIX)/bin/$(notdir $(prorab_this_name)) \
+            )
 
         #need empty line here to avoid merging with adjacent macro instantiations
 
