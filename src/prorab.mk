@@ -189,19 +189,25 @@ ifneq ($(prorab_included),true)
 
         #need empty line here to avoid merging with adjacent macro instantiations
 
-        $(eval prorab_private_headers := $(patsubst $(d)%,%,$(call prorab-rwildcard, $(d), *.h *.hpp)))
+        $(eval prorab_private_headers_dir := $(d)$(this_headers_dir)/)
 
-        install::
-		$(prorab_echo)for i in $(prorab_private_headers); do \
-		    install -d $(DESTDIR)$(PREFIX)/include/$$$$(dirname $$$$i); \
-		    install -m 644 $(d)$$$$i $(DESTDIR)$(PREFIX)/include/$$$$i; \
-		done
+        $(eval prorab_private_headers := $(patsubst $(prorab_private_headers_dir)%,%,$(call prorab-rwildcard, $(prorab_private_headers_dir), *.h *.hpp)))
 
-        uninstall::
-		$(prorab_echo)for i in $(prorab_private_headers); do \
-		    path=$$$$(echo $$$$i | cut -d "/" -f1) && \
-		    rm -rf $(DESTDIR)$(PREFIX)/include/$$$$path; \
-		done
+        $(if $(filter $(this_no_install),true),, install::)
+		$(if $(filter $(this_no_install),true),, \
+                $(prorab_echo)for i in $(prorab_private_headers); do \
+                    install -d $(DESTDIR)$(PREFIX)/include/$$$$(dirname $$$$i) && \
+                    install -m 644 $(prorab_private_headers_dir)$$$$i $(DESTDIR)$(PREFIX)/include/$$$$i; \
+                done \
+            )
+
+        $(if $(filter $(this_no_install),true),, uninstall::)
+		$(if $(filter $(this_no_install),true),, \
+                $(prorab_echo)for i in $(prorab_private_headers); do \
+                    path=$$$$(echo $$$$i | cut -d "/" -f1) && \
+                    rm -rf $(DESTDIR)$(PREFIX)/include/$$$$path; \
+                done \
+            )
 
         #need empty line here to avoid merging with adjacent macro instantiations
 
@@ -221,27 +227,35 @@ ifneq ($(prorab_included),true)
                 $(prorab-private-dynamic-lib-specific-rules-nix-systems) \
             )
 
-        #in Cygwin and MSYS the .dll files go to /usr/bin and .a and .dll.a files go to /usr/lib
-        install:: $(prorab_this_name)
-		$(prorab_echo)install -d $(DESTDIR)$(PREFIX)/lib/
-		$(if $(filter windows,$(os)), \
-		        $(prorab_echo)install -d $(DESTDIR)$(PREFIX)/bin/ && \
-		                install $(prorab_this_name) $(DESTDIR)$(PREFIX)/bin/ && \
-		                install $(prorab_this_name).a $(DESTDIR)$(PREFIX)/lib/ \
-		    , \
-		        $(prorab_echo)install $(prorab_this_name) $(DESTDIR)$(PREFIX)/lib/ \
-		    )
-		$(if $(filter macosx,$(os)), \
-		        $(prorab_echo)install_name_tool -id "$(PREFIX)/lib/$(notdir $(prorab_this_name))" $(DESTDIR)$(PREFIX)/lib/$(notdir $(prorab_this_name)) \
-		    )
+        #in Cygwin and Msys2 the .dll files go to /usr/bin and .a and .dll.a files go to /usr/lib
+        $(if $(filter $(this_no_install),true),, install:: $(prorab_this_name))
+		$(if $(filter $(this_no_install),true),, \
+                $(prorab_echo)install -d $(DESTDIR)$(PREFIX)/lib/ \
+            )
+		$(if $(filter $(this_no_install),true),, \
+                $(if $(filter windows,$(os)), \
+                        $(prorab_echo)install -d $(DESTDIR)$(PREFIX)/bin/ && \
+                                install $(prorab_this_name) $(DESTDIR)$(PREFIX)/bin/ && \
+                                install $(prorab_this_name).a $(DESTDIR)$(PREFIX)/lib/ \
+                    , \
+                        $(prorab_echo)install $(prorab_this_name) $(DESTDIR)$(PREFIX)/lib/ \
+                    ) \
+            )
+		$(if $(filter $(this_no_install),true),, \
+                $(if $(filter macosx,$(os)), \
+                        $(prorab_echo)install_name_tool -id "$(PREFIX)/lib/$(notdir $(prorab_this_name))" $(DESTDIR)$(PREFIX)/lib/$(notdir $(prorab_this_name)) \
+                    ) \
+            )
 
-        uninstall::
-		$(if $(filter windows,$(os)), \
-		        $(prorab_echo)rm -f $(DESTDIR)$(PREFIX)/lib/$(notdir $(prorab_this_name).a) \
-		        $(prorab_echo)rm -f $(DESTDIR)$(PREFIX)/bin/$(notdir $(prorab_this_name))
-		    , \
-		        $(prorab_echo)rm -f $(DESTDIR)$(PREFIX)/lib/$(notdir $(prorab_this_name)) \
-		    )
+        $(if $(filter $(this_no_install),true),, uninstall::)
+		$(if $(filter $(this_no_install),true),, \
+                $(if $(filter windows,$(os)), \
+                        $(prorab_echo)rm -f $(DESTDIR)$(PREFIX)/lib/$(notdir $(prorab_this_name).a) && \
+                                rm -f $(DESTDIR)$(PREFIX)/bin/$(notdir $(prorab_this_name)) \
+                    , \
+                        $(prorab_echo)rm -f $(DESTDIR)$(PREFIX)/lib/$(notdir $(prorab_this_name)) \
+                    ) \
+            )
 
         #need empty line here to avoid merging with adjacent macro instantiations
 
@@ -260,12 +274,16 @@ ifneq ($(prorab_included),true)
         clean::
 		$(prorab_echo)rm -f $(prorab_this_staticlib)
 
-        install:: $(prorab_this_staticlib)
-		$(prorab_echo)install -d $(DESTDIR)$(PREFIX)/lib/
-		$(prorab_echo)install -m 644 $(prorab_this_staticlib) $(DESTDIR)$(PREFIX)/lib/
+        $(if $(filter $(this_no_install),true),, install:: $(prorab_this_staticlib))
+		$(if $(filter $(this_no_install),true),, \
+                $(prorab_echo)install -d $(DESTDIR)$(PREFIX)/lib/ && \
+                        install -m 644 $(prorab_this_staticlib) $(DESTDIR)$(PREFIX)/lib/ \
+            )
 
-        uninstall::
-		$(prorab_echo)rm -f $(DESTDIR)$(PREFIX)/lib/$(notdir $(prorab_this_staticlib))
+        $(if $(filter $(this_no_install),true),, uninstall::)
+		$(if $(filter $(this_no_install),true),, \
+                $(prorab_echo)rm -f $(DESTDIR)$(PREFIX)/lib/$(notdir $(prorab_this_staticlib)) \
+            )
 
         #static library rule
         $(prorab_this_staticlib): $(prorab_this_objs)

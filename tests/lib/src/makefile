@@ -22,4 +22,6 @@ this_srcs += $(call prorab-src-dir, .)
 
 this_no_install := true
 
+this_headers_dir := ../no_install_headers
+
 $(eval $(prorab-build-lib))
