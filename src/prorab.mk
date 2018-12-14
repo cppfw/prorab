@@ -166,12 +166,16 @@ ifneq ($(prorab_included),true)
 
         all: $(prorab_this_symbolic_name)
 
-        install:: $(prorab_this_symbolic_name)
-		$(prorab_echo)install -d $(DESTDIR)$(PREFIX)/lib/
-		$(prorab_echo)(cd $(DESTDIR)$(PREFIX)/lib/; ln -f -s $(notdir $(prorab_this_name)) $(notdir $(prorab_this_symbolic_name)))
+        $(if $(filter $(this_no_install),true),, install:: $(prorab_this_symbolic_name))
+		$(if $(filter $(this_no_install),true),, \
+                $(prorab_echo)install -d $(DESTDIR)$(PREFIX)/lib/ && \
+                        (cd $(DESTDIR)$(PREFIX)/lib/; ln -f -s $(notdir $(prorab_this_name)) $(notdir $(prorab_this_symbolic_name))) \
+            )
 
-        uninstall::
-		$(prorab_echo)rm -f $(DESTDIR)$(PREFIX)/lib/$(notdir $(prorab_this_symbolic_name))
+        $(if $(filter $(this_no_install),true),, uninstall::)
+		$(if $(filter $(this_no_install),true),, \
+                $(prorab_echo)rm -f $(DESTDIR)$(PREFIX)/lib/$(notdir $(prorab_this_symbolic_name))
+            )
 
         clean::
 		$(prorab_echo)rm -f $(prorab_this_symbolic_name)

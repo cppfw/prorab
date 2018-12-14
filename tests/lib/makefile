@@ -21,6 +21,7 @@ else
 endif
 	$(prorab_echo)if [ ! -f $(d)src/libtests.a ]; then $(this_err) "src/libtests.a file not found"; fi
 
+	$(prorab_echo)rm -rf $(d)tmp
 	$(prorab_echo)$(MAKE) -C $(d)src install DESTDIR=../tmp PREFIX=/usr
 	$(prorab_echo)if [ ! -f $(d)tmp/usr/include/test.h ]; then $(this_err) "tmp/usr/include/test.h file not found"; fi
 	$(prorab_echo)if [ ! -f $(d)tmp/usr/include/test.hpp ]; then $(this_err) "tmp/usr/include/test.hpp file not found"; fi
@@ -30,12 +31,14 @@ endif
 ifeq ($(os), macosx)
 	$(prorab_echo)if [ ! -f $(d)tmp/usr/lib/libtests.dylib ]; then $(this_err) "tmp/usr/lib/libtests.dylib file not found"; fi
 	$(prorab_echo)if [ ! -f $(d)tmp/usr/lib/libtests.0.dylib ]; then $(this_err) "tmp/usr/lib/libtests.0.dylib file not found"; fi
+	$(prorab_echo)if [ -f $(d)tmp/usr/lib/libtests_no_install.dylib ]; then $(this_err) "tmp/usr/lib/libtests_no_install.dylib file found, must not be there"; fi
 else ifeq ($(os), windows)
 	$(prorab_echo)if [ ! -f $(d)tmp/usr/bin/libtests.dll ]; then $(this_err) "tmp/usr/bin/libtests.dll file not found"; fi
 	$(prorab_echo)if [ ! -f $(d)tmp/usr/lib/libtests.dll.a ]; then $(this_err) "tmp/usr/lib/libtests.dll.a file not found"; fi
 else
 	$(prorab_echo)if [ ! -f $(d)tmp/usr/lib/libtests.so ]; then $(this_err) "tmp/usr/lib/libtests.so file not found"; fi
 	$(prorab_echo)if [ ! -f $(d)tmp/usr/lib/libtests.so.0 ]; then $(this_err) "tmp/usr/lib/libtests.so.0 file not found"; fi
+	$(prorab_echo)if [ -f $(d)tmp/usr/lib/libtests_no_install.so ]; then $(this_err) "tmp/usr/lib/libtests_no_install.so file found, must not be there"; fi
 endif
 
 	$(prorab_echo)$(MAKE) -C $(d)src uninstall DESTDIR=../tmp PREFIX=/usr

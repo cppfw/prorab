@@ -8,3 +8,18 @@ this_srcs += $(call prorab-src-dir, .)
 
 $(eval $(prorab-build-lib))
 
+
+
+$(eval $(prorab-clear-this-vars))
+
+
+
+this_name := tests_no_install
+
+this_soname := 0
+
+this_srcs += $(call prorab-src-dir, .)
+
+this_no_install := true
+
+$(eval $(prorab-build-lib))
