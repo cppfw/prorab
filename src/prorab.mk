@@ -170,10 +170,17 @@ ifneq ($(prorab_included),true)
 
         all: $(prorab_this_symbolic_name)
 
-        $(if $(filter $(this_no_install),true),, install:: $(prorab_this_symbolic_name))
+        $(if $(filter $(this_no_install),true),, install:: $(DESTDIR)$(PREFIX)/lib/$(notdir $(prorab_this_name)))
 		$(if $(filter $(this_no_install),true),, \
                 $(prorab_echo)install -d $(DESTDIR)$(PREFIX)/lib/ && \
                         (cd $(DESTDIR)$(PREFIX)/lib/ && ln -f -s $(notdir $(prorab_this_name)) $(notdir $(prorab_this_symbolic_name))) \
+            )
+
+        $(if $(filter $(this_no_install),true),, $(DESTDIR)$(PREFIX)/lib/$(notdir $(prorab_this_name)): $(prorab_this_name))
+		$(if $(filter $(this_no_install),true),, \
+                $(prorab_echo) \
+                        install -d $(DESTDIR)$(PREFIX)/lib/ && \
+                        install $(prorab_this_name) $(DESTDIR)$(PREFIX)/lib/ \
             )
 
         $(if $(filter $(this_no_install),true),, uninstall::)
@@ -232,7 +239,12 @@ ifneq ($(prorab_included),true)
             )
 
         #in Cygwin and Msys2 the .dll files go to /usr/bin and .a and .dll.a files go to /usr/lib
-        $(if $(filter $(this_no_install),true),, install:: $(prorab_this_name))
+        $(if $(filter $(this_no_install),true),, install:: \
+                $(if $(filter windows,$(os), \
+                        $(prorab_this_name)), \
+                        $(DESTDIR)$(PREFIX)/lib/$(notdir $(prorab_this_name)) \
+                    ) \
+            )
 		$(if $(filter $(this_no_install),true),, \
                 $(if $(filter windows,$(os)), \
                         $(prorab_echo) \
@@ -240,11 +252,7 @@ ifneq ($(prorab_included),true)
                                 install $(prorab_this_name) $(DESTDIR)$(PREFIX)/bin/ && \
                                 install -d $(DESTDIR)$(PREFIX)/lib/ && \
                                 install $(prorab_this_name).a $(DESTDIR)$(PREFIX)/lib/ \
-                    , \
-                        $(prorab_echo) \
-                                install -d $(DESTDIR)$(PREFIX)/lib/ && \
-                                install $(prorab_this_name) $(DESTDIR)$(PREFIX)/lib/ \
-                    ) \
+                    ,) \
             )
 		$(if $(filter $(this_no_install),true),, \
                 $(if $(filter macosx,$(os)), \
