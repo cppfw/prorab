@@ -34,41 +34,44 @@ ifneq ($(prorab_included),true)
 
     prorab-rwildcard = $(foreach dd,$(wildcard $(patsubst %.,%,$1)*),$(call prorab-rwildcard,$(dd)/,$2) $(filter $(subst *,%,$2),$(dd)))
 
-    #calculate number of ../ in a file path
+    # calculate number of ../ in a file path
     prorab-calculate-stepups = $(foreach var,$(filter ..,$(subst /, ,$(dir $1))),x)
 
-    #define this directory for parent makefile
+    # define this directory for parent makefile
     prorab_this_makefile := $(word $(call prorab-num,$(call prorab-dec,$(MAKEFILE_LIST))),$(MAKEFILE_LIST))
     d := $(dir $(prorab_this_makefile))
 
-    #defining alias for 'd'
+    # defining alias for 'd'
     prorab_this_dir = $(d)
 
 
     .PHONY: clean all install uninstall distclean phony
 
-    #define the very first default target
+    # define the very first default target
     all:
 
-    #define dummy phony target
+    # define dummy phony target
     phony:
 
-    #define distclean target which does same as clean. This is to make some older versions of debhelper happy.
+    # define distclean target which does same as clean. This is to make some older versions of debhelper happy.
     distclean: clean
 
-    #directory of prorab.mk
+    # directory of prorab.mk
     prorab_dir := $(dir $(lastword $(MAKEFILE_LIST)))
 
-    #initialize standard vars for "install" and "uninstall" targets
+    # initialize standard vars for "install" and "uninstall" targets
     ifeq ($(PREFIX),) #PREFIX is environment variable, but if it is not set, then set default value
         PREFIX := /usr/local
     endif
 
-    #Detect operating system
+    # Detect operating system
     prorab_private_os := $(shell uname)
     prorab_private_os := $(patsubst MINGW%,Windows,$(prorab_private_os))
     prorab_private_os := $(patsubst CYGWIN%,Windows,$(prorab_private_os))
-    prorab_private_os := $(patsubst MSYS%,Linux,$(prorab_private_os)) # MSYS environment is same as linux
+
+    # MSYS environment is same as linux
+    prorab_private_os := $(patsubst MSYS%,Linux,$(prorab_private_os))
+
     ifeq ($(prorab_private_os), Windows)
         prorab_os := windows
     else ifeq ($(prorab_private_os), Darwin)
@@ -82,7 +85,7 @@ ifneq ($(prorab_included),true)
 
     os := $(prorab_os)
 
-    #set library extension
+    # set library extension
     ifeq ($(os), windows)
         prorab_lib_extension := .dll
     else ifeq ($(os), macosx)
@@ -231,15 +234,16 @@ ifneq ($(prorab_included),true)
         #in Cygwin and Msys2 the .dll files go to /usr/bin and .a and .dll.a files go to /usr/lib
         $(if $(filter $(this_no_install),true),, install:: $(prorab_this_name))
 		$(if $(filter $(this_no_install),true),, \
-                $(prorab_echo)install -d $(DESTDIR)$(PREFIX)/lib/ \
-            )
-		$(if $(filter $(this_no_install),true),, \
                 $(if $(filter windows,$(os)), \
-                        $(prorab_echo)install -d $(DESTDIR)$(PREFIX)/bin/ && \
+                        $(prorab_echo) \
+                                install -d $(DESTDIR)$(PREFIX)/bin/ && \
                                 install $(prorab_this_name) $(DESTDIR)$(PREFIX)/bin/ && \
+                                install -d $(DESTDIR)$(PREFIX)/lib/ && \
                                 install $(prorab_this_name).a $(DESTDIR)$(PREFIX)/lib/ \
                     , \
-                        $(prorab_echo)install $(prorab_this_name) $(DESTDIR)$(PREFIX)/lib/ \
+                        $(prorab_echo) \
+                                install -d $(DESTDIR)$(PREFIX)/lib/ && \
+                                install $(prorab_this_name) $(DESTDIR)$(PREFIX)/lib/ \
                     ) \
             )
 		$(if $(filter $(this_no_install),true),, \
