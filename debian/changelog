@@ -1,3 +1,9 @@
+prorab (1.12.1) unstable; urgency=medium
+
+  * fixed dependency for symbolic link creation when installing
+
+ -- Ivan Gagis <igagis@gmail.com>  Mon, 17 Dec 2018 15:57:33 +0200
+
 prorab (1.12.0) unstable; urgency=medium
 
   * added this_no_install and this_headers_dir
