@@ -22,15 +22,33 @@ ifneq ($(prorab_included),true)
 
 
     #define arithmetic functions
-    prorab-num = $(words $1) #get number from variable
-    prorab-add = $1 $2 #add two variables
-    prarab-inc = x $1 #increment variable
-    prorab-dec = $(wordlist 2,$(words $1),$1) #decrement variable
-    prorab-max = $(subst xx,x,$(join $1,$2)) #get maximum of two variables
-    prorab-gt = $(filter-out $(words $2),$(words $(call prorab-max,$1,$2))) #greater predicate
-    prorab-eq = $(filter $(words $1),$(words $2)) #equals predicate
-    prorab-gte = $(call prorab-gt,$1,$2)$(call prorab-eq,$1,$2) #greater or equals predicate
-    prorab-sub = $(if $(call prorab-gte,$1,$2),$(filter-out xx,$(join $1,$2)),$(error subtraction goes negative)) #subtract one variable from another, negative result is clamped to zero
+
+    #get number from variable
+    prorab-num = $(words $1)
+
+    #add two variables
+    prorab-add = $1 $2
+
+    #increment variable
+    prarab-inc = x $1
+
+    #decrement variable
+    prorab-dec = $(wordlist 2,$(words $1),$1)
+
+    #get maximum of two variables
+    prorab-max = $(subst xx,x,$(join $1,$2))
+
+    #greater predicate
+    prorab-gt = $(filter-out $(words $2),$(words $(call prorab-max,$1,$2)))
+
+    #equals predicate
+    prorab-eq = $(filter $(words $1),$(words $2))
+
+    #greater or equals predicate
+    prorab-gte = $(call prorab-gt,$1,$2)$(call prorab-eq,$1,$2)
+
+    #subtract one variable from another, negative result is clamped to zero
+    prorab-sub = $(if $(call prorab-gte,$1,$2),$(filter-out xx,$(join $1,$2)),$(error subtraction goes negative))
 
     prorab-rwildcard = $(foreach dd,$(wildcard $(patsubst %.,%,$1)*),$(call prorab-rwildcard,$(dd)/,$2) $(filter $(subst *,%,$2),$(dd)))
 
@@ -67,10 +85,8 @@ ifneq ($(prorab_included),true)
     # Detect operating system
     prorab_private_os := $(shell uname)
     prorab_private_os := $(patsubst MINGW%,Windows,$(prorab_private_os))
+    prorab_private_os := $(patsubst MSYS%,Windows,$(prorab_private_os))
     prorab_private_os := $(patsubst CYGWIN%,Windows,$(prorab_private_os))
-
-    # MSYS environment is same as linux
-    prorab_private_os := $(patsubst MSYS%,Linux,$(prorab_private_os))
 
     ifeq ($(prorab_private_os), Windows)
         prorab_os := windows
