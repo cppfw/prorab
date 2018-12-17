@@ -162,14 +162,14 @@ ifneq ($(prorab_included),true)
         #symbolic link to shared library rule
         $(prorab_this_symbolic_name): $(prorab_this_name)
 			@printf "\\033[0;36mCreating symbolic link\\033[0m $$(notdir $$@) -> $$(notdir $$<)...\n"
-			$(prorab_echo)(cd $$(dir $$<); ln -f -s $$(notdir $$<) $$(notdir $$@))
+			$(prorab_echo)(cd $$(dir $$<) && ln -f -s $$(notdir $$<) $$(notdir $$@))
 
         all: $(prorab_this_symbolic_name)
 
         $(if $(filter $(this_no_install),true),, install:: $(prorab_this_symbolic_name))
 		$(if $(filter $(this_no_install),true),, \
                 $(prorab_echo)install -d $(DESTDIR)$(PREFIX)/lib/ && \
-                        (cd $(DESTDIR)$(PREFIX)/lib/; ln -f -s $(notdir $(prorab_this_name)) $(notdir $(prorab_this_symbolic_name))) \
+                        (cd $(DESTDIR)$(PREFIX)/lib/ && ln -f -s $(notdir $(prorab_this_name)) $(notdir $(prorab_this_symbolic_name))) \
             )
 
         $(if $(filter $(this_no_install),true),, uninstall::)
