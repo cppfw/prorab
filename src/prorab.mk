@@ -68,6 +68,7 @@ ifneq ($(prorab_included),true)
     prorab_private_os := $(shell uname)
     prorab_private_os := $(patsubst MINGW%,Windows,$(prorab_private_os))
     prorab_private_os := $(patsubst CYGWIN%,Windows,$(prorab_private_os))
+    prorab_private_os := $(patsubst MSYS%,Linux,$(prorab_private_os)) # MSYS environment is same as linux
     ifeq ($(prorab_private_os), Windows)
         prorab_os := windows
     else ifeq ($(prorab_private_os), Darwin)
