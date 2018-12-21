@@ -1,3 +1,9 @@
+prorab (1.12.3) unstable; urgency=medium
+
+  * msys deployment to msys repo instead of mingw
+
+ -- Ivan Gagis <igagis@gmail.com>  Fri, 21 Dec 2018 19:29:30 +0200
+
 prorab (1.12.2) unstable; urgency=medium
 
   * msys deployment corrected
