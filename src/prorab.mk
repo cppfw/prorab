@@ -1,8 +1,8 @@
 # prorab - the build system
 
 #once
-ifneq ($(prorab_included),true)
-    prorab_included := true
+ifneq ($(prorab_is_included),true)
+    prorab_is_included := true
 
     #for storing list of included makefiles
     prorab_included_makefiles :=
@@ -50,17 +50,25 @@ ifneq ($(prorab_included),true)
     #subtract one variable from another, negative result is clamped to zero
     prorab-sub = $(if $(call prorab-gte,$1,$2),$(filter-out xx,$(join $1,$2)),$(error subtraction goes negative))
 
+
+    # function for recursive wildcard
     prorab-rwildcard = $(foreach dd,$(wildcard $(patsubst %.,%,$1)*),$(call prorab-rwildcard,$(dd)/,$2) $(filter $(subst *,%,$2),$(dd)))
 
-    # calculate number of ../ in a file path
+
+    # function for calculating number of ../ in a file path
     prorab-calculate-stepups = $(foreach var,$(filter ..,$(subst /, ,$(dir $1))),x)
 
-    # define this directory for parent makefile
+
+    # directory of makefile which includes 'prorab.mk'
     prorab_this_makefile := $(word $(call prorab-num,$(call prorab-dec,$(MAKEFILE_LIST))),$(MAKEFILE_LIST))
     d := $(dir $(prorab_this_makefile))
 
     # defining alias for 'd'
     prorab_this_dir = $(d)
+
+
+    prorab_root_makefile_abs_dir := $(abspath $(d))/
+#    $(info prorab_root_makefile_abs_dir = $(prorab_root_makefile_abs_dir))
 
 
     .PHONY: clean all install uninstall distclean phony
