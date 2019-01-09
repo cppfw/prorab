@@ -264,8 +264,8 @@ ifneq ($(prorab_is_included),true)
 
         #in Cygwin and Msys2 the .dll files go to /usr/bin and .a and .dll.a files go to /usr/lib
         $(if $(filter $(this_no_install),true),, install:: \
-                $(if $(filter windows,$(os), \
-                        $(prorab_this_name)), \
+                $(if $(filter windows,$(os)), \
+                        $(prorab_this_name), \
                         $(DESTDIR)$(PREFIX)/lib/$(notdir $(prorab_this_name)) \
                     ) \
             )
