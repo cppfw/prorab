@@ -7,8 +7,8 @@ define this_rules
 test::
 	@$(this_running) $(this_test)
 	$(prorab_echo)rm -rf $(d)tmp
-	$(prorab_echo)$(MAKE) -C $(d)src clean || $(this_err) "initial 'make clean' failed"
-	$(prorab_echo)$(MAKE) -C $(d)src || $(this_err) "'make' failed"
+	$(prorab_echo)$(MAKE) --no-print-directory -C $(d)src clean || $(this_err) "initial 'make clean' failed"
+	$(prorab_echo)$(MAKE) --no-print-directory -C $(d)src || $(this_err) "'make' failed"
 ifeq ($(os), macosx)
 	$(prorab_echo)if [ ! -f $(d)src/libtests.dylib ]; then $(this_err) "src/libtests.dylib file not found"; fi
 	$(prorab_echo)if [ ! -f $(d)src/libtests.0.dylib ]; then $(this_err) "src/libtests.0.dylib file not found"; fi
@@ -22,7 +22,7 @@ endif
 	$(prorab_echo)if [ ! -f $(d)src/libtests.a ]; then $(this_err) "src/libtests.a file not found"; fi
 
 	$(prorab_echo)rm -rf $(d)tmp
-	$(prorab_echo)$(MAKE) -C $(d)src install DESTDIR=../tmp PREFIX=/usr || $(this_err) "'make install' failed"
+	$(prorab_echo)$(MAKE) --no-print-directory -C $(d)src install DESTDIR=../tmp PREFIX=/usr || $(this_err) "'make install' failed"
 	$(prorab_echo)if [ ! -f $(d)tmp/usr/include/test.h ]; then $(this_err) "tmp/usr/include/test.h file not found"; fi
 	$(prorab_echo)if [ ! -f $(d)tmp/usr/include/test.hpp ]; then $(this_err) "tmp/usr/include/test.hpp file not found"; fi
 	$(prorab_echo)if [ ! -f $(d)tmp/usr/include/test/test.h ]; then $(this_err) "tmp/usr/include/test/test.h file not found"; fi
@@ -48,7 +48,7 @@ else
 	$(prorab_echo)if [ -f $(d)tmp/usr/lib/libtests_no_install.so.0 ]; then $(this_err) "tmp/usr/lib/libtests_no_install.so.0 file found, must not be there"; fi
 endif
 
-	$(prorab_echo)$(MAKE) -C $(d)src uninstall DESTDIR=../tmp PREFIX=/usr || $(this_err) "'make uninstall' failed"
+	$(prorab_echo)$(MAKE) --no-print-directory -C $(d)src uninstall DESTDIR=../tmp PREFIX=/usr || $(this_err) "'make uninstall' failed"
 	$(prorab_echo)if [ -f $(d)tmp/usr/include/test.h ]; then $(this_err) "tmp/usr/include/test.h file found"; fi
 	$(prorab_echo)if [ -f $(d)tmp/usr/include/test.hpp ]; then $(this_err) "tmp/usr/include/test.hpp file found"; fi
 	$(prorab_echo)if [ -f $(d)tmp/usr/include/test/test.h ]; then $(this_err) "tmp/usr/include/test/test.h file found"; fi
@@ -70,7 +70,7 @@ endif
 
 	$(prorab_echo)rm -rf $(d)tmp
 
-	$(prorab_echo)$(MAKE) -C $(d)src clean || $(this_err) "final 'make clean' failed"
+	$(prorab_echo)$(MAKE) --no-print-directory -C $(d)src clean || $(this_err) "final 'make clean' failed"
 	$(prorab_echo)if [ -f $(d)src/libtests.a ]; then $(this_err) "src/libtests.a file remained after clean"; fi
 	$(prorab_echo)if [ -f $(d)src/libtests.so ]; then $(this_err) "src/libtests.so file remained after clean"; fi
 	$(prorab_echo)if [ -f $(d)src/libtests.so.0 ]; then $(this_err) "src/libtests.so.0 file remained after clean"; fi

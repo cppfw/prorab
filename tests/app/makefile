@@ -27,7 +27,9 @@ test::
 
 	$(prorab_echo)$(MAKE) --no-print-directory -C $(d)src clean || $(this_err) "final 'make clean' failed"
 	$(prorab_echo)if [ -f $(d)src/tests$(exeext) ]; then $(this_err) "src/tests$(exeext) file remained after clean"; fi
+	$(prorab_echo)if [ -f $(d)src/tests_no_install$(exeext) ]; then $(this_err) "src/tests_no_install$(exeext) file remained after clean"; fi
 	$(prorab_echo)if [ -d $(d)src/obj_tests ]; then $(this_err) "src/obj_tests directory remained after clean"; fi
+	$(prorab_echo)if [ -d $(d)src/obj_tests_no_install ]; then $(this_err) "src/obj_tests_no_install directory remained after clean"; fi
 	@$(this_pass)
 endef
 $(eval $(this_rules))
