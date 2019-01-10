@@ -1,3 +1,9 @@
+prorab (1.13.3) unstable; urgency=medium
+
+  * removed ... from output
+
+ -- Ivan Gagis <igagis@gmail.com>  Thu, 10 Jan 2019 19:35:37 +0200
+
 prorab (1.13.2) unstable; urgency=medium
 
   * improving 'linking' echo message
