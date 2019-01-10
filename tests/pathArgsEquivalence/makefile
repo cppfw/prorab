@@ -18,6 +18,8 @@ test::
 	$(prorab_echo)cat $(d)log.txt | sed -n -e "s/\(Compiling\).*/\1 /p" > $(d)log2.txt #check that compiler is NOT invoked
 	$(prorab_echo)cat $(d)log.txt | sed -n -e "s/\(Linking\).*/\1 /p" >> $(d)log2.txt #check that linker is NOT invoked
 	$(prorab_echo)cmp $(d)log2.txt $(d)log2.txt.cmp || (echo "log2.txt = "; cat $(d)log2.txt; $(this_err) "second compilation log is not as expected");
+	$(prorab_echo)$(MAKE) --no-print-directory -C $(d)prj clean || $(this_err) "final 'make clean' failed"
+	$(prorab_echo)rm $(d)log.txt $(d)log1.txt $(d)log2.txt
 	@$(this_pass)
 endef
 $(eval $(this_rules))

@@ -19,6 +19,8 @@ test::
 	$(prorab_echo)cp $(d)tmp_app/test_new.c $(d)tmp_app/test.c
 	$(prorab_echo)$(MAKE) --no-print-directory -C $(d)tmp_app || $(this_err) "'make' after removing header failed"
 
+	$(prorab_echo)rm -rf $(d)tmp_app
+
 	@$(this_pass)
 
 clean::
