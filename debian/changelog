@@ -1,3 +1,9 @@
+prorab (1.13.0) unstable; urgency=medium
+
+  * implemented this_out_dir
+
+ -- Ivan Gagis <igagis@gmail.com>  Thu, 10 Jan 2019 18:15:22 +0200
+
 prorab (1.12.3) unstable; urgency=medium
 
   * msys deployment to msys repo instead of mingw
