@@ -7,7 +7,7 @@ this_srcs += ../src/../src/test1.c
 
 this_ldlibs += -lstdc++
 
-this_outdir := out1
+this_out_dir := out1
 
 $(eval $(prorab-build-app))
 
@@ -26,6 +26,6 @@ this_ldlibs += -lstdc++
 
 this_no_install := true
 
-this_outdir := out2
+this_out_dir := out2
 
 $(eval $(prorab-build-app))
