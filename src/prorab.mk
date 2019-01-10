@@ -378,13 +378,13 @@ ifneq ($(prorab_is_included),true)
 
         #compile .cpp static pattern rule
         $(prorab_this_cpp_objs): $(prorab_this_obj_dir)cpp/$(prorab_private_objspacer)%.o: $(d)%.cpp $(prorab_cxxargs_file)
-		@printf "\\033[1;34mCompiling\\033[0m $$<\n"
+		@printf "\\033[0;94mCompiling\\033[0m $$<\n"
 		$(prorab_echo)mkdir -p $$(dir $$@)
 		$(prorab_echo)$(this_cxx) -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -MP -o "$$@" $(prorab_cxxargs) $$<
 
         #compile .c static pattern rule
         $(prorab_this_c_objs): $(prorab_this_obj_dir)c/$(prorab_private_objspacer)%.o: $(d)%.c $(prorab_cargs_file)
-		@printf "\\033[1;35mCompiling\\033[0m $$<\n"
+		@printf "\\033[0;35mCompiling\\033[0m $$<\n"
 		$(prorab_echo)mkdir -p $$(dir $$@)
 		$(prorab_echo)$(this_cc) -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -MP -o "$$@" $(prorab_cargs) $$<
 
@@ -419,7 +419,7 @@ ifneq ($(prorab_is_included),true)
 
         #link rule
         $(prorab_this_name): $(prorab_this_objs) $(prorab_ldargs_file)
-		@printf "\\033[1;32mLinking\\033[0m $$(patsubst $(prorab_root_makefile_abs_dir)%,%,$$@)\n"
+		@printf "\\033[0;91mLinking\\033[0m $$(patsubst $(prorab_root_makefile_abs_dir)%,%,$$@)\n"
 		$(prorab_echo)mkdir -p $(d)$(this_out_dir)
 		$(prorab_echo)$(this_cc) $(prorab_ldflags) $$(filter %.o,$$^) $(prorab_ldlibs) -o "$$@"
 
