@@ -1,3 +1,9 @@
+prorab (1.13.4) unstable; urgency=medium
+
+  * this_static_lib_only implemented
+
+ -- Ivan Gagis <igagis@gmail.com>  Thu, 10 Jan 2019 23:08:36 +0200
+
 prorab (1.13.3) unstable; urgency=medium
 
   * removed ... from output
