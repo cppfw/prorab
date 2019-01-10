@@ -168,3 +168,12 @@ Sometimes it is needed to have number of parallel jobs exactly as the number of 
 ```
 make autojobs=true
 ```
+
+
+## Adding prorab.mk to project tree
+
+In case there is no possibility to install the **prorab** to the system it is possible to just add the `prorab.mk` to the project files tree. Then all includes of the `prorab.mk` have to be done with relative path and using the `$(d)` variable.
+
+```
+include $(d)../../prorab.mk
+```
