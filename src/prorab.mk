@@ -303,26 +303,26 @@ ifneq ($(prorab_is_included),true)
 
         $(if $(this_name),,$(error this_name is not defined))
 
-        $(eval prorab_this_staticlib := $(abspath $(d)$(this_out_dir)/lib$(this_name).a))
+        $(eval prorab_this_static_lib := $(abspath $(d)$(this_out_dir)/lib$(this_name).a))
 
-        all: $(prorab_this_staticlib)
+        all: $(prorab_this_static_lib)
 
         clean::
-		$(prorab_echo)rm -f $(prorab_this_staticlib)
+		$(prorab_echo)rm -f $(prorab_this_static_lib)
 
-        $(if $(filter $(this_no_install),true),, install:: $(prorab_this_staticlib))
+        $(if $(filter $(this_no_install),true),, install:: $(prorab_this_static_lib))
 		$(if $(filter $(this_no_install),true),, \
                 $(prorab_echo)install -d $(DESTDIR)$(PREFIX)/lib/ && \
-                        install -m 644 $(prorab_this_staticlib) $(DESTDIR)$(PREFIX)/lib/ \
+                        install -m 644 $(prorab_this_static_lib) $(DESTDIR)$(PREFIX)/lib/ \
             )
 
         $(if $(filter $(this_no_install),true),, uninstall::)
 		$(if $(filter $(this_no_install),true),, \
-                $(prorab_echo)rm -f $(DESTDIR)$(PREFIX)/lib/$(notdir $(prorab_this_staticlib)) \
+                $(prorab_echo)rm -f $(DESTDIR)$(PREFIX)/lib/$(notdir $(prorab_this_static_lib)) \
             )
 
         #static library rule
-        $(prorab_this_staticlib): $(prorab_this_objs)
+        $(prorab_this_static_lib): $(prorab_this_objs)
 		@printf "\\033[0;33mCreating static library\\033[0m $$(notdir $$@)\n"
 		$(prorab_echo)ar cr $$@ $$(filter %.o,$$^)
 
