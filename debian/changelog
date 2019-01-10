@@ -1,3 +1,9 @@
+prorab (1.13.1) unstable; urgency=medium
+
+  * travis build fix
+
+ -- Ivan Gagis <igagis@gmail.com>  Thu, 10 Jan 2019 18:30:51 +0200
+
 prorab (1.13.0) unstable; urgency=medium
 
   * implemented this_out_dir
