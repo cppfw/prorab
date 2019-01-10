@@ -161,7 +161,7 @@ $(eval $(prorab-build-app))
 ```
 
 
-## using automatic number of parallel jobs
+## Using automatic number of parallel jobs
 
 Sometimes it is needed to have number of parallel jobs exactly as the number of physical processors on the system. **prorab** allows to do that. Just pass the `autojobs` variable set to `true` to the `make` command.
 
