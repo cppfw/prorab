@@ -177,10 +177,10 @@ ifneq ($(prorab_is_included),true)
 
         $(if $(this_soname),,$(error this_soname is not defined))
 
-        $(eval prorab_this_symbolic_name := $(abspath $(d)lib$(this_name)$(prorab_lib_extension)))
+        $(eval prorab_this_symbolic_name := $(abspath $(d)$(this_out_dir)/lib$(this_name)$(soext)))
 
         $(if $(filter macosx,$(os)), \
-                $(eval prorab_this_name := $(abspath $(d)lib$(this_name).$(this_soname)$(prorab_lib_extension))) \
+                $(eval prorab_this_name := $(abspath $(d)$(this_out_dir)/lib$(this_name).$(this_soname)$(soext))) \
                 $(eval prorab_private_ldflags += -dynamiclib -Wl,-install_name,$(prorab_this_name),-headerpad_max_install_names,-undefined,dynamic_lookup,-compatibility_version,1.0,-current_version,1.0) \
             ,\
                 $(eval prorab_this_name := $(prorab_this_symbolic_name).$(this_soname)) \
@@ -255,8 +255,8 @@ ifneq ($(prorab_is_included),true)
         $(if $(this_name),,$(error this_name is not defined))
 
         $(if $(filter windows,$(os)), \
-                $(eval prorab_this_name := $(abspath $(d)lib$(this_name)$(soext))) \
-                $(eval prorab_private_ldflags = -shared -s -Wl,--out-implib=$(d)lib$(this_name)$(soext).a) \
+                $(eval prorab_this_name := $(abspath $(d)$(this_out_dir)/lib$(this_name)$(soext))) \
+                $(eval prorab_private_ldflags = -shared -s -Wl,--out-implib=$(d)$(this_out_dir)/lib$(this_name)$(soext).a) \
                 $(eval prorab_this_symbolic_name := $(prorab_this_name)) \
             , \
                 $(prorab-private-dynamic-lib-specific-rules-nix-systems) \
@@ -304,7 +304,7 @@ ifneq ($(prorab_is_included),true)
 
         $(if $(this_name),,$(error this_name is not defined))
 
-        $(eval prorab_this_staticlib := $(abspath $(d)lib$(this_name).a))
+        $(eval prorab_this_staticlib := $(abspath $(d)$(this_out_dir)/lib$(this_name).a))
 
         all: $(prorab_this_staticlib)
 
@@ -420,7 +420,7 @@ ifneq ($(prorab_is_included),true)
 
         #link rule
         $(prorab_this_name): $(prorab_this_objs) $(prorab_ldargs_file)
-		@printf "\\033[1;32mLinking\\033[0m $$@...\n"
+		@printf "\\033[1;32mLinking\\033[0m $$(patsubst $(abspath $(d))%,%,$$@)...\n"
 		$(prorab_echo)mkdir -p $(d)$(this_out_dir)
 		$(prorab_echo)$(this_cc) $(prorab_ldflags) $$(filter %.o,$$^) $(prorab_ldlibs) -o "$$@"
 
