@@ -50,7 +50,7 @@ include prorab.mk
 $(eval $(prorab-build-subdirs))
 ```
 
-And that's it. This will invoke the same target on every subdirectory which has a makefile. Note, that parallel build is still supported.
+And that's it. This will invoke the same target on every subdirectory which has file named `makefile`. Note, that parallel build is still supported since it is a non-recursive technique.
 
 
 ## Prorab definitions and input variables
@@ -116,4 +116,27 @@ All commands in **prorab** recipes are prefixed with @ by default, but it is pos
 
 ```
 make verbose=true
+```
+
+
+## Defining several builds in one makefile
+
+It is possible to define several builds in a single `makefile`. Right before starting definition of a next build one has to clear all `this_` prefixed varibales, so that those do not go to the next build from previous build. To do that, there is a `prorab-clear-this-vars` definition which can be invoked using `$(eval ...)` as usual. Note, that this definition is automatically invoked inside of `prorab.mk`, so it is not necessary to invoke it for the very first build of the `makefile`.
+
+```
+include prorab.mk
+
+this_name := app1
+this_srcs += app1.cpp
+
+$(eval $(prorab-build-app))
+
+
+$(eval $(prorab-clear-this-vars))
+
+
+this_name := app2
+this_srcs += app2.cpp
+
+$(eval $(prorab-build-app))
 ```
