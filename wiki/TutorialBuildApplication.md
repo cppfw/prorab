@@ -18,7 +18,7 @@ But before we have to define some input variables if needed:
 Note: `this_ldlibs` and `this_ldflags` are separated because sometimes order of linker flags, object files and libraries matters. So, linker flags go first, then go object files and then go linker libs.
 
 After invocation of `prorab-build-app` there are following variables defined:
-- `prorab_this_name` - resulting name of the binary file (for example on Windows it will have .exe extension appended)
+- `prorab_this_name` - resulting name of the binary file (for example on Windows it will have `.exe` extension appended)
 - `prorab_this_objs` - list of generated object files
 
 Example:
