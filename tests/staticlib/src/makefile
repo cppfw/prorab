@@ -6,4 +6,6 @@ this_soname := 0
 
 this_srcs += $(call prorab-src-dir,.)
 
-$(eval $(prorab-build-static-lib))
+this_static_lib_only := true
+
+$(eval $(prorab-build-lib))
