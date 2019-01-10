@@ -140,3 +140,22 @@ this_srcs += app2.cpp
 
 $(eval $(prorab-build-app))
 ```
+
+
+# Adding all source files from all subdirectories to the build
+
+It is often needed in the build to use all source files from a certain directory subtree. There is a `prorab-src-dir` function for that. The directory to search for source files is relative to the `makefile` directory. Only `.c` and `.cpp` files are searched.
+
+```
+include prorab.mk
+
+this_name := app
+
+# all our sources are in `src` directory
+this_srcs := $(call prorab-src-dir,src)
+
+this_ldlibs += -lstdc++
+this_cxxflags += -Werror -O2 -g
+
+$(eval $(prorab-build-app))
+```
