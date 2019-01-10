@@ -6,6 +6,8 @@ this_soname := 0
 
 this_srcs += $(call prorab-src-dir, .)
 
+this_out_dir := out1/
+
 $(eval $(prorab-build-lib))
 
 
@@ -23,5 +25,7 @@ this_srcs += $(call prorab-src-dir, .)
 this_no_install := true
 
 this_headers_dir := ../no_install_headers
+
+this_out_dir := out2
 
 $(eval $(prorab-build-lib))

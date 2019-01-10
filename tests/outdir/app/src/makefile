@@ -26,6 +26,6 @@ this_ldlibs += -lstdc++
 
 this_no_install := true
 
-this_out_dir := out2
+this_out_dir := out2/
 
 $(eval $(prorab-build-app))

@@ -150,7 +150,7 @@ ifneq ($(prorab_is_included),true)
 
         $(eval prorab_private_ldflags := )
 
-        $(eval prorab_this_name := $(abspath $(d)$(this_name)$(exeext)))
+        $(eval prorab_this_name := $(abspath $(d)$(this_out_dir)/$(this_name)$(exeext)))
 
         $(eval prorab_this_symbolic_name := $(prorab_this_name))
 
@@ -177,12 +177,12 @@ ifneq ($(prorab_is_included),true)
 
         $(if $(this_soname),,$(error this_soname is not defined))
 
+        $(eval prorab_this_symbolic_name := $(abspath $(d)lib$(this_name)$(prorab_lib_extension)))
+
         $(if $(filter macosx,$(os)), \
-                $(eval prorab_this_symbolic_name := $(abspath $(d)lib$(this_name)$(prorab_lib_extension))) \
                 $(eval prorab_this_name := $(abspath $(d)lib$(this_name).$(this_soname)$(prorab_lib_extension))) \
                 $(eval prorab_private_ldflags += -dynamiclib -Wl,-install_name,$(prorab_this_name),-headerpad_max_install_names,-undefined,dynamic_lookup,-compatibility_version,1.0,-current_version,1.0) \
             ,\
-                $(eval prorab_this_symbolic_name := $(abspath $(d)lib$(this_name)$(prorab_lib_extension))) \
                 $(eval prorab_this_name := $(prorab_this_symbolic_name).$(this_soname)) \
                 $(eval prorab_private_ldflags = -shared -Wl,-soname,$(notdir $(prorab_this_name))) \
             )
@@ -356,18 +356,18 @@ ifneq ($(prorab_is_included),true)
         $(eval prorab_private_objspacer := )
         $(foreach var,$(prorab_private_numobjspacers), $(eval prorab_private_objspacer := $(prorab_private_objspacer)_prorab/))
 
-        $(eval prorab_this_obj_dir := obj_$(this_name)/)
+        $(eval prorab_this_obj_dir := $(d)$(this_out_dir)/obj_$(this_name)/)
 
         #Prepare list of object files
-        $(eval prorab_this_cpp_objs := $(addprefix $(d)$(prorab_this_obj_dir)cpp/$(prorab_private_objspacer),$(patsubst %.cpp,%.o,$(filter %.cpp,$(this_srcs)))))
-        $(eval prorab_this_c_objs := $(addprefix $(d)$(prorab_this_obj_dir)c/$(prorab_private_objspacer),$(patsubst %.c,%.o,$(filter %.c,$(this_srcs)))))
+        $(eval prorab_this_cpp_objs := $(addprefix $(prorab_this_obj_dir)cpp/$(prorab_private_objspacer),$(patsubst %.cpp,%.o,$(filter %.cpp,$(this_srcs)))))
+        $(eval prorab_this_c_objs := $(addprefix $(prorab_this_obj_dir)c/$(prorab_private_objspacer),$(patsubst %.c,%.o,$(filter %.c,$(this_srcs)))))
         $(eval prorab_this_objs := $(prorab_this_cpp_objs) $(prorab_this_c_objs))
 
         $(eval prorab_cxxargs := $(this_cppflags) $(this_cxxflags))
         $(eval prorab_cargs := $(this_cppflags) $(this_cflags))
 
-        $(eval prorab_cxxargs_file := $(d)$(prorab_this_obj_dir)cxxargs.txt)
-        $(eval prorab_cargs_file := $(d)$(prorab_this_obj_dir)cargs.txt)
+        $(eval prorab_cxxargs_file := $(prorab_this_obj_dir)cxxargs.txt)
+        $(eval prorab_cargs_file := $(prorab_this_obj_dir)cargs.txt)
 
         #compile command line flags dependency
         #we don't want to store equivalent paths in a different way, so substitute 'd' to empty string
@@ -378,13 +378,13 @@ ifneq ($(prorab_is_included),true)
         $(eval d := $(prorab_private_temp_d))
 
         #compile .cpp static pattern rule
-        $(prorab_this_cpp_objs): $(d)$(prorab_this_obj_dir)cpp/$(prorab_private_objspacer)%.o: $(d)%.cpp $(prorab_cxxargs_file)
+        $(prorab_this_cpp_objs): $(prorab_this_obj_dir)cpp/$(prorab_private_objspacer)%.o: $(d)%.cpp $(prorab_cxxargs_file)
 		@printf "\\033[1;34mCompiling\\033[0m $$<...\n"
 		$(prorab_echo)mkdir -p $$(dir $$@)
 		$(prorab_echo)$(this_cxx) -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -MP -o "$$@" $(prorab_cxxargs) $$<
 
         #compile .c static pattern rule
-        $(prorab_this_c_objs): $(d)$(prorab_this_obj_dir)c/$(prorab_private_objspacer)%.o: $(d)%.c $(prorab_cargs_file)
+        $(prorab_this_c_objs): $(prorab_this_obj_dir)c/$(prorab_private_objspacer)%.o: $(d)%.c $(prorab_cargs_file)
 		@printf "\\033[1;35mCompiling\\033[0m $$<...\n"
 		$(prorab_echo)mkdir -p $$(dir $$@)
 		$(prorab_echo)$(this_cc) -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -MP -o "$$@" $(prorab_cargs) $$<
@@ -393,7 +393,7 @@ ifneq ($(prorab_is_included),true)
         include $(wildcard $(addsuffix *.d,$(dir $(prorab_this_objs))))
 
         clean::
-		$(prorab_echo)rm -rf $(d)$(prorab_this_obj_dir)
+		$(prorab_echo)rm -rf $(prorab_this_obj_dir)
 
         #need empty line here to avoid merging with adjacent macro instantiations
 
@@ -408,7 +408,7 @@ ifneq ($(prorab_is_included),true)
         $(eval prorab_ldflags := $(this_ldflags) $(prorab_private_ldflags))
         $(eval prorab_ldlibs := $(this_ldlibs))
 
-        $(eval prorab_ldargs_file := $(d)$(prorab_this_obj_dir)ldargs.txt)
+        $(eval prorab_ldargs_file := $(prorab_this_obj_dir)ldargs.txt)
 
         #we don't want to store equivalent paths in a different way, so substitute 'd' to empty string
         $(eval prorab_private_temp_d := $(d))
@@ -421,6 +421,7 @@ ifneq ($(prorab_is_included),true)
         #link rule
         $(prorab_this_name): $(prorab_this_objs) $(prorab_ldargs_file)
 		@printf "\\033[1;32mLinking\\033[0m $$@...\n"
+		$(prorab_echo)mkdir -p $(d)$(this_out_dir)
 		$(prorab_echo)$(this_cc) $(prorab_ldflags) $$(filter %.o,$$^) $(prorab_ldlibs) -o "$$@"
 
         clean::

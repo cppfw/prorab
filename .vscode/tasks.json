@@ -7,6 +7,12 @@
             "label": "test",
             "type": "shell",
             "command": "make test"
+        },
+        {
+            "label": "test_outdir",
+            "type": "shell",
+            "command": "make --no-print-directory -C tests/outdir test",
+            "problemMatcher": []
         }
     ]
 }
