@@ -15,7 +15,7 @@ and libraries.
 ## Including prorab into the makefile
 
 Including **prorab** in the make file is simple and obvious, just add the following directive
-in the beginning of the makefile
+in the beginning of the `makefile`
 
 ```
 include prorab.mk
@@ -34,9 +34,9 @@ Right after inclusion of `prorab.mk` there will be following variables defined:
 
 ## Prorab definitions and variables naming conventions
 
-All **prorab** definitions are named using hyphen-case and start with `prorab-` prefix.
-Variables defined by **prorab** are named using snake case and start with `prorab_` prefix.
-Input variables are named using snake case and start with `this_` prefix.
+ - **Prorab definitions** are named using hyphen-case and start with `prorab-` prefix.
+ - **Output variables** are named using snake case and start with `prorab_` prefix.
+ - **Input variables** are named using snake case and start with `this_` prefix.
 
 
 ## Building subprojects with prorab
