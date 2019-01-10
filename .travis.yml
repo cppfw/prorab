@@ -1,3 +1,4 @@
+# build only master branch and version tags
 branches:
   only:
   - master

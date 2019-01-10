@@ -68,7 +68,6 @@ ifneq ($(prorab_is_included),true)
 
 
     prorab_root_makefile_abs_dir := $(abspath $(d))/
-#    $(info prorab_root_makefile_abs_dir = $(prorab_root_makefile_abs_dir))
 
 
     .PHONY: clean all install uninstall distclean phony
@@ -420,7 +419,7 @@ ifneq ($(prorab_is_included),true)
 
         #link rule
         $(prorab_this_name): $(prorab_this_objs) $(prorab_ldargs_file)
-		@printf "\\033[1;32mLinking\\033[0m $$(patsubst $(abspath $(d))%,%,$$@)...\n"
+		@printf "\\033[1;32mLinking\\033[0m $$(patsubst $(prorab_root_makefile_abs_dir)%,%,$$@)...\n"
 		$(prorab_echo)mkdir -p $(d)$(this_out_dir)
 		$(prorab_echo)$(this_cc) $(prorab_ldflags) $$(filter %.o,$$^) $(prorab_ldlibs) -o "$$@"
 
