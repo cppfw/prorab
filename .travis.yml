@@ -1,6 +1,6 @@
 branches:
-  except:
-  - release
+  only:
+  - master
 
 sudo: required
 dist: trusty

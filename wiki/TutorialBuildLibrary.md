@@ -4,7 +4,8 @@ To build a C++ library with prorab we can use a *prorab-build-lib* definition.
 
 But before we have to define some input variables if needed:
 - *this_soname* - 'so' name for shared library, for example 0.
-- *this_name*, *this_cc*, *this_cxx*, *this_srcs*, *this_cflags*, *this_cxxflags*, *this_ldflags*, *this_ldlibs*, *this_cppflags* - same as for [application](TutorialBuildApplication.md).
+- *this_headers_dir* - header files root directory, all headers from this directory subtree will be installed by `make install`. The directory is relative to the `makefile` directory. Can be empty.
+- *this_name*, *this_cc*, *this_cxx*, *this_srcs*, *this_cflags*, *this_cxxflags*, *this_ldflags*, *this_ldlibs*, *this_cppflags*, *this_out_dir*, *this_no_install* - same as for [application](TutorialBuildApplication.md).
 
 Note: *this_ldlibs* and *this_ldflags* are separated because sometimes order of linker flags, object files and libraries matters. So, linker flags go first, then go object files and then go linker libs.
 
@@ -35,10 +36,10 @@ $(eval $(prorab-build-lib))
 
 ## Install target
 
-**prorab** will define a *install* target for the library.
+**prorab** will define a `install` target for the library.
 
-Note, that it only installs *.hpp* header files from _subdirectories_ to *PREFIX/include* directory.
+Note, that it only installs `.hpp` and `.h` header files to `PREFIX/include` directory.
 
-Shared and static library files are installed to *PREFIX/lib* directory.
+Shared and static library files are installed to `PREFIX/lib` directory.
 
-*PREFIX* equals to */usr/local* by default.
+`PREFIX` equals to `/usr/local` by default.
