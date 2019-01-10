@@ -1,6 +1,6 @@
 # Basic concepts
 
-**prorab** is a non-recursive *GNU make*-based build system. Essentially it just provides
+**prorab** is a non-recursive `GNU make`-based build system. Essentially it just provides
 convenient definitions for writing clean makefiles.
 
 The main feature of **prorab** is that it allows having independent makefiles
@@ -23,26 +23,27 @@ include prorab.mk
 
 Basically, all makefiles in the project are supposed to use **prorab** and have this include directive as a first include.
 
-Right after inclusion of *prorab.mk* there will be following variables defined:
-- *prorab_this_dir* - directory where this makefile resides.
-- *d* - shorthand alias for *prorab_this_dir*
-- *prorab_os* - operating system where makefile is run, can be *linux*, *macosx*, *windows*.
-- *os* - shorthand alias for *prorab_os*
-- *prorab_lib_extension* - typical extension for dynamically linked libraries in the OS (.dll, .so, .dylib).
-- *soext* - shorthand alias for *prorab_lib_extension*
+Right after inclusion of `prorab.mk` there will be following variables defined:
+- `prorab_this_dir` - directory where this makefile resides.
+- `d` - shorthand alias for `prorab_this_dir`
+- `prorab_os` - operating system where makefile is run, can be `linux`, `macosx`, `windows`. Note, that `windows` is when building under `Cygwin` or `Msys`.
+- `os` - shorthand alias for `prorab_os`
+- `prorab_lib_extension` - typical extension for dynamically linked libraries in the OS (windows: `.dll`, linux: `.so`, macosx: `.dylib`)
+- `soext` - shorthand alias for `prorab_lib_extension`
+- `exeext` - typical executable extension (windows: `.exe`, linux: empty, macosx: empty)
 
 ## Prorab definitions and variables naming conventions
 
-All **prorab** definitions are named using kebab-case and start with **prorab-** prefix.
-Variables defined by **prorab** are named using underscore case and start with **prorab_** prefix.
-Input variables are named using underscore case and start with **this_** prefix.
+All **prorab** definitions are named using hyphen-case and start with `prorab-` prefix.
+Variables defined by **prorab** are named using snake case and start with `prorab_` prefix.
+Input variables are named using snake case and start with `this_` prefix.
 
 
 ## Building subprojects with prorab
 
-As said before, **prorab** allows 'cascading' of makefiles. Say, you have two subdirectories in your project: "app" and "test". And both those directories contain some subproject which can be built independently. So, in both those directories there are project makefiles.
+As said before, **prorab** allows 'cascading' of makefiles. Say, you have two subdirectories in your project: `app` and `test`. And both those directories contain some subproject which can be built independently. So, in both those directories there are project makefiles.
 
-Now, if we want to have a makefile in project root directory which builds both those subprojects, we can use *prorab-build-subdirs* definition and root makefile would look like this:
+Now, if we want to have a makefile in project root directory which builds both those subprojects, we can use `prorab-build-subdirs` definition and root makefile would look like this:
 
 ```
 include prorab.mk
@@ -65,32 +66,12 @@ this_cflags += -I$(d)../src -DDEBUG
 $(eval $(prorab-build-app))
 ```
 
-After invoking some **prorab** definition there might be some output variables defined like, for example, *prorab_this_name* which represents the resulting filename of the created binary.
-
-One can use *prorab-clear-this-vars* definition to clear all variables which have *this_* prefix. Thus, several **prorab** build definitions can be used in the same makefile:
-
-```
-this_name := AppName
-this_ldlibs += -lsomelib1
-this_cxxflags += -I$(d)../src -DDEBUG
-this_srcs := main1.cpp MyClass1.cpp
-
-$(eval $(prorab-build-app))
-
-$(eval $(prorab-clear-this-vars))
-
-this_name := AnotherAppName
-this_ldlibs += -lsomelib1
-this_cxxflags += -I$(d)../src -DDEBUG
-this_srcs := main2.cpp MyClass2.cpp
-
-$(eval $(prorab-build-app))
-```
+After invoking some **prorab** definition there might be some output variables defined like, for example, `prorab_this_name` which represents the resulting filename of the created binary.
 
 
 ## Including other makefiles
 
-In order to include some other makefile one can use *prorab-include* function. This function will check if the makefile was already included or not and only include it if necessary.
+In order to include some other makefile one can use `prorab-include` function. This function will check if the makefile was already included or not and only include it if necessary.
 
 Example:
 
@@ -112,7 +93,7 @@ $(eval $(call prorab-include,$(d)../stuff/makefile))
 
 ## Echoing commands from recipes
 
-All commands in **prorab** recipes are prefixed with @ by default, but it is possible to make it to be verbose by setting the _verbose_ variable to _true_, like this:
+All commands in **prorab** recipes are prefixed with @ by default, but it is possible to make it to be verbose by setting the `verbose` variable to `true`, like this:
 
 ```
 make verbose=true
@@ -128,16 +109,12 @@ include prorab.mk
 
 this_name := app1
 this_srcs += app1.cpp
-
 $(eval $(prorab-build-app))
-
 
 $(eval $(prorab-clear-this-vars))
 
-
 this_name := app2
 this_srcs += app2.cpp
-
 $(eval $(prorab-build-app))
 ```
 
