@@ -12,6 +12,7 @@ But before we have to define some input variables if needed:
 - *this_ldflags* - flags passed to linker, ok to use += right a way. By default equals to `LDFLAGS`. **Use only deferred assignment if re-assigning**.
 - *this_ldlibs* - libs passed to linker, ok to use += right a way. By default equals to `LDLIBS`. **Use only deferred assignment if re-assigning**.
 - *this_cppflags* - c preprocessor flags, ok to use += right a way. By default equals to `CPPFLAGS`. **Use only deferred assignment if re-assigning**.
+- *this_out_dir* - output directory relative to the directory of `makefile`. Can be empty.
 
 Note: *this_ldlibs* and *this_ldflags* are separated because sometimes order of linker flags, object files and libraries matters. So, linker flags go first, then go object files and then go linker libs.
 
