@@ -142,7 +142,7 @@ $(eval $(prorab-build-app))
 ```
 
 
-# Adding all source files from all subdirectories to the build
+## Adding all source files from all subdirectories to the build
 
 It is often needed in the build to use all source files from a certain directory subtree. There is a `prorab-src-dir` function for that. The directory to search for source files is relative to the `makefile` directory. Only `.c` and `.cpp` files are searched.
 
