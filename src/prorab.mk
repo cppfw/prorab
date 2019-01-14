@@ -69,6 +69,8 @@ ifneq ($(prorab_is_included),true)
 
     prorab_root_makefile_abs_dir := $(abspath $(d))/
 
+    # Delete target file in case its recepie has failed
+    .DELETE_ON_ERROR:
 
     .PHONY: clean all install uninstall distclean phony
 

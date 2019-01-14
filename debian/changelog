@@ -1,3 +1,9 @@
+prorab (1.13.6) unstable; urgency=medium
+
+  * utilize .DELETE_ON_ERROR: rule
+
+ -- Ivan Gagis <igagis@gmail.com>  Mon, 14 Jan 2019 19:44:32 +0200
+
 prorab (1.13.5) unstable; urgency=medium
 
   * colors updated
