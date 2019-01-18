@@ -155,6 +155,8 @@ In case there is no possibility to install the **prorab** to the system it is po
 ```
 include $(d)../../prorab.mk
 ```
+It is good to take a note in some `readme` file, or as a comment right in `prorab.mk` about which version of **prorab** you copied, so that you know if it needs update or not when new version of **prorab** comes out.
+
 
 ## Defining custom rules
 
