@@ -212,10 +212,7 @@ ifneq ($(prorab_is_included),true)
 
         #symbolic link to shared library rule
         $(prorab_this_symbolic_name): $(prorab_this_name)
-			@test -t 1 && printf "\\033[0;36m" || true
-			@printf "Creating symbolic link"
-			@test -t 1 && printf "\\033[0m" || true
-			@printf " $$(notdir $$@) -> $$(notdir $$<)\n"
+			@test -t 1 && printf "\\033[0;36mCreating symbolic link\\033[0m $$(notdir $$@) -> $$(notdir $$<)\n" || printf "Creating symbolic link $$(notdir $$@) -> $$(notdir $$<)\n"
 			$(prorab_echo)(cd $$(dir $$<) && ln -f -s $$(notdir $$<) $$(notdir $$@))
 
         all: $(prorab_this_symbolic_name)
@@ -350,11 +347,8 @@ ifneq ($(prorab_is_included),true)
 
         #static library rule
         $(prorab_this_static_lib): $(prorab_this_objs)
-			@test -t 1 && printf "\\033[0;33m" || true
-			@printf "Creating static library"
-			@test -t 1 && printf "\\033[0m" || true
-			@printf " $$(notdir $$@)\n"
-		$(prorab_echo)ar cr $$@ $$(filter %.o,$$^)
+			@test -t 1 && printf "\\033[0;33mCreating static library\\033[0m $$(notdir $$@)\n" || printf "Creating static library $$(notdir $$@)\n"
+			$(prorab_echo)ar cr $$@ $$(filter %.o,$$^)
 
         #need empty line here to avoid merging with adjacent macro instantiations
 
@@ -365,9 +359,9 @@ ifneq ($(prorab_is_included),true)
         #need empty line here to avoid merging with adjacent macro instantiations
 
         $1: $(if $(shell echo '$2' | cmp $1 2>/dev/null), phony,)
-		$(prorab_echo)mkdir -p $$(dir $$@)
-		$(prorab_echo)touch $$@
-		$(prorab_echo)echo '$2' > $$@
+			$(prorab_echo)mkdir -p $$(dir $$@)
+			$(prorab_echo)touch $$@
+			$(prorab_echo)echo '$2' > $$@
 
         #need empty line here to avoid merging with adjacent macro instantiations
 
@@ -408,21 +402,15 @@ ifneq ($(prorab_is_included),true)
 
         #compile .cpp static pattern rule
         $(prorab_this_cpp_objs): $(prorab_this_obj_dir)cpp/$(prorab_private_objspacer)%.o: $(d)%.cpp $(prorab_cxxargs_file)
-			@test -t 1 && printf "\\033[0;94m" || true
-			@printf "Compiling"
-			@test -t 1 && printf "\\033[0m" || true
-			@printf " $$<\n"
-		$(prorab_echo)mkdir -p $$(dir $$@)
-		$(prorab_echo)$(this_cxx) -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -MP -o "$$@" $(prorab_cxxargs) $$<
+			@test -t 1 && printf "\\033[0;94mCompiling\\033[0m $$<\n" || printf "Compiling $$<\n"
+			$(prorab_echo)mkdir -p $$(dir $$@)
+			$(prorab_echo)$(this_cxx) -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -MP -o "$$@" $(prorab_cxxargs) $$<
 
         #compile .c static pattern rule
         $(prorab_this_c_objs): $(prorab_this_obj_dir)c/$(prorab_private_objspacer)%.o: $(d)%.c $(prorab_cargs_file)
-			@test -t 1 && printf "\\033[0;35m" || true
-			@printf "Compiling"
-			@test -t 1 && printf "\\033[0m" || true
-			@printf " $$<\n"
-		$(prorab_echo)mkdir -p $$(dir $$@)
-		$(prorab_echo)$(this_cc) -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -MP -o "$$@" $(prorab_cargs) $$<
+			@test -t 1 && printf "\\033[0;35mCompiling\\033[0m $$<\n" || printf "Compiling $$<\n"
+			$(prorab_echo)mkdir -p $$(dir $$@)
+			$(prorab_echo)$(this_cc) -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -MP -o "$$@" $(prorab_cargs) $$<
 
         #include rules for header dependencies
         include $(wildcard $(addsuffix *.d,$(dir $(prorab_this_objs))))
@@ -455,18 +443,15 @@ ifneq ($(prorab_is_included),true)
 
         #link rule
         $(prorab_this_name): $(prorab_this_objs) $(prorab_ldargs_file)
-			@test -t 1 && printf "\\033[0;91m" || true
-			@printf "Linking"
-			@test -t 1 && printf "\\033[0m" || true
-			@printf " $$(patsubst $(prorab_root_makefile_abs_dir)%,%,$$@)\n"
-		$(prorab_echo)mkdir -p $(d)$(this_out_dir)
-		$(prorab_echo)$(this_cc) $(prorab_ldflags) $$(filter %.o,$$^) $(prorab_ldlibs) -o "$$@"
+			@test -t 1 && printf "\\033[0;91mLinking\\033[0m $$(patsubst $(prorab_root_makefile_abs_dir)%,%,$$@)\n" || printf "Linking $$(patsubst $(prorab_root_makefile_abs_dir)%,%,$$@)\n"
+			$(prorab_echo)mkdir -p $(d)$(this_out_dir)
+			$(prorab_echo)$(this_cc) $(prorab_ldflags) $$(filter %.o,$$^) $(prorab_ldlibs) -o "$$@"
 
         clean::
-		$(if $(filter windows,$(os)), \
-		        $(prorab_echo)rm -f $(prorab_this_name).a
-		    )
-		$(prorab_echo)rm -f $(prorab_this_name)
+			$(if $(filter windows,$(os)), \
+			        $(prorab_echo)rm -f $(prorab_this_name).a
+			    )
+			$(prorab_echo)rm -f $(prorab_this_name)
 
         #need empty line here to avoid merging with adjacent macro instantiations
 
