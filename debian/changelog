@@ -1,3 +1,10 @@
+prorab (1.13.7) unstable; urgency=medium
+
+  * added testing for terminal and printing colors only in case of
+    terminal
+
+ -- Ivan Gagis <igagis@gmail.com>  Mon, 04 Feb 2019 15:10:39 +0200
+
 prorab (1.13.6) unstable; urgency=medium
 
   * utilize .DELETE_ON_ERROR: rule
