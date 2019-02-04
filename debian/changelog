@@ -1,3 +1,9 @@
+prorab (1.13.8) unstable; urgency=medium
+
+  * made printf's to print line at once
+
+ -- Ivan Gagis <igagis@gmail.com>  Mon, 04 Feb 2019 15:45:27 +0200
+
 prorab (1.13.7) unstable; urgency=medium
 
   * added testing for terminal and printing colors only in case of
