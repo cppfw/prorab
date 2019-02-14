@@ -149,13 +149,39 @@ ifneq ($(prorab_is_included),true)
         exeext :=
     endif
 
+    # 'verbose' valid values are only 'true' or 'false'
     ifeq ($(verbose),true)
-        prorab_echo :=
+        v := true
+    else ifeq ($(verbose),false)
+        v := false
+    else ifeq ($(v),0)
+        v := false
+    else ifeq ($(v),)
+        v := false
     else
-        prorab_echo := @
+        v := true
     endif
 
+    ifeq ($(v),false)
+        prorab_echo := @
+    else
+        prorab_echo :=
+    endif
+
+    # 'autojobs' valid values are only 'true' or 'false'
     ifeq ($(autojobs),true)
+        aj := true
+    else ifeq ($(autojobs),false)
+        aj := false
+    else ifeq ($(aj),0)
+        aj := false
+    else ifeq ($(aj),)
+        aj := false
+    else
+        aj := true
+    endif
+
+    ifeq ($(aj),true)
         ifeq ($(os),macosx)
             MAKEFLAGS += -j$(shell sysctl -n hw.ncpu)
         else
