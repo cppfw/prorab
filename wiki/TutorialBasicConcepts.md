@@ -157,7 +157,7 @@ Set `autojobs` variable has higher priority than set `aj` variable.
 
 ## Adding prorab.mk to project tree
 
-In case there is no possibility to install the **prorab** to the system it is possible to just add the `prorab.mk` to the project file tree. Then all includes of the `prorab.mk` have to be done with relative path and using the `$(d)` variable.
+If there is no possibility to install **prorab** to the system then it is possible to just add the `prorab.mk` to the project file tree. Then all includes of the `prorab.mk` have to be done with relative path and using the `$(d)` variable as path prefix.
 
 ```
 include $(d)../../prorab.mk
