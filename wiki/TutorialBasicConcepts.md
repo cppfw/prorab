@@ -99,7 +99,10 @@ All commands in **prorab** recipes are prefixed with @ by default, but it is pos
 ```
 make verbose=true
 ```
+Valid values for `verbose` are `true` or `false` or not set.
 
+The `v` is a shorthand alias for `verbose`. If `v` is not set or set to `0` or `false` then it is equivalent to `verbose=false`. Otherwise, if `v` is set to any other value it is same as `verbose=true`.
+Set `verbose` variable has higher priority than set `v` variable.
 
 ## Defining several builds in one makefile
 
@@ -146,6 +149,10 @@ Sometimes it is needed to have number of parallel jobs exactly as the number of 
 ```
 make autojobs=true
 ```
+Valid valies for `autojobs` are `true` or `false` or not set.
+
+The `aj` is a shorthand alias for `autojobs`. If `aj` is not set or set to `0` or `false` then it is equivalent to `autojobs=true`. Otehrwise, if `aj` is set to any other value then it is same as `autojobs=true`.
+Set `autojobs` variable has higher priority than set `aj` variable.
 
 
 ## Adding prorab.mk to project tree
