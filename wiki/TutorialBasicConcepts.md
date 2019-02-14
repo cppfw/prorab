@@ -164,10 +164,12 @@ It is often necessary to add custom rules. `GNU make` expands variables in `make
 
 ```
 define this_rules
+
 test:: my_executable_binary
     @echo "Running my_executable_binary"
-	   @(cd $(d); $$^)
-	   @echo "program finished"
+    @(cd $(d); $$^)
+    @echo "program finished"
+
 endef
 $(eval $(this_rules))
 ```
