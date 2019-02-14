@@ -1,3 +1,9 @@
+prorab (1.13.9) unstable; urgency=medium
+
+  * shorthand aliases added for verbose and autojobs
+
+ -- Ivan Gagis <igagis@gmail.com>  Fri, 15 Feb 2019 00:54:04 +0200
+
 prorab (1.13.8) unstable; urgency=medium
 
   * made printf's to print line at once
