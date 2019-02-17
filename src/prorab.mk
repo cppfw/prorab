@@ -151,15 +151,17 @@ ifneq ($(prorab_is_included),true)
 
     # 'verbose' valid values are only 'true' or 'false'
     ifeq ($(verbose),true)
-        v := true
+        override v := true
     else ifeq ($(verbose),false)
-        v := false
+        override v := false
     else ifeq ($(v),0)
-        v := false
+        override v := false
     else ifeq ($(v),)
-        v := false
+        override v := false
+    else ifeq ($(v),false)
+        #do nothing
     else
-        v := true
+        override v := true
     endif
 
     ifeq ($(v),false)
@@ -170,15 +172,17 @@ ifneq ($(prorab_is_included),true)
 
     # 'autojobs' valid values are only 'true' or 'false'
     ifeq ($(autojobs),true)
-        aj := true
+        override aj := true
     else ifeq ($(autojobs),false)
-        aj := false
+        override aj := false
     else ifeq ($(aj),0)
-        aj := false
+        override aj := false
+    else ifeq ($(aj),false)
+        # do nothing
     else ifeq ($(aj),)
-        aj := false
+        override aj := false
     else
-        aj := true
+        override aj := true
     endif
 
     ifeq ($(aj),true)
