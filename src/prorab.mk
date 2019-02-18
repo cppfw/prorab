@@ -94,7 +94,7 @@ ifneq ($(prorab_is_included),true)
     # Delete target file in case its recepie has failed
     .DELETE_ON_ERROR:
 
-    .PHONY: clean all install uninstall distclean phony
+    .PHONY: clean all install uninstall distclean phony re echo-cleaning
 
     # define the very first default target
     all:
@@ -104,6 +104,11 @@ ifneq ($(prorab_is_included),true)
 
     # define distclean target which does same as clean. This is to make some older versions of debhelper happy.
     distclean: clean
+
+    echo-cleaning:
+		@test -t 1 && printf "\\033[0;90mCleaning\\033[0m\n" || printf "Cleaning\n"
+
+    clean:: echo-cleaning
 
     # directory of prorab.mk
     prorab_dir := $(dir $(lastword $(MAKEFILE_LIST)))
@@ -193,6 +198,10 @@ ifneq ($(prorab_is_included),true)
         endif
     endif
 
+    # target for rebuilding all
+    re:
+		$(prorab_echo)$(MAKE) --no-print-directory clean
+		$(prorab_echo)$(MAKE) --no-print-directory
 
 
     define prorab-private-app-specific-rules
@@ -266,7 +275,7 @@ ifneq ($(prorab_is_included),true)
             )
 
         clean::
-		$(prorab_echo)rm -f $(prorab_this_symbolic_name)
+			$(prorab_echo)rm -f $(prorab_this_symbolic_name)
 
         #need empty line here to avoid merging with adjacent macro instantiations
 
