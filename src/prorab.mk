@@ -412,8 +412,8 @@ ifneq ($(prorab_is_included),true)
         $(eval prorab_this_obj_dir := $(d)$(this_out_dir)/obj_$(this_name)/)
 
         #Prepare list of object files
-        $(eval prorab_this_cpp_objs := $(addprefix $(prorab_this_obj_dir)cpp/$(prorab_private_objspacer),$(patsubst %.cpp,%.o,$(filter %.cpp,$(this_srcs)))))
-        $(eval prorab_this_c_objs := $(addprefix $(prorab_this_obj_dir)c/$(prorab_private_objspacer),$(patsubst %.c,%.o,$(filter %.c,$(this_srcs)))))
+        $(eval prorab_this_cpp_objs := $(addprefix $(prorab_this_obj_dir)$(prorab_private_objspacer),$(patsubst %.cpp,%.cpp.o,$(filter %.cpp,$(this_srcs)))))
+        $(eval prorab_this_c_objs := $(addprefix $(prorab_this_obj_dir)$(prorab_private_objspacer),$(patsubst %.c,%.c.o,$(filter %.c,$(this_srcs)))))
         $(eval prorab_this_objs := $(prorab_this_cpp_objs) $(prorab_this_c_objs))
 
         $(eval prorab_cxxargs := $(this_cppflags) $(this_cxxflags))
@@ -431,13 +431,13 @@ ifneq ($(prorab_is_included),true)
         $(eval d := $(prorab_private_temp_d))
 
         #compile .cpp static pattern rule
-        $(prorab_this_cpp_objs): $(prorab_this_obj_dir)cpp/$(prorab_private_objspacer)%.o: $(d)%.cpp $(prorab_cxxargs_file)
+        $(prorab_this_cpp_objs): $(prorab_this_obj_dir)$(prorab_private_objspacer)%.cpp.o: $(d)%.cpp $(prorab_cxxargs_file)
 			@test -t 1 && printf "\\033[0;94mCompiling\\033[0m $$<\n" || printf "Compiling $$<\n"
 			$(prorab_echo)mkdir -p $$(dir $$@)
 			$(prorab_echo)$(this_cxx) -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -MP -o "$$@" $(prorab_cxxargs) $$<
 
         #compile .c static pattern rule
-        $(prorab_this_c_objs): $(prorab_this_obj_dir)c/$(prorab_private_objspacer)%.o: $(d)%.c $(prorab_cargs_file)
+        $(prorab_this_c_objs): $(prorab_this_obj_dir)$(prorab_private_objspacer)%.c.o: $(d)%.c $(prorab_cargs_file)
 			@test -t 1 && printf "\\033[0;35mCompiling\\033[0m $$<\n" || printf "Compiling $$<\n"
 			$(prorab_echo)mkdir -p $$(dir $$@)
 			$(prorab_echo)$(this_cc) -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -MP -o "$$@" $(prorab_cargs) $$<
