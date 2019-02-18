@@ -425,8 +425,8 @@ ifneq ($(prorab_is_included),true)
         $(eval prorab_this_c_objs := $(addprefix $(prorab_this_obj_dir)$(prorab_private_objspacer),$(patsubst %.c,%.c.o,$(filter %.c,$(this_srcs)))))
         $(eval prorab_this_objs := $(prorab_this_cpp_objs) $(prorab_this_c_objs))
 
-        $(eval prorab_cxxargs := $(this_cppflags) $(this_cxxflags))
-        $(eval prorab_cargs := $(this_cppflags) $(this_cflags))
+        $(eval prorab_cxxargs = $$(this_cppflags) $$(this_cxxflags))
+        $(eval prorab_cargs := $$(this_cppflags) $$(this_cflags))
 
         $(eval prorab_cxxargs_file := $(prorab_this_obj_dir)cxxargs.txt)
         $(eval prorab_cargs_file := $(prorab_this_obj_dir)cargs.txt)
@@ -435,8 +435,8 @@ ifneq ($(prorab_is_included),true)
         #we don't want to store equivalent paths in a different way, so substitute 'd' to empty string
         $(eval prorab_private_temp_d := $(d))
         $(eval d := )
-        $(call prorab-private-args-file-rules, $(prorab_cxxargs_file),$(this_cxx) $(this_cppflags) $(this_cxxflags))
-        $(call prorab-private-args-file-rules, $(prorab_cargs_file),$(this_cc) $(this_cppflags) $(this_cflags))
+        $(call prorab-private-args-file-rules, $(prorab_cxxargs_file),$(this_cxx) $(prorab_cxxargs))
+        $(call prorab-private-args-file-rules, $(prorab_cargs_file),$(this_cc) $(prorab_cargs))
         $(eval d := $(prorab_private_temp_d))
 
         #compile .cpp static pattern rule
