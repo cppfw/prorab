@@ -105,16 +105,6 @@ script:
     sudo chroot /srv/chroot/rasp-armhf bash -c "cd /build && dpkg-buildpackage -us -uc";
   fi
 
-#- if [ "$TRAVIS_OS_NAME" == "linux" ]; then
-#    src/myci-deb-prepare.sh &&
-#    PATH=$PATH:$TRAVIS_BUILD_DIR/src dpkg-buildpackage -uc -us;
-#  fi
-## 'sudo make install' is needed because when deploying it will use myci-deploy-homebrew.sh script.
-#- if [ "$TRAVIS_OS_NAME" == "osx" ]; then
-#    make &&
-#    PATH=$PATH:$TRAVIS_BUILD_DIR/src make test &&
-#    sudo make install;
-#  fi
 
 before_deploy:
   - myci-apply-version.sh -v `myci-deb-version.sh debian/changelog` travis_bintray_*.json.in
