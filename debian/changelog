@@ -1,3 +1,9 @@
+prorab (1.13.10) unstable; urgency=medium
+
+  * added checking if variable is deferred where needed
+
+ -- Ivan Gagis <igagis@gmail.com>  Tue, 19 Feb 2019 12:33:20 +0200
+
 prorab (1.13.9) unstable; urgency=medium
 
   * shorthand aliases added for verbose and autojobs
