@@ -1,3 +1,9 @@
+prorab (1.13.12) unstable; urgency=medium
+
+  * cargs.txt generation bug fix
+
+ -- Ivan Gagis <igagis@gmail.com>  Sun, 03 Mar 2019 00:40:38 +0200
+
 prorab (1.13.11) unstable; urgency=medium
 
   * deferred assert bug fix
