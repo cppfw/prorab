@@ -409,8 +409,8 @@ ifneq ($(prorab_is_included),true)
 
     define prorab-private-assert-deferred
 
-        $(eval prorab_private_probe := x)
         $(eval prorab_private_tmp := $($1))
+        $(eval prorab_private_probe := x)
         $(eval $1 += $$(prorab_private_probe))
         $(eval prorab_private_probe :=)
         $(if $(call prorab-eq, $($1), $(prorab_private_tmp)),,$(error [$(d)makefile]: Variable '$1' must be a deferred expansion variable))
