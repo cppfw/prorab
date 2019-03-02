@@ -1,4 +1,6 @@
 Compile
+Compile
 Link
+-I./app/../app 
 -I./app/../app 
 -L./app/../app 

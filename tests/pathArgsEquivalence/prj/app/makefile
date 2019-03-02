@@ -20,6 +20,8 @@ this_ldflags += -L$(d)../app
 this_cxxflags += -Werror -O2 -g
 this_cxxflags += -I$(d)../app
 
+this_cflags += -I$(d)../app
+
 #Call to 'prorab-build-app' macro defines all needed rules to build the application.
 #All the needed input variables defined above are used by this macro.
 $(eval $(prorab-build-app))

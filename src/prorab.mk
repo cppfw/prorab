@@ -442,7 +442,7 @@ ifneq ($(prorab_is_included),true)
         $(call prorab-private-assert-deferred,this_cppflags)
 
         $(eval prorab_cxxargs = $$(this_cppflags) $$(this_cxxflags))
-        $(eval prorab_cargs := $$(this_cppflags) $$(this_cflags))
+        $(eval prorab_cargs = $$(this_cppflags) $$(this_cflags))
 
         $(eval prorab_cxxargs_file := $(prorab_this_obj_dir)cxxargs.txt)
         $(eval prorab_cargs_file := $(prorab_this_obj_dir)cargs.txt)
