@@ -27,9 +27,9 @@ addons:
 matrix:
   include:
     - name: macosx
-    os: osx
-    compiler: clang
-    osx_image: xcode8.3
+      os: osx
+      compiler: clang
+      osx_image: xcode8.3
 
 
 env:
