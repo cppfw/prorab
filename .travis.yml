@@ -16,7 +16,7 @@ os: linux
 addons:
   apt:
     sources:
-      - sourceline: 'deb https://dl.bintray.com/igagis/ubuntu xenial main'
+      - sourceline: 'deb http://dl.bintray.com/igagis/ubuntu xenial main'
         key_url: 'http://keyserver.ubuntu.com/pks/lookup?op=get&search=0x379CE192D401AB61'
     update: true
     packages:
@@ -52,7 +52,7 @@ before_install:
 - if [ "$TRAVIS_OS_NAME" == "linux" ] && [ -z "$TRAVIS_JOB_NAME" ]; then
     docker run --name ccc -v $TRAVIS_BUILD_DIR/..:/build -w /build/$(basename $TRAVIS_BUILD_DIR) -it -d $DOCKER_IMAGE bash &&
     if [ "$PACKAGE_TYPE" == "deb" ]; then
-      docker exec ccc bash -c "echo 'deb https://dl.bintray.com/igagis/$OS $OS_REL main' > /etc/apt/sources.list.d/igagis.list" &&
+      docker exec ccc bash -c "echo 'deb http://dl.bintray.com/igagis/$OS $OS_REL main' > /etc/apt/sources.list.d/igagis.list" &&
       docker exec ccc apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 379CE192D401AB61 &&
       docker exec ccc apt update &&
       docker exec ccc apt install -y devscripts equivs myci &&
