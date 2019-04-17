@@ -20,11 +20,11 @@
 - Update apt packages
 
   ```
-  sudo apt-get update
+  sudo apt update
   ```
 
 - Install **prorab** package
 
   ```
-  sudo apt-get install prorab
+  sudo apt install prorab
   ```
