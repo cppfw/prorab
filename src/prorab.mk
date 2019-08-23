@@ -387,7 +387,7 @@ ifneq ($(prorab_is_included),true)
         #static library rule
         $(prorab_this_static_lib): $(prorab_this_objs)
 			@test -t 1 && printf "\\033[0;33mCreating static library\\033[0m $$(notdir $$@)\n" || printf "Creating static library $$(notdir $$@)\n"
-			$(prorab_echo)ar cr $$@ $$(filter %.o,$$^)
+			$(prorab_echo)$(this_ar) cr $$@ $$(filter %.o,$$^)
 
         #need empty line here to avoid merging with adjacent macro instantiations
 
@@ -611,6 +611,7 @@ ifneq ($(prorab_is_included),true)
         #set default values for compilers
         $(eval this_cc := $(CC))
         $(eval this_cxx := $(CXX))
+        $(eval this_ar := $(AR))
 
         #set default values for flags
         #NOTE: we need deferred assignment here because we want that $(d) would be substituted after saving arguments to command line arguments dependency files.
