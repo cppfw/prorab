@@ -7,7 +7,6 @@ But before we have to define some input variables if needed:
 - `this_srcs` - list of sources, ok to use += right a way.
 - `this_cc` - c compiler to use. By default equals to value of `CC` variable.
 - `this_cxx` - c++ compiler to use. By default equals to value of `CXX` variable.
-- `this_ar` - archiver program for creating static libraries. By default equals to value of `AR` variable.
 - `this_cflags` - flags passed to C compiler, ok to use += right a way. By default equals to value of `CFLAGS` variable. **Use only deferred assignment if re-assigning**.
 - `this_cxxflags` - flags passed to C++ compiler, ok to use += right a way. By default equals to value of `CXXFLAGS` variable. **Use only deferred assignment if re-assigning**.
 - `this_ldflags` - flags passed to linker, ok to use += right a way. By default equals to value of `LDFLAGS` variable. **Use only deferred assignment if re-assigning**.
