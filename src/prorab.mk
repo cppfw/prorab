@@ -149,6 +149,7 @@ ifneq ($(prorab_is_included),true)
     endif
 
     ifeq ($(v),false)
+        # NOTE: prorab_echo is kept for backwards compatibility
         prorab_echo := @
         Q := @
     else
@@ -276,7 +277,7 @@ ifneq ($(prorab_is_included),true)
         #need empty line here to avoid merging with adjacent macro instantiations
 
     endef
-    
+
 
     #######################
     # common rules #
@@ -336,13 +337,13 @@ $(.RECIPEPREFIX)$(Q)$(MAKE) --no-print-directory
 
         $(if $(filter $(this_no_install),true),, install:: $(prorab_this_name))
 $(.RECIPEPREFIX)$(if $(filter $(this_no_install),true),, \
-                $(prorab_echo)install -d $(DESTDIR)$(PREFIX)/bin/ && \
+                $(Q)install -d $(DESTDIR)$(PREFIX)/bin/ && \
                         install $(prorab_this_name) $(DESTDIR)$(PREFIX)/bin/ \
             )
 
         $(if $(filter $(this_no_install),true),, uninstall::)
 $(.RECIPEPREFIX)$(if $(filter $(this_no_install),true),, \
-                $(prorab_echo)rm -f $(DESTDIR)$(PREFIX)/bin/$(notdir $(prorab_this_name)) \
+                $(Q)rm -f $(DESTDIR)$(PREFIX)/bin/$(notdir $(prorab_this_name)) \
             )
 
         #need empty line here to avoid merging with adjacent macro instantiations
@@ -377,30 +378,30 @@ $(.RECIPEPREFIX)$(if $(filter $(this_no_install),true),, \
         #symbolic link to shared library rule
         $(prorab_this_symbolic_name): $(prorab_this_name)
 $(.RECIPEPREFIX)@test -t 1 && printf "\\033[0;36mCreating symbolic link\\033[0m $$(notdir $$@) -> $$(notdir $$<)\n" || printf "Creating symbolic link $$(notdir $$@) -> $$(notdir $$<)\n"
-$(.RECIPEPREFIX)$(prorab_echo)(cd $$(dir $$<) && ln -f -s $$(notdir $$<) $$(notdir $$@))
+$(.RECIPEPREFIX)$(Q)(cd $$(dir $$<) && ln -f -s $$(notdir $$<) $$(notdir $$@))
 
         all: $(prorab_this_symbolic_name)
 
         $(if $(filter $(this_no_install),true),, install:: $(DESTDIR)$(PREFIX)/lib/$(notdir $(prorab_this_name)))
 $(.RECIPEPREFIX)$(if $(filter $(this_no_install),true),, \
-                $(prorab_echo)install -d $(DESTDIR)$(PREFIX)/lib/ && \
+                $(Q)install -d $(DESTDIR)$(PREFIX)/lib/ && \
                         (cd $(DESTDIR)$(PREFIX)/lib/ && ln -f -s $(notdir $(prorab_this_name)) $(notdir $(prorab_this_symbolic_name))) \
             )
 
         $(if $(filter $(this_no_install),true),, $(DESTDIR)$(PREFIX)/lib/$(notdir $(prorab_this_name)): $(prorab_this_name))
 $(.RECIPEPREFIX)$(if $(filter $(this_no_install),true),, \
-                $(prorab_echo) \
+                $(Q) \
                         install -d $(DESTDIR)$(PREFIX)/lib/ && \
                         install $(prorab_this_name) $(DESTDIR)$(PREFIX)/lib/ \
             )
 
         $(if $(filter $(this_no_install),true),, uninstall::)
 $(.RECIPEPREFIX)$(if $(filter $(this_no_install),true),, \
-                $(prorab_echo)rm -f $(DESTDIR)$(PREFIX)/lib/$(notdir $(prorab_this_symbolic_name))
+                $(Q)rm -f $(DESTDIR)$(PREFIX)/lib/$(notdir $(prorab_this_symbolic_name))
             )
 
         clean::
-$(.RECIPEPREFIX)$(prorab_echo)rm -f $(prorab_this_symbolic_name)
+$(.RECIPEPREFIX)$(Q)rm -f $(prorab_this_symbolic_name)
 
         #need empty line here to avoid merging with adjacent macro instantiations
 
@@ -417,7 +418,7 @@ $(.RECIPEPREFIX)$(prorab_echo)rm -f $(prorab_this_symbolic_name)
 
         $(if $(filter $(this_no_install),true),, install::)
 $(.RECIPEPREFIX)$(if $(filter $(this_no_install),true),, \
-                $(prorab_echo)for i in $(prorab_private_headers); do \
+                $(Q)for i in $(prorab_private_headers); do \
                     install -d $(DESTDIR)$(PREFIX)/include/$$$$(dirname $$$$i) && \
                     install -m 644 $(prorab_private_headers_dir)$$$$i $(DESTDIR)$(PREFIX)/include/$$$$i; \
                 done \
@@ -425,7 +426,7 @@ $(.RECIPEPREFIX)$(if $(filter $(this_no_install),true),, \
 
         $(if $(filter $(this_no_install),true),, uninstall::)
 $(.RECIPEPREFIX)$(if $(filter $(this_no_install),true),, \
-                $(prorab_echo)for i in $(prorab_private_headers); do \
+                $(Q)for i in $(prorab_private_headers); do \
                     path=$$$$(echo $$$$i | cut -d "/" -f1) && \
                     rm -rf $(DESTDIR)$(PREFIX)/include/$$$$path; \
                 done \
@@ -465,7 +466,7 @@ $(.RECIPEPREFIX)$(if $(filter $(this_no_install),true),, \
             )
 $(.RECIPEPREFIX)$(if $(filter $(this_no_install),true),, \
                 $(if $(filter windows,$(os)), \
-                        $(prorab_echo) \
+                        $(Q) \
                                 install -d $(DESTDIR)$(PREFIX)/bin/ && \
                                 install $(prorab_this_name) $(DESTDIR)$(PREFIX)/bin/ && \
                                 install -d $(DESTDIR)$(PREFIX)/lib/ && \
@@ -474,17 +475,17 @@ $(.RECIPEPREFIX)$(if $(filter $(this_no_install),true),, \
             )
 $(.RECIPEPREFIX)$(if $(filter $(this_no_install),true),, \
                 $(if $(filter macosx,$(os)), \
-                        $(prorab_echo)install_name_tool -id "$(PREFIX)/lib/$(notdir $(prorab_this_name))" $(DESTDIR)$(PREFIX)/lib/$(notdir $(prorab_this_name)) \
+                        $(Q)install_name_tool -id "$(PREFIX)/lib/$(notdir $(prorab_this_name))" $(DESTDIR)$(PREFIX)/lib/$(notdir $(prorab_this_name)) \
                     ) \
             )
 
         $(if $(filter $(this_no_install),true),, uninstall::)
 $(.RECIPEPREFIX)$(if $(filter $(this_no_install),true),, \
                 $(if $(filter windows,$(os)), \
-                        $(prorab_echo)rm -f $(DESTDIR)$(PREFIX)/lib/$(notdir $(prorab_this_name).a) && \
+                        $(Q)rm -f $(DESTDIR)$(PREFIX)/lib/$(notdir $(prorab_this_name).a) && \
                                 rm -f $(DESTDIR)$(PREFIX)/bin/$(notdir $(prorab_this_name)) \
                     , \
-                        $(prorab_echo)rm -f $(DESTDIR)$(PREFIX)/lib/$(notdir $(prorab_this_name)) \
+                        $(Q)rm -f $(DESTDIR)$(PREFIX)/lib/$(notdir $(prorab_this_name)) \
                     ) \
             )
 
@@ -510,23 +511,23 @@ $(.RECIPEPREFIX)$(if $(filter $(this_no_install),true),, \
         all: $(prorab_this_static_lib)
 
         clean::
-$(.RECIPEPREFIX)$(prorab_echo)rm -f $(prorab_this_static_lib)
+$(.RECIPEPREFIX)$(Q)rm -f $(prorab_this_static_lib)
 
         $(if $(filter $(this_no_install),true),, install:: $(prorab_this_static_lib))
 $(.RECIPEPREFIX)$(if $(filter $(this_no_install),true),, \
-                $(prorab_echo)install -d $(DESTDIR)$(PREFIX)/lib/ && \
+                $(Q)install -d $(DESTDIR)$(PREFIX)/lib/ && \
                         install -m 644 $(prorab_this_static_lib) $(DESTDIR)$(PREFIX)/lib/ \
             )
 
         $(if $(filter $(this_no_install),true),, uninstall::)
 $(.RECIPEPREFIX)$(if $(filter $(this_no_install),true),, \
-                $(prorab_echo)rm -f $(DESTDIR)$(PREFIX)/lib/$(notdir $(prorab_this_static_lib)) \
+                $(Q)rm -f $(DESTDIR)$(PREFIX)/lib/$(notdir $(prorab_this_static_lib)) \
             )
 
         #static library rule
         $(prorab_this_static_lib): $(prorab_this_objs)
 $(.RECIPEPREFIX)@test -t 1 && printf "\\033[0;33mCreating static library\\033[0m $$(notdir $$@)\n" || printf "Creating static library $$(notdir $$@)\n"
-$(.RECIPEPREFIX)$(prorab_echo)$(this_ar) cr $$@ $$(filter %.o,$$^)
+$(.RECIPEPREFIX)$(Q)$(this_ar) cr $$@ $$(filter %.o,$$^)
 
         #need empty line here to avoid merging with adjacent macro instantiations
 
@@ -537,9 +538,9 @@ $(.RECIPEPREFIX)$(prorab_echo)$(this_ar) cr $$@ $$(filter %.o,$$^)
         #need empty line here to avoid merging with adjacent macro instantiations
 
         $1: $(if $(shell echo '$2' | cmp $1 2>/dev/null), phony,)
-$(.RECIPEPREFIX)$(prorab_echo)mkdir -p $$(dir $$@)
-$(.RECIPEPREFIX)$(prorab_echo)touch $$@
-$(.RECIPEPREFIX)$(prorab_echo)echo '$2' > $$@
+$(.RECIPEPREFIX)$(Q)mkdir -p $$(dir $$@)
+$(.RECIPEPREFIX)$(Q)touch $$@
+$(.RECIPEPREFIX)$(Q)echo '$2' > $$@
 
         #need empty line here to avoid merging with adjacent macro instantiations
 
@@ -604,20 +605,20 @@ $(.RECIPEPREFIX)$(prorab_echo)echo '$2' > $$@
         #compile .cpp static pattern rule
         $(prorab_this_cpp_objs): $(prorab_this_obj_dir)$(prorab_private_objspacer)%.cpp.o: $(d)%.cpp $(prorab_cxxargs_file)
 $(.RECIPEPREFIX)@test -t 1 && printf "\\033[0;94mCompiling\\033[0m $$<\n" || printf "Compiling $$<\n"
-$(.RECIPEPREFIX)$(prorab_echo)mkdir -p $$(dir $$@)
-$(.RECIPEPREFIX)$(prorab_echo)$(this_cxx) -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -MP -o "$$@" $(prorab_cxxargs) $$<
+$(.RECIPEPREFIX)$(Q)mkdir -p $$(dir $$@)
+$(.RECIPEPREFIX)$(Q)$(this_cxx) -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -MP -o "$$@" $(prorab_cxxargs) $$<
 
         #compile .c static pattern rule
         $(prorab_this_c_objs): $(prorab_this_obj_dir)$(prorab_private_objspacer)%.c.o: $(d)%.c $(prorab_cargs_file)
 $(.RECIPEPREFIX)@test -t 1 && printf "\\033[0;35mCompiling\\033[0m $$<\n" || printf "Compiling $$<\n"
-$(.RECIPEPREFIX)$(prorab_echo)mkdir -p $$(dir $$@)
-$(.RECIPEPREFIX)$(prorab_echo)$(this_cc) -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -MP -o "$$@" $(prorab_cargs) $$<
+$(.RECIPEPREFIX)$(Q)mkdir -p $$(dir $$@)
+$(.RECIPEPREFIX)$(Q)$(this_cc) -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -MP -o "$$@" $(prorab_cargs) $$<
 
         #include rules for header dependencies
         include $(wildcard $(addsuffix *.d,$(dir $(prorab_this_objs))))
 
         clean::
-$(.RECIPEPREFIX)$(prorab_echo)rm -rf $(prorab_this_obj_dir)
+$(.RECIPEPREFIX)$(Q)rm -rf $(prorab_this_obj_dir)
 
         #need empty line here to avoid merging with adjacent macro instantiations
 
@@ -648,14 +649,14 @@ $(.RECIPEPREFIX)$(prorab_echo)rm -rf $(prorab_this_obj_dir)
         #link rule
         $(prorab_this_name): $(prorab_this_objs) $(prorab_ldargs_file)
 $(.RECIPEPREFIX)@test -t 1 && printf "\\033[0;91mLinking\\033[0m $$(patsubst $(prorab_root_makefile_abs_dir)%,%,$$@)\n" || printf "Linking $$(patsubst $(prorab_root_makefile_abs_dir)%,%,$$@)\n"
-$(.RECIPEPREFIX)$(prorab_echo)mkdir -p $(d)$(this_out_dir)
-$(.RECIPEPREFIX)$(prorab_echo)$(this_cc) $(prorab_ldflags) $$(filter %.o,$$^) $(prorab_ldlibs) -o "$$@"
+$(.RECIPEPREFIX)$(Q)mkdir -p $(d)$(this_out_dir)
+$(.RECIPEPREFIX)$(Q)$(this_cc) $(prorab_ldflags) $$(filter %.o,$$^) $(prorab_ldlibs) -o "$$@"
 
         clean::
 $(.RECIPEPREFIX)$(if $(filter windows,$(os)), \
-                    $(prorab_echo)rm -f $(prorab_this_name).a \
+                    $(Q)rm -f $(prorab_this_name).a \
                 )
-$(.RECIPEPREFIX)$(prorab_echo)rm -f $(prorab_this_name)
+$(.RECIPEPREFIX)$(Q)rm -f $(prorab_this_name)
 
         #need empty line here to avoid merging with adjacent macro instantiations
 
