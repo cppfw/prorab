@@ -171,8 +171,10 @@ ifneq ($(prorab_is_included),true)
 
     ifeq ($(v),false)
         prorab_echo := @
+        Q := @
     else
         prorab_echo :=
+        Q :=  
     endif
 
     # 'autojobs' valid values are only 'true' or 'false'
