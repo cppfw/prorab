@@ -17,6 +17,8 @@ test::
 	+$(Q)$(MAKE) --no-print-directory -C $(d)tmp_src/app > $(d)log.txt || $(this_err) "'make' after modifying header failed"
 	+$(Q)$(MAKE) --no-print-directory -C $(d)tmp_src/app > /dev/null || $(this_err) "second 'make' after modifying header failed"
 
+	$(Q)sed -i -e "s/tests\.exe/tests/g" $(d)log.txt
+
 	$(Q)cmp $(d)log.txt $(d)log.txt.cmp || (echo "log.txt = "; cat $(d)log.txt; $(this_err) "make log is not as expected");
 	$(Q)rm $(d)log.txt
 
