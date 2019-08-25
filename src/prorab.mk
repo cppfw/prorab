@@ -22,64 +22,96 @@
 
 # prorab - the build system
 
-#once
+# include guard
 ifneq ($(prorab_is_included),true)
     prorab_is_included := true
 
-    #for storing list of included makefiles
-    prorab_included_makefiles :=
 
-
-    #check if running minimal supported GNU make version
+    # check if running minimal supported GNU make version
     prorab_min_gnumake_version := 3.81
     ifeq ($(filter $(prorab_min_gnumake_version),$(firstword $(sort $(MAKE_VERSION) $(prorab_min_gnumake_version)))),)
         $(error GNU make $(prorab_min_gnumake_version) or higher is needed, but found only $(MAKE_VERSION))
     endif
 
 
-    #check that prorab.mk is the first file included
+    # check that prorab.mk is the first file included
     ifneq ($(words $(MAKEFILE_LIST)),2)
         $(error prorab.mk is not a first include in the makefile, include prorab.mk should be the very first thing done in the makefile.)
     endif
 
 
-    #define arithmetic functions
+    ###############################
+    # define arithmetic functions #
 
-    #get number from variable
+    # get number from variable
     prorab-num = $(words $1)
 
-    #add two variables
+    # add two variables
     prorab-add = $1 $2
 
-    #increment variable
+    # increment variable
     prarab-inc = x $1
 
-    #decrement variable
+    # decrement variable
     prorab-dec = $(wordlist 2,$(words $1),$1)
 
-    #get maximum of two variables
+    # get maximum of two variables
     prorab-max = $(subst xx,x,$(join $1,$2))
 
-    #greater predicate
+    # greater predicate
     prorab-gt = $(filter-out $(words $2),$(words $(call prorab-max,$1,$2)))
 
-    #equals predicate
+    # equals predicate
     prorab-eq = $(filter $(words $1),$(words $2))
 
-    #greater or equals predicate
+    # greater or equals predicate
     prorab-gte = $(call prorab-gt,$1,$2)$(call prorab-eq,$1,$2)
 
-    #subtract one variable from another, negative result is clamped to zero
+    # subtract one variable from another, negative result is clamped to zero
     prorab-sub = $(if $(call prorab-gte,$1,$2),$(filter-out xx,$(join $1,$2)),$(error subtraction goes negative))
 
+
+    ####################
+    # useful functions #
 
     # function for recursive wildcard
     prorab-rwildcard = $(foreach dd,$(wildcard $(patsubst %.,%,$1)*),$(call prorab-rwildcard,$(dd)/,$2) $(filter $(subst *,%,$2),$(dd)))
 
-
     # function for calculating number of ../ in a file path
     prorab-calculate-stepups = $(foreach var,$(filter ..,$(subst /, ,$(dir $1))),x)
 
+    # function to find all source files from specified directory recursively
+    # NOTE: filter-out of empty strings from input path is needed when path is supplied with preceding or trailing spaces, to prevent searching sources from root directory also.
+    prorab-src-dir = $(patsubst $(d)%, %, $(call prorab-rwildcard, $(d)$(filter-out ,$1), *.cpp *.c))
+
+    # function which clears all 'this_'-prefixed variables and sets default values
+    define prorab-clear-this-vars
+
+        #need empty line here to avoid merging with adjacent macro instantiations
+
+        #clear all vars
+        $(foreach var,$(filter this_%,$(.VARIABLES)),$(eval $(var) := ))
+
+        #set default values for compilers
+        $(eval this_cc := $(CC))
+        $(eval this_cxx := $(CXX))
+        $(eval this_ar := $(AR))
+
+        #set default values for flags
+        #NOTE: we need deferred assignment here because we want that $(d) would be substituted after saving arguments to command line arguments dependency files.
+        $(eval this_cppflags = $(CPPFLAGS))
+        $(eval this_cflags = $(CFLAGS))
+        $(eval this_cxxflags = $(CXXFLAGS))
+        $(eval this_ldflags = $(LDFLAGS))
+        $(eval this_ldlibs = $(LDLIBS))
+
+        #need empty line here to avoid merging with adjacent macro instantiations
+
+    endef
+
+
+    #############
+    # variables #
 
     # directory of makefile which includes 'prorab.mk'
     prorab_this_makefile := $(word $(call prorab-num,$(call prorab-dec,$(MAKEFILE_LIST))),$(MAKEFILE_LIST))
@@ -123,41 +155,6 @@ ifneq ($(prorab_is_included),true)
         prorab_echo :=
         Q := 
     endif
-
-    #######################
-    # define common rules #
-
-    # Delete target file in case its recepie has failed
-    .DELETE_ON_ERROR:
-
-    .PHONY: clean all install uninstall distclean phony re echo-cleaning
-
-    # define the very first default target
-    all:
-
-    # define dummy phony target
-    phony:
-
-    # define distclean target which does same as clean. This is to make some older versions of debhelper happy.
-    distclean: clean
-
-    define prorab-private-rules
-
-        echo-cleaning:
-$(.RECIPEPREFIX)@test -t 1 && printf "\\033[0;90mCleaning\\033[0m\n" || printf "Cleaning\n"
-
-        clean:: echo-cleaning
-
-        # target for rebuilding all
-        re:
-$(.RECIPEPREFIX)$(Q)$(MAKE) --no-print-directory clean
-$(.RECIPEPREFIX)$(Q)$(MAKE) --no-print-directory
-
-    endef
-    $(eval $(prorab-private-rules))
-
-
-
 
     # directory of prorab.mk
     prorab_dir := $(dir $(lastword $(MAKEFILE_LIST)))
@@ -225,6 +222,98 @@ $(.RECIPEPREFIX)$(Q)$(MAKE) --no-print-directory
             MAKEFLAGS += -j$(shell nproc)
         endif
     endif
+
+
+    ################################
+    # makefile inclusion functions #
+
+    # for storing list of included makefiles
+    prorab_included_makefiles :=
+
+    define prorab-include
+
+        #need empty line here to avoid merging with adjacent macro instantiations
+
+        #if makefile is already included do nothing
+        $(if $(filter $(abspath $1),$(prorab_included_makefiles)), \
+            , \
+                $(eval prorab_included_makefiles += $(abspath $1)) \
+                $(call prorab-private-include,$1) \
+            )
+
+        #need empty line here to avoid merging with adjacent macro instantiations
+
+    endef
+
+    #for storing previous prorab_this_makefile when including other makefiles
+    prorab_private_this_makefiles :=
+
+    #include file with correct current directory
+    define prorab-private-include
+
+        #need empty line here to avoid merging with adjacent macro instantiations
+
+        prorab_private_this_makefiles += $$(prorab_this_makefile)
+        prorab_this_makefile := $1
+        d := $$(dir $$(prorab_this_makefile))
+        include $1
+        prorab_this_makefile := $$(lastword $$(prorab_private_this_makefiles))
+        d := $$(dir $$(prorab_this_makefile))
+        prorab_private_this_makefiles := $$(wordlist 1,$$(call prorab-num,$$(call prorab-dec,$$(prorab_private_this_makefiles))),$$(prorab_private_this_makefiles))
+
+        #need empty line here to avoid merging with adjacent macro instantiations
+
+    endef
+    #!!!NOTE: the trailing empty line in 'prorab-private-include' definition is needed so that include files would be separated from each other
+
+    #include all makefiles in subdirectories
+    define prorab-build-subdirs
+
+        #need empty line here to avoid merging with adjacent macro instantiations
+
+        $(foreach path,$(wildcard $(d)*/makefile),$(call prorab-include,$(path)))
+
+        #need empty line here to avoid merging with adjacent macro instantiations
+
+    endef
+    
+
+    #######################
+    # common rules #
+
+    # Delete target file in case its recepie has failed
+    .DELETE_ON_ERROR:
+
+    .PHONY: clean all install uninstall distclean phony re echo-cleaning
+
+    # define the very first default target
+    all:
+
+    # define dummy phony target
+    phony:
+
+    # define distclean target which does same as clean. This is to make some older versions of debhelper happy.
+    distclean: clean
+
+    define prorab-private-rules
+
+        echo-cleaning:
+$(.RECIPEPREFIX)@test -t 1 && printf "\\033[0;90mCleaning\\033[0m\n" || printf "Cleaning\n"
+
+        clean:: echo-cleaning
+
+        # target for rebuilding all
+        re:
+$(.RECIPEPREFIX)$(Q)$(MAKE) --no-print-directory clean
+$(.RECIPEPREFIX)$(Q)$(MAKE) --no-print-directory
+
+    endef
+    $(eval $(prorab-private-rules))
+
+
+
+    ####################################
+    # prorab rule generation functions #
 
     define prorab-private-app-specific-rules
 
@@ -607,86 +696,7 @@ $(.RECIPEPREFIX)$(prorab_echo)rm -f $(prorab_this_name)
 
     endef
 
-
-
-
-    define prorab-include
-
-        #need empty line here to avoid merging with adjacent macro instantiations
-
-        #if makefile is already included do nothing
-        $(if $(filter $(abspath $1),$(prorab_included_makefiles)), \
-            , \
-                $(eval prorab_included_makefiles += $(abspath $1)) \
-                $(call prorab-private-include,$1) \
-            )
-
-        #need empty line here to avoid merging with adjacent macro instantiations
-
-    endef
-
-
-    #for storing previous prorab_this_makefile when including other makefiles
-    prorab_private_this_makefiles :=
-
-    #include file with correct current directory
-    define prorab-private-include
-
-        #need empty line here to avoid merging with adjacent macro instantiations
-
-        prorab_private_this_makefiles += $$(prorab_this_makefile)
-        prorab_this_makefile := $1
-        d := $$(dir $$(prorab_this_makefile))
-        include $1
-        prorab_this_makefile := $$(lastword $$(prorab_private_this_makefiles))
-        d := $$(dir $$(prorab_this_makefile))
-        prorab_private_this_makefiles := $$(wordlist 1,$$(call prorab-num,$$(call prorab-dec,$$(prorab_private_this_makefiles))),$$(prorab_private_this_makefiles))
-
-        #need empty line here to avoid merging with adjacent macro instantiations
-
-    endef
-    #!!!NOTE: the trailing empty line in 'prorab-private-include' definition is needed so that include files would be separated from each other
-
-    #include all makefiles in subdirectories
-    define prorab-build-subdirs
-
-        #need empty line here to avoid merging with adjacent macro instantiations
-
-        $(foreach path,$(wildcard $(d)*/makefile),$(call prorab-include,$(path)))
-
-        #need empty line here to avoid merging with adjacent macro instantiations
-
-    endef
-
-    define prorab-clear-this-vars
-
-        #need empty line here to avoid merging with adjacent macro instantiations
-
-        #clear all vars
-        $(foreach var,$(filter this_%,$(.VARIABLES)),$(eval $(var) := ))
-
-        #set default values for compilers
-        $(eval this_cc := $(CC))
-        $(eval this_cxx := $(CXX))
-        $(eval this_ar := $(AR))
-
-        #set default values for flags
-        #NOTE: we need deferred assignment here because we want that $(d) would be substituted after saving arguments to command line arguments dependency files.
-        $(eval this_cppflags = $(CPPFLAGS))
-        $(eval this_cflags = $(CFLAGS))
-        $(eval this_cxxflags = $(CXXFLAGS))
-        $(eval this_ldflags = $(LDFLAGS))
-        $(eval this_ldlibs = $(LDLIBS))
-
-        #need empty line here to avoid merging with adjacent macro instantiations
-
-    endef
-
-    #define function to find all source files from specified directory recursively
-    #NOTE: filter-out of empty strings from input path is needed when path is supplied with preceding or trailing spaces, to prevent searching sources from root directory also.
-    prorab-src-dir = $(patsubst $(d)%, %, $(call prorab-rwildcard, $(d)$(filter-out ,$1), *.cpp *.c))
-
-endif #~once
+endif # ~include guard
 
 
 $(if $(filter $(prorab_this_makefile),$(prorab_included_makefiles)), \
