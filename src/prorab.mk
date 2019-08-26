@@ -154,7 +154,7 @@ ifneq ($(prorab_is_included),true)
         Q := @
     else
         prorab_echo :=
-        Q := 
+        Q :=
     endif
 
     # directory of prorab.mk
@@ -604,8 +604,8 @@ $(.RECIPEPREFIX)$(Q)echo '$2' > $$@
 
         $(eval prorab_private_d_for_sed := $(subst .,\.,$(subst /,\/,$(patsubst ./%,%,$(d)))))
         $(if $(prorab_private_d_for_sed),
-                $(eval prorab_private_d_file_sed_command := sed -i -e "s/\(^\| \)$(prorab_private_d_for_sed)\([^ ]*\)/\1\$$$$$$$$\(d\)\2/g" $$$$(patsubst %.o,%.d,$$$$@) ),
-                $(eval prorab_private_d_file_sed_command := sed -i -e "s/\(^\| \)\([^ /\][^ ]*\)/\1\$$$$$$$$\(d\)\2/g" $$$$(patsubst %.o,%.d,$$$$@) )
+                $(eval prorab_private_d_file_sed_command := sed -E -i -e "s/(^| )$(prorab_private_d_for_sed)([^ ]*)/\1\$$$$$$$$\(d\)\2/g" $$$$(patsubst %.o,%.d,$$$$@) ),
+                $(eval prorab_private_d_file_sed_command := sed -E -i -e "s/(^| )([^ /\][^ ]*)/\1\$$$$$$$$\(d\)\2/g" $$$$(patsubst %.o,%.d,$$$$@) )
             )
 
         #compile .cpp static pattern rule
