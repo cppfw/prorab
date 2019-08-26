@@ -299,7 +299,7 @@ ifneq ($(prorab_is_included),true)
     define prorab-private-rules
 
         echo-cleaning:
-$(.RECIPEPREFIX)@test -t 1 && printf "\e[0;36mCleaning\e[0m\n" || printf "Cleaning\n"
+$(.RECIPEPREFIX)@test -t 1 && printf "\e[0;32mCleaning\e[0m\n" || printf "Cleaning\n"
 
         clean:: echo-cleaning
 
