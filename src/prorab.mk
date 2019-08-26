@@ -299,7 +299,7 @@ ifneq ($(prorab_is_included),true)
     define prorab-private-rules
 
         echo-cleaning:
-$(.RECIPEPREFIX)@test -t 1 && printf "\\033[0;90mCleaning\\033[0m\n" || printf "Cleaning\n"
+$(.RECIPEPREFIX)@test -t 1 && printf "\e[0;37mCleaning\e[0m\n" || printf "Cleaning\n"
 
         clean:: echo-cleaning
 
@@ -377,7 +377,7 @@ $(.RECIPEPREFIX)$(if $(filter $(this_no_install),true),, \
 
         #symbolic link to shared library rule
         $(prorab_this_symbolic_name): $(prorab_this_name)
-$(.RECIPEPREFIX)@test -t 1 && printf "\\033[0;36mCreating symbolic link\\033[0m $$(notdir $$@) -> $$(notdir $$<)\n" || printf "Creating symbolic link $$(notdir $$@) -> $$(notdir $$<)\n"
+$(.RECIPEPREFIX)@test -t 1 && printf "\e[0;36mCreating symbolic link\e[0m $$(notdir $$@) -> $$(notdir $$<)\n" || printf "Creating symbolic link $$(notdir $$@) -> $$(notdir $$<)\n"
 $(.RECIPEPREFIX)$(Q)(cd $$(dir $$<) && ln -f -s $$(notdir $$<) $$(notdir $$@))
 
         all: $(prorab_this_symbolic_name)
@@ -526,7 +526,7 @@ $(.RECIPEPREFIX)$(if $(filter $(this_no_install),true),, \
 
         #static library rule
         $(prorab_this_static_lib): $(prorab_this_objs)
-$(.RECIPEPREFIX)@test -t 1 && printf "\\033[0;33mCreating static library\\033[0m $$(notdir $$@)\n" || printf "Creating static library $$(notdir $$@)\n"
+$(.RECIPEPREFIX)@test -t 1 && printf "\e[0;33mCreating static library\e[0m $$(notdir $$@)\n" || printf "Creating static library $$(notdir $$@)\n"
 $(.RECIPEPREFIX)$(Q)$(this_ar) cr $$@ $$(filter %.o,$$^)
 
         #need empty line here to avoid merging with adjacent macro instantiations
@@ -610,14 +610,14 @@ $(.RECIPEPREFIX)$(Q)echo '$2' > $$@
 
         #compile .cpp static pattern rule
         $(prorab_this_cpp_objs): $(prorab_this_obj_dir)$(prorab_private_objspacer)%.cpp.o: $(d)%.cpp $(prorab_cxxargs_file)
-$(.RECIPEPREFIX)@test -t 1 && printf "\\033[0;94mCompiling\\033[0m $$<\n" || printf "Compiling $$<\n"
+$(.RECIPEPREFIX)@test -t 1 && printf "\e[0;94mCompiling\e[0m $$<\n" || printf "Compiling $$<\n"
 $(.RECIPEPREFIX)$(Q)mkdir -p $$(dir $$@)
 $(.RECIPEPREFIX)$(Q)$(this_cxx) -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -MP -o "$$@" $(prorab_cxxargs) $$<
 $(.RECIPEPREFIX)$(Q)$(prorab_private_d_file_sed_command)
 
         #compile .c static pattern rule
         $(prorab_this_c_objs): $(prorab_this_obj_dir)$(prorab_private_objspacer)%.c.o: $(d)%.c $(prorab_cargs_file)
-$(.RECIPEPREFIX)@test -t 1 && printf "\\033[0;35mCompiling\\033[0m $$<\n" || printf "Compiling $$<\n"
+$(.RECIPEPREFIX)@test -t 1 && printf "\e[0;35mCompiling\e[0m $$<\n" || printf "Compiling $$<\n"
 $(.RECIPEPREFIX)$(Q)mkdir -p $$(dir $$@)
 $(.RECIPEPREFIX)$(Q)$(this_cc) -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -MP -o "$$@" $(prorab_cargs) $$<
 $(.RECIPEPREFIX)$(Q)$(prorab_private_d_file_sed_command)
@@ -656,7 +656,7 @@ $(.RECIPEPREFIX)$(Q)rm -rf $(prorab_this_obj_dir)
 
         #link rule
         $(prorab_this_name): $(prorab_this_objs) $(prorab_ldargs_file)
-$(.RECIPEPREFIX)@test -t 1 && printf "\\033[0;91mLinking\\033[0m $$(patsubst $(prorab_root_makefile_abs_dir)%,%,$$@)\n" || printf "Linking $$(patsubst $(prorab_root_makefile_abs_dir)%,%,$$@)\n"
+$(.RECIPEPREFIX)@test -t 1 && printf "\e[0;91mLinking\e[0m $$(patsubst $(prorab_root_makefile_abs_dir)%,%,$$@)\n" || printf "Linking $$(patsubst $(prorab_root_makefile_abs_dir)%,%,$$@)\n"
 $(.RECIPEPREFIX)$(Q)mkdir -p $(d)$(this_out_dir)
 $(.RECIPEPREFIX)$(Q)$(this_cc) $(prorab_ldflags) $$(filter %.o,$$^) $(prorab_ldlibs) -o "$$@"
 
