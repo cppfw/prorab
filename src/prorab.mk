@@ -299,7 +299,7 @@ ifneq ($(prorab_is_included),true)
     define prorab-private-rules
 
         echo-cleaning:
-$(.RECIPEPREFIX)@test -t 1 && printf "\e[0;37mCleaning\e[0m\n" || printf "Cleaning\n"
+$(.RECIPEPREFIX)@test -t 1 && printf "\e[0;36mCleaning\e[0m\n" || printf "Cleaning\n"
 
         clean:: echo-cleaning
 
@@ -377,7 +377,7 @@ $(.RECIPEPREFIX)$(if $(filter $(this_no_install),true),, \
 
         #symbolic link to shared library rule
         $(prorab_this_symbolic_name): $(prorab_this_name)
-$(.RECIPEPREFIX)@test -t 1 && printf "\e[0;36mCreating symbolic link\e[0m $$(notdir $$@) -> $$(notdir $$<)\n" || printf "Creating symbolic link $$(notdir $$@) -> $$(notdir $$<)\n"
+$(.RECIPEPREFIX)@test -t 1 && printf "\e[1;36mCreating symbolic link\e[0m $$(notdir $$@) -> $$(notdir $$<)\n" || printf "Creating symbolic link $$(notdir $$@) -> $$(notdir $$<)\n"
 $(.RECIPEPREFIX)$(Q)(cd $$(dir $$<) && ln -f -s $$(notdir $$<) $$(notdir $$@))
 
         all: $(prorab_this_symbolic_name)
@@ -610,7 +610,7 @@ $(.RECIPEPREFIX)$(Q)echo '$2' > $$@
 
         #compile .cpp static pattern rule
         $(prorab_this_cpp_objs): $(prorab_this_obj_dir)$(prorab_private_objspacer)%.cpp.o: $(d)%.cpp $(prorab_cxxargs_file)
-$(.RECIPEPREFIX)@test -t 1 && printf "\e[0;94mCompiling\e[0m $$<\n" || printf "Compiling $$<\n"
+$(.RECIPEPREFIX)@test -t 1 && printf "\e[1;34mCompiling\e[0m $$<\n" || printf "Compiling $$<\n"
 $(.RECIPEPREFIX)$(Q)mkdir -p $$(dir $$@)
 $(.RECIPEPREFIX)$(Q)$(this_cxx) -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -MP -o "$$@" $(prorab_cxxargs) $$<
 $(.RECIPEPREFIX)$(Q)$(prorab_private_d_file_sed_command)
@@ -656,7 +656,7 @@ $(.RECIPEPREFIX)$(Q)rm -rf $(prorab_this_obj_dir)
 
         #link rule
         $(prorab_this_name): $(prorab_this_objs) $(prorab_ldargs_file)
-$(.RECIPEPREFIX)@test -t 1 && printf "\e[0;91mLinking\e[0m $$(patsubst $(prorab_root_makefile_abs_dir)%,%,$$@)\n" || printf "Linking $$(patsubst $(prorab_root_makefile_abs_dir)%,%,$$@)\n"
+$(.RECIPEPREFIX)@test -t 1 && printf "\e[0;31mLinking\e[0m $$(patsubst $(prorab_root_makefile_abs_dir)%,%,$$@)\n" || printf "Linking $$(patsubst $(prorab_root_makefile_abs_dir)%,%,$$@)\n"
 $(.RECIPEPREFIX)$(Q)mkdir -p $(d)$(this_out_dir)
 $(.RECIPEPREFIX)$(Q)$(this_cc) $(prorab_ldflags) $$(filter %.o,$$^) $(prorab_ldlibs) -o "$$@"
 
