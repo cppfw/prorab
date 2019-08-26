@@ -1,7 +1,9 @@
 include $(d)../../src/prorab.mk
 
-
 include $(d)../common.mk
+
+# TEST DESCRIPTION:
+# Test that variables this_cflags, this_cxxflags etc. are forced to be _deferred_ assigned.
 
 define this_rules
 .PHONY: test

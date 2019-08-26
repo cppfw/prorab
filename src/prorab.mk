@@ -154,7 +154,7 @@ ifneq ($(prorab_is_included),true)
         Q := @
     else
         prorab_echo :=
-        Q := 
+        Q :=
     endif
 
     # directory of prorab.mk
@@ -602,17 +602,25 @@ $(.RECIPEPREFIX)$(Q)echo '$2' > $$@
         $(call prorab-private-args-file-rules, $(prorab_cargs_file),$(this_cc) $(prorab_cargs))
         $(eval d := $(prorab_private_temp_d))
 
+        $(eval prorab_private_d_for_sed := $(subst .,\.,$(subst /,\/,$(patsubst ./%,%,$(d)))))
+        $(if $(prorab_private_d_for_sed),
+                $(eval prorab_private_d_file_sed_command := sed -E -i -e "s/(^| )$(prorab_private_d_for_sed)([^ ]*)/\1\$$$$$$$$\(d\)\2/g" $$$$(patsubst %.o,%.d,$$$$@) ),
+                $(eval prorab_private_d_file_sed_command := sed -E -i -e "s/(^| )([^ /\][^ ]*)/\1\$$$$$$$$\(d\)\2/g" $$$$(patsubst %.o,%.d,$$$$@) )
+            )
+
         #compile .cpp static pattern rule
         $(prorab_this_cpp_objs): $(prorab_this_obj_dir)$(prorab_private_objspacer)%.cpp.o: $(d)%.cpp $(prorab_cxxargs_file)
 $(.RECIPEPREFIX)@test -t 1 && printf "\\033[0;94mCompiling\\033[0m $$<\n" || printf "Compiling $$<\n"
 $(.RECIPEPREFIX)$(Q)mkdir -p $$(dir $$@)
 $(.RECIPEPREFIX)$(Q)$(this_cxx) -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -MP -o "$$@" $(prorab_cxxargs) $$<
+$(.RECIPEPREFIX)$(Q)$(prorab_private_d_file_sed_command)
 
         #compile .c static pattern rule
         $(prorab_this_c_objs): $(prorab_this_obj_dir)$(prorab_private_objspacer)%.c.o: $(d)%.c $(prorab_cargs_file)
 $(.RECIPEPREFIX)@test -t 1 && printf "\\033[0;35mCompiling\\033[0m $$<\n" || printf "Compiling $$<\n"
 $(.RECIPEPREFIX)$(Q)mkdir -p $$(dir $$@)
 $(.RECIPEPREFIX)$(Q)$(this_cc) -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -MP -o "$$@" $(prorab_cargs) $$<
+$(.RECIPEPREFIX)$(Q)$(prorab_private_d_file_sed_command)
 
         #include rules for header dependencies
         include $(wildcard $(addsuffix *.d,$(dir $(prorab_this_objs))))
