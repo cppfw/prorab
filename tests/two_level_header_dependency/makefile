@@ -2,8 +2,6 @@ include $(d)../../src/prorab.mk
 
 include $(d)../common.mk
 
-$(info MAKEFLAGS = $(MAKEFLAGS))
-
 define this_rules
 .PHONY: test
 test::
