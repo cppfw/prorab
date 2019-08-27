@@ -82,7 +82,7 @@ Example:
 $(prorab_this_name): $(abspath $(d)../stuff/libstuff$(soext))
 
 
-# include makefile which defines rules how to build the libstuff
+# include makefile which defines rules for building the libstuff
 
 $(eval $(call prorab-include,$(d)../stuff/makefile))
 
