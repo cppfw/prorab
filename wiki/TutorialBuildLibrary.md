@@ -1,6 +1,6 @@
 # Building C/C++ library
 
-To build a C/C++ library with prorab we can use a `prorab-build-lib` definition.
+To build a C/C++ library with prorab we can use a `prorab-build-lib` macro.
 
 But before we have to define some input variables if needed:
 - `this_soname` - 'so' name for shared library, for example 0.
