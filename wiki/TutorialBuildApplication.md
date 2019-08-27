@@ -1,6 +1,6 @@
 # Building C/C++ application
 
-To build a C/C++ application with prorab we can use a `prorab-build-app` definition.
+To build a C/C++ application with prorab we can use a `prorab-build-app` macro.
 
 But before we have to define some input variables if needed:
 - `this_name` - name of the application. It will be used to generate the output binary filename.
