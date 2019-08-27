@@ -165,7 +165,7 @@ It is good to take a note in some `readme` file, or as a comment right in `prora
 
 ## Defining custom rules
 
-It is often necessary to add custom rules. `GNU make` expands variables in `makefile` in two phases. During first phase it expands all variables in makefiles, except recepies. During second phase it starts executing the recepies and it expands variables in recepies right before executing, see [GNU make: Using Variables in Recipes](https://www.gnu.org/software/make/manual/html_node/Variables-in-Recipes.html). So, in order to use correct values of context dependent variables, like `$(d)`, one has to use the trick to substitue those variable values to the custom rule's recepie right a way during the first phase. This is achieved by wrapping the custom rule with recepie into some temporary variable, let's say `this_rules`, and then evaluating the value of that variable.
+It is often necessary to add custom rules. `GNU make` expands variables in `makefile` in two phases. During first phase it expands all variables in makefiles, except recepies. During second phase it starts executing the recepies and it expands variables in recepies right before executing, see [GNU make: Using Variables in Recipes](https://www.gnu.org/software/make/manual/html_node/Variables-in-Recipes.html). So, in order to use correct values of context dependent variables, like `$(d)`, one has to use the trick to substitue those variable values to the custom rule's recepie right away during the first phase. This is achieved by wrapping the custom rule with recepie into some temporary variable, let's say `this_rules`, and then evaluating the value of that variable.
 
 ```
 define this_rules
