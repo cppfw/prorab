@@ -38,7 +38,7 @@ $(eval $(prorab-build-lib))
 
 ## Install target
 
-**prorab** will define a `install` target for the library.
+**prorab** will define an `install` target for the library.
 
 Note, that it only installs `.hpp` and `.h` header files to `PREFIX/include` directory.
 
