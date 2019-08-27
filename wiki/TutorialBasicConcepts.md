@@ -24,18 +24,16 @@ include prorab.mk
 Basically, all makefiles in the project are supposed to use **prorab** and have this include directive as a first include.
 
 Right after inclusion of `prorab.mk` there will be following variables defined:
-- `prorab_this_dir` - directory where this makefile resides.
-- `d` - shorthand alias for `prorab_this_dir`
-- `prorab_os` - operating system where makefile is run, can be `linux`, `macosx`, `windows`. Note, that `windows` is when building under `Cygwin` or `Msys`.
-- `os` - shorthand alias for `prorab_os`
-- `prorab_lib_extension` - typical extension for dynamically linked libraries in the OS (windows: `.dll`, linux: `.so`, macosx: `.dylib`)
-- `soext` - shorthand alias for `prorab_lib_extension`
+- `d` - directory where this `makefile` resides
+- `os` - operating system where makefile is run, can be `linux`, `macosx`, `windows`. Note, that `windows` is when building under `Cygwin` or `Msys`.
+- `soext` - typical extension for dynamically linked libraries in the OS (windows: `.dll`, linux: `.so`, macosx: `.dylib`)
 - `exeext` - typical executable extension (windows: `.exe`, linux: empty, macosx: empty)
+- `.RECIPEPREFIX` - this is a built-in variable of `GNU make`, but by default it is empty which means the default recipe prefix will be the tab character. Prorab explicitly sets the value of this variable to tab character, so that this variable could be used in user's makefiles.
 
-## Prorab definitions and variables naming conventions
+## Prorab macros and variables naming conventions
 
- - **Prorab definitions** are named using hyphen-case and start with `prorab-` prefix.
- - **Output variables** are named using snake case and start with `prorab_` prefix.
+ - **Prorab macros** are named using hyphen-case and start with `prorab-` prefix.
+ - **Output variables** are named using snake case and start with `prorab_this_` prefix.
  - **Input variables** are named using snake case and start with `this_` prefix.
 
 
@@ -43,7 +41,7 @@ Right after inclusion of `prorab.mk` there will be following variables defined:
 
 As said before, **prorab** allows 'cascading' of makefiles. Say, you have two subdirectories in your project: `app` and `test`. And both those directories contain some subproject which can be built independently. So, in both those directories there are project makefiles.
 
-Now, if we want to have a makefile in project root directory which builds both those subprojects, we can use `prorab-build-subdirs` definition and root makefile would look like this:
+Now, if we want to have a makefile in project root directory which builds both of those subprojects, we can use `prorab-build-subdirs` macro and then the root makefile would look like this:
 
 ```
 include prorab.mk
@@ -54,9 +52,9 @@ $(eval $(prorab-build-subdirs))
 And that's it. This will invoke the same target on every subdirectory which has file named `makefile`. Note, that parallel build is still supported since it is a non-recursive technique.
 
 
-## Prorab definitions and input variables
+## Prorab macros and input variables
 
-Before invoking most of the **prorab** definitions one has to set some input variables for the definition.
+Before invoking most of the **prorab** macros one has to set some input variables for the macro.
 For example:
 
 ```
@@ -66,7 +64,7 @@ this_cflags += -I$(d)../src -DDEBUG
 $(eval $(prorab-build-app))
 ```
 
-After invoking some **prorab** definition there might be some output variables defined like, for example, `prorab_this_name` which represents the resulting filename of the created binary.
+After invoking some **prorab** macro there might be some output variables defined like, for example, `prorab_this_name` which represents the resulting filename of the created binary.
 
 
 ## Including other makefiles
@@ -106,7 +104,7 @@ Set `verbose` variable has higher priority than set `v` variable.
 
 ## Defining several builds in one makefile
 
-It is possible to define several builds in a single `makefile`. Right before starting definition of a next build one has to clear all `this_` prefixed varibales, so that those do not go to the next build from previous build. To do that, there is a `prorab-clear-this-vars` definition which can be invoked using `$(eval ...)` as usual. Note, that this definition is automatically invoked inside of `prorab.mk`, so it is not necessary to invoke it for the very first build of the `makefile`.
+It is possible to define several builds in a single `makefile`. Right before starting definition of a next build one has to clear all `this_` prefixed varibales, so that those do not go to the next build from previous build. To do that, there is a `prorab-clear-this-vars` macro which can be invoked using `$(eval ...)` as usual. Note, that this macro is automatically invoked inside of `prorab.mk`, so it is not necessary to invoke it for the very first build of the `makefile`.
 
 ```
 include prorab.mk
@@ -182,3 +180,18 @@ $(eval $(this_rules))
 ```
 
 Note, the use of double dollar sign in `$$^` variable, this is escaping of dollar sign so that `$^` will actually appear in the `this_rules` value at the moment of `$(eval $(this_rules))` invocation.
+
+User can override the value of `.RECIPEPREFIX` variable to any character he/she wants. I personally recommend to explicitly use the `.RECIPEPREFIX` when writing custom rules to avoid possible errors:
+
+```
+define this_rules
+
+test:: my_executable_binary
+$(.RECIPEPREFIX)@echo "Running my_executable_binary"
+$(.RECIPEPREFIX)@(cd $(d); $$^)
+$(.RECIPEPREFIX)@echo "program finished"
+
+endef
+$(eval $(this_rules))
+```
+
