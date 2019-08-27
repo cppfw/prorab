@@ -69,7 +69,7 @@ After invoking some **prorab** macro there might be some output variables define
 
 ## Including other makefiles
 
-In order to include some other makefile one can use `prorab-include` function. This function will check if the makefile was already included or not and only include it if necessary.
+In order to include some other makefile one can use `prorab-include` macro. This macro will check if the makefile was already included or not and only include it if necessary.
 
 Example:
 
@@ -104,7 +104,7 @@ Set `verbose` variable has higher priority than set `v` variable.
 
 ## Defining several builds in one makefile
 
-It is possible to define several builds in a single `makefile`. Right before starting definition of a next build one has to clear all `this_` prefixed varibales, so that those do not go to the next build from previous build. To do that, there is a `prorab-clear-this-vars` macro which can be invoked using `$(eval ...)` as usual. Note, that this macro is automatically invoked inside of `prorab.mk`, so it is not necessary to invoke it for the very first build of the `makefile`.
+It is possible to define several builds in a single `makefile`. Right before starting definition of the next build one has to clear all `this_` prefixed varibales, so that those do not go to the next build from previous build. To do that, there is a `prorab-clear-this-vars` macro which can be invoked using `$(eval ...)` as usual. Note, that this macro is automatically invoked inside of `prorab.mk`, so it is not necessary to invoke it for the very first build of the `makefile`.
 
 ```
 include prorab.mk
@@ -165,7 +165,7 @@ It is good to take a note in some `readme` file, or as a comment right in `prora
 
 ## Defining custom rules
 
-It is often necessary to add custom rules. `GNU make` expands variables in `makefile` in two phases. During first phase it expands all variables in makefiles, except recepies. During second phase it starts executing the recepies and it expands variables in recepies right before executing, see [GNU make: Using Variables in Recipes](https://www.gnu.org/software/make/manual/html_node/Variables-in-Recipes.html). So, in order to use correct values of context dependent variables, like `$(d)`, one has to use the trick to substitue those variable values to the custom rule's recepie right away during the first phase. This is achieved by wrapping the custom rule with recepie into some temporary variable, let's say `this_rules`, and then evaluating the value of that variable.
+It is often necessary to add custom rules. `GNU make` expands variables in `makefile` in two phases. During first phase it expands all variables in makefiles, except recipes. During second phase it starts executing the recipes and it expands variables in recipes right before executing, see [GNU make: Using Variables in Recipes](https://www.gnu.org/software/make/manual/html_node/Variables-in-Recipes.html). So, in order to use correct values of context dependent variables, like `$(d)`, one has to use the trick to substitue those variable values to the custom rule's recipe right away during the first phase. This is achieved by wrapping the custom rule with recipe into some temporary variable, let's say `this_rules`, and then evaluating the value of that variable.
 
 ```
 define this_rules
