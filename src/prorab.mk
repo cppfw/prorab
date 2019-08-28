@@ -316,22 +316,18 @@ $(.RECIPEPREFIX)$(Q)$(MAKE) --no-print-directory
     ####################################
     # prorab rule generation functions #
 
+    # this is to make sure out dir ends with /
+    prorab_private_out_dir = $(if $(this_out_dir),$(if $(patsubst %/,,$(this_out_dir)),$(this_out_dir)/,$(this_out_dir)))
+
     define prorab-private-app-specific-rules
 
         #need empty line here to avoid merging with adjacent macro instantiations
 
         $(if $(this_name),,$(error this_name is not defined))
 
-        # Make sure this_out_dir ends with /
-        $(if $(this_out_dir),
-                $(if $(patsubst %/,,$(this_out_dir)),
-                        $(eval this_out_dir := $(this_out_dir)/)
-                    )
-            )
-
         $(eval prorab_private_ldflags := )
 
-        $(eval prorab_this_name := $(abspath $(d)$(this_out_dir)$(this_name)$(exeext)))
+        $(eval prorab_this_name := $(abspath $(d)$(prorab_private_out_dir)$(this_name)$(exeext)))
 
         $(eval prorab_this_symbolic_name := $(prorab_this_name))
 
@@ -358,17 +354,10 @@ $(.RECIPEPREFIX)$(if $(filter $(this_no_install),true),, \
 
         $(if $(this_soname),,$(error this_soname is not defined))
 
-        # Make sure this_out_dir ends with /
-        $(if $(this_out_dir),
-                $(if $(patsubst %/,,$(this_out_dir)),
-                        $(eval this_out_dir := $(this_out_dir)/)
-                    )
-            )
-
-        $(eval prorab_this_symbolic_name := $(abspath $(d)$(this_out_dir)lib$(this_name)$(soext)))
+        $(eval prorab_this_symbolic_name := $(abspath $(d)$(prorab_private_out_dir)lib$(this_name)$(soext)))
 
         $(if $(filter macosx,$(os)), \
-                $(eval prorab_this_name := $(abspath $(d)$(this_out_dir)lib$(this_name).$(this_soname)$(soext))) \
+                $(eval prorab_this_name := $(abspath $(d)$(prorab_private_out_dir)lib$(this_name).$(this_soname)$(soext))) \
                 $(eval prorab_private_ldflags := -dynamiclib -Wl,-install_name,$(prorab_this_name),-headerpad_max_install_names,-undefined,dynamic_lookup,-compatibility_version,1.0,-current_version,1.0) \
             ,\
                 $(eval prorab_this_name := $(prorab_this_symbolic_name).$(this_soname)) \
@@ -442,16 +431,9 @@ $(.RECIPEPREFIX)$(if $(filter $(this_no_install),true),, \
 
         $(if $(this_name),,$(error this_name is not defined))
 
-        # Make sure this_out_dir ends with /
-        $(if $(this_out_dir),
-                $(if $(patsubst %/,,$(this_out_dir)),
-                        $(eval this_out_dir := $(this_out_dir)/)
-                    )
-            )
-
         $(if $(filter windows,$(os)), \
-                $(eval prorab_this_name := $(abspath $(d)$(this_out_dir)lib$(this_name)$(soext))) \
-                $(eval prorab_private_ldflags := -shared -s -Wl,--out-implib=$(d)$(this_out_dir)lib$(this_name)$(soext).a) \
+                $(eval prorab_this_name := $(abspath $(d)$(prorab_private_out_dir)lib$(this_name)$(soext))) \
+                $(eval prorab_private_ldflags := -shared -s -Wl,--out-implib=$(d)$(prorab_private_out_dir)lib$(this_name)$(soext).a) \
                 $(eval prorab_this_symbolic_name := $(prorab_this_name)) \
             , \
                 $(prorab-private-dynamic-lib-specific-rules-nix-systems) \
@@ -499,14 +481,7 @@ $(.RECIPEPREFIX)$(if $(filter $(this_no_install),true),, \
 
         $(if $(this_name),,$(error this_name is not defined))
 
-        # Make sure this_out_dir ends with /
-        $(if $(this_out_dir),
-                $(if $(patsubst %/,,$(this_out_dir)),
-                        $(eval this_out_dir := $(this_out_dir)/)
-                    )
-            )
-
-        $(eval prorab_this_static_lib := $(abspath $(d)$(this_out_dir)lib$(this_name).a))
+        $(eval prorab_this_static_lib := $(abspath $(d)$(prorab_private_out_dir)lib$(this_name).a))
 
         all: $(prorab_this_static_lib)
 
@@ -570,14 +545,7 @@ $(.RECIPEPREFIX)$(Q)echo '$2' > $$@
         $(eval prorab_private_objspacer := )
         $(foreach var,$(prorab_private_numobjspacers), $(eval prorab_private_objspacer := $(prorab_private_objspacer)_prorab/))
 
-        # Make sure this_out_dir ends with /
-        $(if $(this_out_dir),
-                $(if $(patsubst %/,,$(this_out_dir)),
-                        $(eval this_out_dir := $(this_out_dir)/)
-                    )
-            )
-
-        $(eval prorab_this_obj_dir := $(d)$(this_out_dir)obj_$(this_name)/)
+        $(eval prorab_this_obj_dir := $(d)$(prorab_private_out_dir)obj_$(this_name)/)
 
         #Prepare list of object files
         $(eval prorab_this_cpp_objs := $(addprefix $(prorab_this_obj_dir)$(prorab_private_objspacer),$(patsubst %.cpp,%.cpp.o,$(filter %.cpp,$(this_srcs)))))
@@ -657,7 +625,7 @@ $(.RECIPEPREFIX)$(Q)rm -rf $(prorab_this_obj_dir)
         #link rule
         $(prorab_this_name): $(prorab_this_objs) $(prorab_ldargs_file)
 $(.RECIPEPREFIX)@test -t 1 && printf "\e[0;31mLinking\e[0m $$(patsubst $(prorab_root_makefile_abs_dir)%,%,$$@)\n" || printf "Linking $$(patsubst $(prorab_root_makefile_abs_dir)%,%,$$@)\n"
-$(.RECIPEPREFIX)$(Q)mkdir -p $(d)$(this_out_dir)
+$(.RECIPEPREFIX)$(Q)mkdir -p $(d)$(prorab_private_out_dir)
 $(.RECIPEPREFIX)$(Q)$(this_cc) $(prorab_ldflags) $$(filter %.o,$$^) $(prorab_ldlibs) -o "$$@"
 
         clean::
