@@ -1,3 +1,9 @@
+prorab (1.13.15) unstable; urgency=medium
+
+  * do not modify this_out_dir variable defined by user
+
+ -- Ivan Gagis <igagis@gmail.com>  Wed, 28 Aug 2019 18:07:31 +0300
+
 prorab (1.13.14) unstable; urgency=medium
 
   * fixed header dependency files (.d) generation
