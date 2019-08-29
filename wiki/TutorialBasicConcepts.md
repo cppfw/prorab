@@ -29,6 +29,7 @@ Right after inclusion of `prorab.mk` there will be following variables defined:
 - `soext` - typical extension for dynamically linked libraries in the OS (windows: `.dll`, linux: `.so`, macosx: `.dylib`)
 - `exeext` - typical executable extension (windows: `.exe`, linux: empty, macosx: empty)
 - `.RECIPEPREFIX` - this is a built-in variable of `GNU make`, but by default it is empty which means the default recipe prefix will be the tab character. Prorab explicitly sets the value of this variable to tab character, so that this variable could be used in user's makefiles.
+- `Q` - this variable is either empty or set to `@` depending on value of `verbose` or `v` variables. See about verbosity below.
 
 ## Prorab macros and variables naming conventions
 
@@ -101,6 +102,8 @@ Valid values for `verbose` are `true` or `false` or not set.
 
 The `v` is a shorthand alias for `verbose`. If `v` is not set or set to `0` or `false` then it is equivalent to `verbose=false`. Otherwise, if `v` is set to any other value it is same as `verbose=true`.
 Set `verbose` variable has higher priority than set `v` variable.
+
+Prorab uses value of `Q` variable to prefix all recipe lines. The `Q` variable is set by prorab to `@` or to empty value depending on verbosity.
 
 ## Defining several builds in one makefile
 
