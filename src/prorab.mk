@@ -499,9 +499,11 @@ $(.RECIPEPREFIX)$(if $(filter $(this_no_install),true),, \
                 $(Q)rm -f $(DESTDIR)$(PREFIX)/lib/$(notdir $(prorab_this_static_lib)) \
             )
 
-        #static library rule
+        # static library rule
+        # NOTE: need to remove the lib before creating, otherwise files will just be appended to the existing .a archive.
         $(prorab_this_static_lib): $(prorab_this_objs)
 $(.RECIPEPREFIX)@test -t 1 && printf "\e[0;33mCreating static library\e[0m $$(notdir $$@)\n" || printf "Creating static library $$(notdir $$@)\n"
+$(.RECIPEPREFIX)$(Q)rm -f $$@
 $(.RECIPEPREFIX)$(Q)$(this_ar) cr $$@ $$(filter %.o,$$^)
 
         #need empty line here to avoid merging with adjacent macro instantiations
