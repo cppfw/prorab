@@ -1,3 +1,9 @@
+prorab (1.13.16) unstable; urgency=medium
+
+  * static library bugfix
+
+ -- Ivan Gagis <igagis@gmail.com>  Tue, 10 Sep 2019 03:01:20 +0300
+
 prorab (1.13.15) unstable; urgency=medium
 
   * do not modify this_out_dir variable defined by user
