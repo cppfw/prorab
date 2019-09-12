@@ -24,9 +24,9 @@ $(.RECIPEPREFIX)$(Q)if [ ! -f $(d)tmp_src/build_dynamic/test.c.o ]; then $(this_
 $(.RECIPEPREFIX)$(Q)if [ -f $(d)tmp_src/build_dynamic/test.cpp.o ]; then $(this_err) "build_dynamic/test.cpp.o file unexpectedly present"; fi
 
 # check that dynamic lib and app binary do not contain 'increment' function
-$(.RECIPEPREFIX)$(Q)nm $(d)tmp_src/build_dynamic/libtests$(soext) > $(d)tmp_src/symbols.txt
+$(.RECIPEPREFIX)$(Q)objdump -t $(d)tmp_src/build_dynamic/libtests$(soext) > $(d)tmp_src/symbols.txt
 $(.RECIPEPREFIX)$(Q)[ -z "$$$$(echo $(d)tmp_src/symbols.txt | grep increment)" ] || $(this_err) "build_dynamic/libtests.so contains 'increment' function"
-$(.RECIPEPREFIX)$(Q)nm $(d)tmp_src/build_app/tests$(exeext) > $(d)tmp_src/symbols.txt
+$(.RECIPEPREFIX)$(Q)objdump -t $(d)tmp_src/build_app/tests$(exeext) > $(d)tmp_src/symbols.txt
 $(.RECIPEPREFIX)$(Q)[ -z "$$$$(echo $(d)tmp_src/symbols.txt | grep increment)" ] || $(this_err) "build_app/tests contains 'increment' function"
 
 $(.RECIPEPREFIX)@$(this_pass)
