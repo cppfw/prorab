@@ -33,8 +33,10 @@ $(.RECIPEPREFIX)$(Q)if [ -f $(d)tmp_src/build_dynamic/test.cpp.o ]; then $(this_
 
 # check that dynamic lib and app binary do not contain 'increment' function
 $(.RECIPEPREFIX)$(Q)$(this_symcmd) $(d)tmp_src/build_dynamic/libtests$(soext) > $(d)tmp_src/symbols.txt
+$(.RECIPEPREFIX)$(Q)[ ! -z "$$$$(cat $(d)tmp_src/symbols.txt | grep decrement)" ] || $(this_err) "build_dynamic/libtests.so does not contain 'decrement' function"
 $(.RECIPEPREFIX)$(Q)[ -z "$$$$(cat $(d)tmp_src/symbols.txt | grep increment)" ] || $(this_err) "build_dynamic/libtests.so contains 'increment' function"
 $(.RECIPEPREFIX)$(Q)$(this_symcmd) $(d)tmp_src/build_app/tests$(exeext) > $(d)tmp_src/symbols.txt
+$(.RECIPEPREFIX)$(Q)[ ! -z "$$$$(cat $(d)tmp_src/symbols.txt | grep decrement)" ] || $(this_err) "build_app/tests does not contain 'decrement' function"
 $(.RECIPEPREFIX)$(Q)[ -z "$$$$(cat $(d)tmp_src/symbols.txt | grep increment)" ] || $(this_err) "build_app/tests contains 'increment' function"
 
 $(.RECIPEPREFIX)@$(this_pass)
