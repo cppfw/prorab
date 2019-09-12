@@ -501,25 +501,25 @@ $(.RECIPEPREFIX)$(if $(filter $(this_no_install),true),, \
 
         # static library rule
         # NOTE: need to remove the lib before creating, otherwise files will just be appended to the existing .a archive.
-        $(prorab_this_static_lib): $(prorab_this_objs)
+        $(prorab_this_static_lib): $(prorab_this_objs) $(prorab_objs_file)
 $(.RECIPEPREFIX)@test -t 1 && printf "\e[0;33mCreating static library\e[0m $$(notdir $$@)\n" || printf "Creating static library $$(notdir $$@)\n"
 $(.RECIPEPREFIX)$(Q)rm -f $$@
 $(.RECIPEPREFIX)$(Q)$(this_ar) cr $$@ $$(filter %.o,$$^)
 
-        #need empty line here to avoid merging with adjacent macro instantiations
+        # need empty line here to avoid merging with adjacent macro instantiations
 
     endef
 
     define prorab-private-args-file-rules
 
-        #need empty line here to avoid merging with adjacent macro instantiations
+        # need empty line here to avoid merging with adjacent macro instantiations
 
         $1: $(if $(shell echo '$2' | cmp $1 2>/dev/null), phony,)
 $(.RECIPEPREFIX)$(Q)mkdir -p $$(dir $$@)
 $(.RECIPEPREFIX)$(Q)touch $$@
 $(.RECIPEPREFIX)$(Q)echo '$2' > $$@
 
-        #need empty line here to avoid merging with adjacent macro instantiations
+        # need empty line here to avoid merging with adjacent macro instantiations
 
     endef
 
@@ -537,21 +537,29 @@ $(.RECIPEPREFIX)$(Q)echo '$2' > $$@
 
     define prorab-private-compile-rules
 
-        #need empty line here to avoid merging with adjacent macro instantiations
+        # need empty line here to avoid merging with adjacent macro instantiations
 
-        #calculate max number of steps up in source paths and prepare obj directory spacer
+        # calculate max number of steps up in source paths and prepare obj directory spacer
         $(eval prorab_private_numobjspacers := )
         $(foreach var,$(this_srcs),\
                 $(eval prorab_private_numobjspacers := $(call prorab-max,$(call prorab-calculate-stepups,$(var)),$(prorab_private_numobjspacers))) \
             )
         $(eval prorab_private_objspacer := )
-        $(foreach var,$(prorab_private_numobjspacers), $(eval prorab_private_objspacer := $(prorab_private_objspacer)_prorab/))
+        $(foreach var,$(prorab_private_numobjspacers), $(eval prorab_private_objspacer := $(prorab_private_objspacer)_spacer/))
 
         $(eval prorab_this_obj_dir := $(d)$(prorab_private_out_dir)obj_$(this_name)/)
 
-        #Prepare list of object files
-        $(eval prorab_this_cpp_objs := $(addprefix $(prorab_this_obj_dir)$(prorab_private_objspacer),$(patsubst %.cpp,%.cpp.o,$(filter %.cpp,$(this_srcs)))))
-        $(eval prorab_this_c_objs := $(addprefix $(prorab_this_obj_dir)$(prorab_private_objspacer),$(patsubst %.c,%.c.o,$(filter %.c,$(this_srcs)))))
+        # Prepare list of object files
+        $(eval prorab_this_cpp_objs := $(patsubst %.cpp,%.cpp.o,$(filter %.cpp,$(this_srcs))))
+        $(eval prorab_this_c_objs := $(patsubst %.c,%.c.o,$(filter %.c,$(this_srcs))))
+        
+        $(eval prorab_objs_file := $(prorab_this_obj_dir)objs.txt)
+
+        # save list of objects to text file and only after that add $(d) prefix to those object files
+        $(call prorab-private-args-file-rules, $(prorab_objs_file),$(prorab_this_cpp_objs) $(prorab_this_c_objs))
+
+        $(eval prorab_this_cpp_objs := $(addprefix $(prorab_this_obj_dir)$(prorab_private_objspacer),$(prorab_this_cpp_objs)))
+        $(eval prorab_this_c_objs := $(addprefix $(prorab_this_obj_dir)$(prorab_private_objspacer),$(prorab_this_c_objs)))
         $(eval prorab_this_objs := $(prorab_this_cpp_objs) $(prorab_this_c_objs))
 
         $(call prorab-private-assert-deferred,this_cxxflags)
@@ -564,8 +572,8 @@ $(.RECIPEPREFIX)$(Q)echo '$2' > $$@
         $(eval prorab_cxxargs_file := $(prorab_this_obj_dir)cxxargs.txt)
         $(eval prorab_cargs_file := $(prorab_this_obj_dir)cargs.txt)
 
-        #compile command line flags dependency
-        #we don't want to store equivalent paths in a different way, so substitute 'd' to empty string
+        # compile command line flags dependency
+        # we don't want to store equivalent paths in a different way, so substitute 'd' to empty string
         $(eval prorab_private_temp_d := $(d))
         $(eval d := )
         $(call prorab-private-args-file-rules, $(prorab_cxxargs_file),$(this_cxx) $(prorab_cxxargs))
@@ -578,33 +586,33 @@ $(.RECIPEPREFIX)$(Q)echo '$2' > $$@
                 $(eval prorab_private_d_file_sed_command := sed -E -i -e "s/(^| )([^ /\][^ ]*)/\1\$$$$$$$$\(d\)\2/g" $$$$(patsubst %.o,%.d,$$$$@) )
             )
 
-        #compile .cpp static pattern rule
+        # compile .cpp static pattern rule
         $(prorab_this_cpp_objs): $(prorab_this_obj_dir)$(prorab_private_objspacer)%.cpp.o: $(d)%.cpp $(prorab_cxxargs_file)
 $(.RECIPEPREFIX)@test -t 1 && printf "\e[1;34mCompiling\e[0m $$<\n" || printf "Compiling $$<\n"
 $(.RECIPEPREFIX)$(Q)mkdir -p $$(dir $$@)
 $(.RECIPEPREFIX)$(Q)$(this_cxx) -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -MP -o "$$@" $(prorab_cxxargs) $$<
 $(.RECIPEPREFIX)$(Q)$(prorab_private_d_file_sed_command)
 
-        #compile .c static pattern rule
+        # compile .c static pattern rule
         $(prorab_this_c_objs): $(prorab_this_obj_dir)$(prorab_private_objspacer)%.c.o: $(d)%.c $(prorab_cargs_file)
 $(.RECIPEPREFIX)@test -t 1 && printf "\e[0;35mCompiling\e[0m $$<\n" || printf "Compiling $$<\n"
 $(.RECIPEPREFIX)$(Q)mkdir -p $$(dir $$@)
 $(.RECIPEPREFIX)$(Q)$(this_cc) -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -MP -o "$$@" $(prorab_cargs) $$<
 $(.RECIPEPREFIX)$(Q)$(prorab_private_d_file_sed_command)
 
-        #include rules for header dependencies
+        # include rules for header dependencies
         include $(wildcard $(addsuffix *.d,$(dir $(prorab_this_objs))))
 
         clean::
 $(.RECIPEPREFIX)$(Q)rm -rf $(prorab_this_obj_dir)
 
-        #need empty line here to avoid merging with adjacent macro instantiations
+        # need empty line here to avoid merging with adjacent macro instantiations
 
     endef
 
     define prorab-private-link-rules
 
-        #need empty line here to avoid merging with adjacent macro instantiations
+        # need empty line here to avoid merging with adjacent macro instantiations
 
         $(if $(prorab_this_obj_dir),,$(error prorab_this_obj_dir is not defined))
 
@@ -616,7 +624,7 @@ $(.RECIPEPREFIX)$(Q)rm -rf $(prorab_this_obj_dir)
 
         $(eval prorab_ldargs_file := $(prorab_this_obj_dir)ldargs.txt)
 
-        #we don't want to store equivalent paths in a different way, so substitute 'd' to empty string
+        # we don't want to store equivalent paths in a different way, so substitute 'd' to empty string
         $(eval prorab_private_temp_d := $(d))
         $(eval d := )
         $(call prorab-private-args-file-rules, $(prorab_ldargs_file),$(this_cc) $(prorab_ldflags) $(prorab_ldlibs))
@@ -624,8 +632,8 @@ $(.RECIPEPREFIX)$(Q)rm -rf $(prorab_this_obj_dir)
 
         all: $(prorab_this_name)
 
-        #link rule
-        $(prorab_this_name): $(prorab_this_objs) $(prorab_ldargs_file)
+        # link rule
+        $(prorab_this_name): $(prorab_this_objs) $(prorab_ldargs_file) $(prorab_objs_file)
 $(.RECIPEPREFIX)@test -t 1 && printf "\e[0;31mLinking\e[0m $$(patsubst $(prorab_root_makefile_abs_dir)%,%,$$@)\n" || printf "Linking $$(patsubst $(prorab_root_makefile_abs_dir)%,%,$$@)\n"
 $(.RECIPEPREFIX)$(Q)mkdir -p $(d)$(prorab_private_out_dir)
 $(.RECIPEPREFIX)$(Q)$(this_cc) $(prorab_ldflags) $$(filter %.o,$$^) $(prorab_ldlibs) -o "$$@"
@@ -636,15 +644,15 @@ $(.RECIPEPREFIX)$(if $(filter windows,$(os)), \
                 )
 $(.RECIPEPREFIX)$(Q)rm -f $(prorab_this_name)
 
-        #need empty line here to avoid merging with adjacent macro instantiations
+        # need empty line here to avoid merging with adjacent macro instantiations
 
     endef
 
 
-    #if there are no any sources in this_srcs then just install headers, no need to build binaries
+    # if there are no any sources in this_srcs then just install headers, no need to build binaries
     define prorab-build-lib
 
-        #need empty line here to avoid merging with adjacent macro instantiations
+        # need empty line here to avoid merging with adjacent macro instantiations
 
         $(prorab-private-lib-install-headers-rule)
         $(if $(this_srcs), \
@@ -658,20 +666,20 @@ $(.RECIPEPREFIX)$(Q)rm -f $(prorab_this_name)
                 , \
             )
 
-        #need empty line here to avoid merging with adjacent macro instantiations
+        # need empty line here to avoid merging with adjacent macro instantiations
 
     endef
 
 
     define prorab-build-app
 
-        #need empty line here to avoid merging with adjacent macro instantiations
+        # need empty line here to avoid merging with adjacent macro instantiations
 
         $(prorab-private-app-specific-rules)
         $(prorab-private-compile-rules)
         $(prorab-private-link-rules)
 
-        #need empty line here to avoid merging with adjacent macro instantiations
+        # need empty line here to avoid merging with adjacent macro instantiations
 
     endef
 
