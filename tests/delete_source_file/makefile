@@ -4,7 +4,7 @@ include $(d)../../src/prorab.mk
 include $(d)../common.mk
 
 # In Msys2 the nm does not find symbols in binaries for some reason, but objdump finds.
-# On theother hand, objdump does not work in macosx for some reason.
+# On the other hand, objdump does not work in macosx for some reason.
 ifeq ($(os),windows)
     this_symcmd := objdump -t
 else
