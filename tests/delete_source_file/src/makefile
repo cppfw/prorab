@@ -6,6 +6,9 @@ this_soname := 0
 
 this_srcs += $(patsubst $(d)%, %, $(call prorab-rwildcard, $(d), *test.cpp *test.c))
 
+this_cflags += -g
+this_cxxflags += -g
+
 this_static_lib_only := false
 
 this_out_dir := build_dynamic
@@ -22,6 +25,9 @@ this_soname := 0
 
 this_srcs += $(patsubst $(d)%, %, $(call prorab-rwildcard, $(d), *test.cpp *test.c))
 
+this_cflags += -g
+this_cxxflags += -g
+
 this_static_lib_only := true
 
 this_out_dir := build_static
@@ -36,6 +42,8 @@ this_name := tests
 
 this_srcs += $(patsubst $(d)%, %, $(call prorab-rwildcard, $(d), *test.cpp *test.c)) main.cpp
 
+this_cflags += -g
+this_cxxflags += -g
 this_ldlibs += -lstdc++
 
 this_out_dir := build_app
