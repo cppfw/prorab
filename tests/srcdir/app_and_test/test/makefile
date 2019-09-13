@@ -11,4 +11,4 @@ endef
 $(eval $(this_rules))
 
 
-$(eval $(call prorab-include,$(d)../app/makefile))
+$(eval $(call prorab-try-include, ../app/makefile))
