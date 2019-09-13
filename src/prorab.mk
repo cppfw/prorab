@@ -433,7 +433,7 @@ $(.RECIPEPREFIX)$(if $(filter $(this_no_install),true),, \
 
         $(if $(filter windows,$(os)), \
                 $(eval prorab_this_name := $(abspath $(d)$(prorab_private_out_dir)lib$(this_name)$(soext))) \
-                $(eval prorab_private_ldflags := -shared -s -Wl,--out-implib=$(d)$(prorab_private_out_dir)lib$(this_name)$(soext).a) \
+                $(eval prorab_private_ldflags = -shared -s -Wl,--out-implib=$$(d)$(prorab_private_out_dir)lib$(this_name)$(soext).a) \
                 $(eval prorab_this_symbolic_name := $(prorab_this_name)) \
             , \
                 $(prorab-private-dynamic-lib-specific-rules-nix-systems) \
