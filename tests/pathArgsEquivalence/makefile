@@ -18,6 +18,10 @@ $(.RECIPEPREFIX)+$(Q)$(MAKE) --no-print-directory -C $(d)prj/app > $(d)log.txt |
 $(.RECIPEPREFIX)$(Q)cat $(d)log.txt | sed -n -e "s/.*\(Compiling\).*/Compile/p" > $(d)log2.txt # check that compiler is NOT invoked
 $(.RECIPEPREFIX)$(Q)cat $(d)log.txt | sed -n -e "s/.*\(Linking\).*/Link/p" >> $(d)log2.txt # check that linker is NOT invoked
 $(.RECIPEPREFIX)$(Q)cmp $(d)log2.txt $(d)log2.txt.cmp || (echo "log2.txt = "; cat $(d)log2.txt; $(this_err) "second compilation log is not as expected");
+$(.RECIPEPREFIX)+$(Q)$(MAKE) --no-print-directory -C $(d)prj/lib > $(d)log.txt || $(this_err) "'make' failed"
+$(.RECIPEPREFIX)$(Q)cat $(d)log.txt | sed -n -e "s/.*\(Compiling\).*/Compile/p" > $(d)log3.txt # check that compiler is NOT invoked
+$(.RECIPEPREFIX)$(Q)cat $(d)log.txt | sed -n -e "s/.*\(Linking\).*/Link/p" >> $(d)log3.txt # check that linker is NOT invoked
+$(.RECIPEPREFIX)$(Q)cmp $(d)log3.txt $(d)log3.txt.cmp || (echo "log3.txt = "; cat $(d)log3.txt; $(this_err) "third compilation log is not as expected");
 $(.RECIPEPREFIX)+$(Q)$(MAKE) --no-print-directory -C $(d)prj clean || $(this_err) "final 'make clean' failed"
 $(.RECIPEPREFIX)$(Q)rm $(d)log.txt $(d)log1.txt $(d)log2.txt
 $(.RECIPEPREFIX)@$(this_pass)
