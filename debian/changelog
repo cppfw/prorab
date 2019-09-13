@@ -1,3 +1,9 @@
+prorab (1.13.17) unstable; urgency=medium
+
+  * delete source bug fixed
+
+ -- Ivan Gagis <igagis@gmail.com>  Fri, 13 Sep 2019 23:32:15 +0300
+
 prorab (1.13.16) unstable; urgency=medium
 
   * static library bugfix
