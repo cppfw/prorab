@@ -5,8 +5,9 @@ To build a C/C++ application with prorab we can use a `prorab-build-app` macro.
 But before we have to define some input variables if needed:
 - `this_name` - name of the application. It will be used to generate the output binary filename.
 - `this_srcs` - list of sources, ok to use += right a way.
-- `this_cc` - c compiler to use. By default equals to value of `CC` variable.
-- `this_cxx` - c++ compiler to use. By default equals to value of `CXX` variable.
+- `this_cc` - C compiler to use. By default equals to the value of `CC` variable.
+- `this_cxx` - C++ compiler to use. By default equals to the value of `CXX` variable.
+- `this_cxxext` - file extension for C++ files. Defaults to `.cpp`.
 - `this_cflags` - flags passed to C compiler, ok to use += right a way. By default equals to value of `CFLAGS` variable. **Use only deferred assignment if re-assigning**.
 - `this_cxxflags` - flags passed to C++ compiler, ok to use += right a way. By default equals to value of `CXXFLAGS` variable. **Use only deferred assignment if re-assigning**.
 - `this_ldflags` - flags passed to linker, ok to use += right a way. By default equals to value of `LDFLAGS` variable. **Use only deferred assignment if re-assigning**.
