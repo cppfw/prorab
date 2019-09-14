@@ -573,17 +573,17 @@ $(.RECIPEPREFIX)$(Q)echo '$2' > $$@
         $(eval prorab_this_obj_dir := $(d)$(prorab_private_out_dir)obj_$(this_name)/)
 
         # Prepare list of object files
-        $(eval prorab_this_cpp_objs := $(addsuffix .o,$(filter %$(this_cxxext),$(this_srcs))))
+        $(eval prorab_this_cxx_objs := $(addsuffix .o,$(filter %$(this_cxxext),$(this_srcs))))
         $(eval prorab_this_c_objs := $(addsuffix .o,$(filter %.c,$(this_srcs))))
         
         $(eval prorab_objs_file := $(prorab_this_obj_dir)objs.txt)
 
         # save list of objects to text file and only after that add $(d) prefix to those object files
-        $(call prorab-private-args-file-rules, $(prorab_objs_file),$(prorab_this_cpp_objs) $(prorab_this_c_objs))
+        $(call prorab-private-args-file-rules, $(prorab_objs_file),$(prorab_this_cxx_objs) $(prorab_this_c_objs))
 
-        $(eval prorab_this_cpp_objs := $(addprefix $(prorab_this_obj_dir)$(prorab_private_objspacer),$(prorab_this_cpp_objs)))
+        $(eval prorab_this_cxx_objs := $(addprefix $(prorab_this_obj_dir)$(prorab_private_objspacer),$(prorab_this_cxx_objs)))
         $(eval prorab_this_c_objs := $(addprefix $(prorab_this_obj_dir)$(prorab_private_objspacer),$(prorab_this_c_objs)))
-        $(eval prorab_this_objs := $(prorab_this_cpp_objs) $(prorab_this_c_objs))
+        $(eval prorab_this_objs := $(prorab_this_cxx_objs) $(prorab_this_c_objs))
 
         $(call prorab-private-assert-deferred,this_cxxflags)
         $(call prorab-private-assert-deferred,this_cflags)
@@ -610,7 +610,7 @@ $(.RECIPEPREFIX)$(Q)echo '$2' > $$@
             )
 
         # compile .cpp static pattern rule
-        $(prorab_this_cpp_objs): $(prorab_this_obj_dir)$(prorab_private_objspacer)%.o: $(d)% $(prorab_cxxargs_file)
+        $(prorab_this_cxx_objs): $(prorab_this_obj_dir)$(prorab_private_objspacer)%.o: $(d)% $(prorab_cxxargs_file)
 $(.RECIPEPREFIX)@test -t 1 && printf "\e[1;34mCompiling\e[0m $$<\n" || printf "Compiling $$<\n"
 $(.RECIPEPREFIX)$(Q)mkdir -p $$(dir $$@)
 $(.RECIPEPREFIX)$(Q)$(this_cxx) -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -MP -o "$$@" $(prorab_cxxargs) $$<
