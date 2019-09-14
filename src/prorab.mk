@@ -82,30 +82,33 @@ ifneq ($(prorab_is_included),true)
 
     # function to find all source files from specified directory recursively
     # NOTE: filter-out of empty strings from input path is needed when path is supplied with preceding or trailing spaces, to prevent searching sources from root directory also.
-    prorab-src-dir = $(patsubst $(d)%, %, $(call prorab-rwildcard, $(d)$(filter-out ,$1), *.cpp *.c))
+    prorab-src-dir = $(patsubst $(d)%, %, $(call prorab-rwildcard, $(d)$(filter-out ,$1), *$(this_cxxext) *.c))
 
     # function which clears all 'this_'-prefixed variables and sets default values
     define prorab-clear-this-vars
 
-        #need empty line here to avoid merging with adjacent macro instantiations
+        # need empty line here to avoid merging with adjacent macro instantiations
 
-        #clear all vars
+        # clear all vars
         $(foreach var,$(filter this_%,$(.VARIABLES)),$(eval $(var) := ))
 
-        #set default values for compilers
+        $(eval this_cxxext := .cpp)
+        $(eval this_hxxext := .hpp)
+
+        # set default values for compilers
         $(eval this_cc := $(CC))
         $(eval this_cxx := $(CXX))
         $(eval this_ar := $(AR))
 
-        #set default values for flags
-        #NOTE: we need deferred assignment here because we want that $(d) would be substituted after saving arguments to command line arguments dependency files.
+        # set default values for flags
+        # NOTE: we need deferred assignment here because we want that $(d) would be substituted after saving arguments to command line arguments dependency files.
         $(eval this_cppflags = $(CPPFLAGS))
         $(eval this_cflags = $(CFLAGS))
         $(eval this_cxxflags = $(CXXFLAGS))
         $(eval this_ldflags = $(LDFLAGS))
         $(eval this_ldlibs = $(LDLIBS))
 
-        #need empty line here to avoid merging with adjacent macro instantiations
+        # need empty line here to avoid merging with adjacent macro instantiations
 
     endef
 
@@ -423,7 +426,7 @@ $(.RECIPEPREFIX)$(Q)rm -f $(prorab_this_symbolic_name)
 
         $(eval prorab_private_headers_dir := $(d)$(this_headers_dir)/)
 
-        $(eval prorab_private_headers := $(patsubst $(prorab_private_headers_dir)%,%,$(call prorab-rwildcard, $(prorab_private_headers_dir), *.h *.hpp)))
+        $(eval prorab_private_headers := $(patsubst $(prorab_private_headers_dir)%,%,$(call prorab-rwildcard, $(prorab_private_headers_dir), *.h *$(this_hxxext))))
 
         $(if $(filter $(this_no_install),true),, install::)
 $(.RECIPEPREFIX)$(if $(filter $(this_no_install),true),, \
@@ -570,8 +573,8 @@ $(.RECIPEPREFIX)$(Q)echo '$2' > $$@
         $(eval prorab_this_obj_dir := $(d)$(prorab_private_out_dir)obj_$(this_name)/)
 
         # Prepare list of object files
-        $(eval prorab_this_cpp_objs := $(patsubst %.cpp,%.cpp.o,$(filter %.cpp,$(this_srcs))))
-        $(eval prorab_this_c_objs := $(patsubst %.c,%.c.o,$(filter %.c,$(this_srcs))))
+        $(eval prorab_this_cpp_objs := $(addsuffix .o,$(filter %$(this_cxxext),$(this_srcs))))
+        $(eval prorab_this_c_objs := $(addsuffix .o,$(filter %.c,$(this_srcs))))
         
         $(eval prorab_objs_file := $(prorab_this_obj_dir)objs.txt)
 
@@ -607,14 +610,14 @@ $(.RECIPEPREFIX)$(Q)echo '$2' > $$@
             )
 
         # compile .cpp static pattern rule
-        $(prorab_this_cpp_objs): $(prorab_this_obj_dir)$(prorab_private_objspacer)%.cpp.o: $(d)%.cpp $(prorab_cxxargs_file)
+        $(prorab_this_cpp_objs): $(prorab_this_obj_dir)$(prorab_private_objspacer)%.o: $(d)% $(prorab_cxxargs_file)
 $(.RECIPEPREFIX)@test -t 1 && printf "\e[1;34mCompiling\e[0m $$<\n" || printf "Compiling $$<\n"
 $(.RECIPEPREFIX)$(Q)mkdir -p $$(dir $$@)
 $(.RECIPEPREFIX)$(Q)$(this_cxx) -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -MP -o "$$@" $(prorab_cxxargs) $$<
 $(.RECIPEPREFIX)$(Q)$(prorab_private_d_file_sed_command)
 
         # compile .c static pattern rule
-        $(prorab_this_c_objs): $(prorab_this_obj_dir)$(prorab_private_objspacer)%.c.o: $(d)%.c $(prorab_cargs_file)
+        $(prorab_this_c_objs): $(prorab_this_obj_dir)$(prorab_private_objspacer)%.o: $(d)% $(prorab_cargs_file)
 $(.RECIPEPREFIX)@test -t 1 && printf "\e[0;35mCompiling\e[0m $$<\n" || printf "Compiling $$<\n"
 $(.RECIPEPREFIX)$(Q)mkdir -p $$(dir $$@)
 $(.RECIPEPREFIX)$(Q)$(this_cc) -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -MP -o "$$@" $(prorab_cargs) $$<
