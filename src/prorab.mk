@@ -295,7 +295,13 @@ ifneq ($(prorab_is_included),true)
 
         # need empty line here to avoid merging with adjacent macro instantiations
 
-        $(foreach path,$(wildcard $(d)*/makefile),$(call prorab-try-include,$(patsubst $(d)%,%,$(path))))
+        $(eval prorab_private_subdirs_makefiles := $(wildcard $(d)*/makefile))
+        $(eval prorab_private_subdirs_makefiles_dirs := $(patsubst %makefile,%,$(prorab_private_subdirs_makefiles)))
+
+        $(eval prorab_private_subdirs_Makefiles := $(filter-out $(prorab_private_subdirs_makefiles_dirs)%,$(wildcard $(d)*/Makefile)))
+
+        $(foreach path,$(prorab_private_subdirs_makefiles),$(call prorab-try-include,$(patsubst $(d)%,%,$(path))))
+        $(foreach path,$(prorab_private_subdirs_Makefiles),$(call prorab-try-include,$(patsubst $(d)%,%,$(path))))
 
         # need empty line here to avoid merging with adjacent macro instantiations
 
@@ -575,7 +581,7 @@ $(.RECIPEPREFIX)$(Q)echo '$2' > $$@
         # Prepare list of object files
         $(eval prorab_this_cxx_objs := $(addsuffix .o,$(filter %$(this_cxxext),$(this_srcs))))
         $(eval prorab_this_c_objs := $(addsuffix .o,$(filter %.c,$(this_srcs))))
-        
+
         $(eval prorab_objs_file := $(prorab_this_obj_dir)objs.txt)
 
         # save list of objects to text file and only after that add $(d) prefix to those object files
