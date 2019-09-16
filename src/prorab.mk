@@ -295,11 +295,10 @@ ifneq ($(prorab_is_included),true)
 
         # need empty line here to avoid merging with adjacent macro instantiations
 
-        $(eval prorab_private_subdirs_Makefiles := $(wildcard $(d)*/Makefile))
-        $(eval prorab_private_subdirs_included_makefiles_dirs := $(patsubst %Makefile,%makefile,$(prorab_private_subdirs_Makefiles)))
-
         $(eval prorab_private_subdirs_makefiles := $(wildcard $(d)*/makefile))
-        $(eval prorab_private_subdirs_makefiles := $(filter-out $(prorab_private_subdirs_included_makefiles_dirs),$(prorab_private_subdirs_makefiles)))
+        $(eval prorab_private_subdirs_makefiles_dirs := $(patsubst %makefile,%,$(prorab_private_subdirs_makefiles)))
+
+        $(eval prorab_private_subdirs_Makefiles := $(filter-out $(prorab_private_subdirs_makefiles_dirs)%,$(wildcard $(d)*/Makefile)))
 
         $(foreach path,$(prorab_private_subdirs_makefiles),$(call prorab-try-include,$(patsubst $(d)%,%,$(path))))
         $(foreach path,$(prorab_private_subdirs_Makefiles),$(call prorab-try-include,$(patsubst $(d)%,%,$(path))))
