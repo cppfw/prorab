@@ -52,6 +52,14 @@ $(eval $(prorab-build-subdirs))
 
 And that's it. This will invoke the same target on every subdirectory which has file named `makefile`. Note, that parallel build is still supported since it is a non-recursive technique.
 
+In case the makefiles in project have different name than `makefile` then it is possible to supply the name of makefiles to include as argument:
+
+```
+include prorab.mk
+
+$(eval $(call prorab-build-subdirs, my_Makefile))
+```
+
 
 ## Prorab macros and input variables
 
