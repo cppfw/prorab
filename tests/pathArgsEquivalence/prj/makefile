@@ -5,5 +5,5 @@
 include $(d)../../../src/prorab.mk
 
 
-#This prorab macro includes all the makefiles it could find in subdirectories
-$(eval $(prorab-build-subdirs))
+# NOTE: whitespaces around 'Makefile' is to test that those do not harm!
+$(eval $(call prorab-build-subdirs,  Makefile ))
