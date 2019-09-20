@@ -18,4 +18,4 @@ $(eval $(prorab-build-app))
 
 $(prorab_this_name): $(abspath $(d)../lib/libtests$(soext))
 
-$(eval $(call prorab-try-include, ../lib/makefile))
+$(eval $(call prorab-try-include, ../lib/Makefile))
