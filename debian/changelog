@@ -1,3 +1,9 @@
+prorab (1.14.0) unstable; urgency=medium
+
+  * allow to specify makefile name to prorab-build-subdirs
+
+ -- Ivan Gagis <igagis@gmail.com>  Fri, 20 Sep 2019 11:48:24 +0300
+
 prorab (1.13.18) unstable; urgency=medium
 
   * added possibility to customize C++ file extensions
