@@ -1,3 +1,9 @@
+prorab (1.14.1) unstable; urgency=medium
+
+  * deploy to debian buster
+
+ -- Ivan Gagis <igagis@gmail.com>  Tue, 26 Nov 2019 17:11:42 +0200
+
 prorab (1.14.0) unstable; urgency=medium
 
   * allow to specify makefile name to prorab-build-subdirs
