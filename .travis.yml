@@ -17,6 +17,12 @@ addons:
     - binfmt-support
     - qemu-user-static
     - myci
+  homebrew:
+    update: true
+    taps:
+    - igagis/tap
+    packages:
+    - myci
 
 matrix:
   include:
@@ -34,12 +40,12 @@ env:
   - secure: "PRL8mGJ6seQnPNeJZ9XwioNGPpRbVf6Lc8dBV1gPvf24/Dc3CnaU17YRzu2J06AfihyN+FC+5mo/mrjpgLjXkVqUVXyK9H5Foivi42eg4NVO8I5yrqSx0ej/xxSTbJMm+Muv31D1Mb/AuL/oIFUxcyRiV7Zzvq6X36LgcAQK8yEhl2XV1Fc84EnVF19DxpdVvHh6hxtaKzBwUAyJVyHv4T+iGa7a2aYJ5h+iH2wdv57cR16D3h6BtGWxJd+MS7BBmQiWNPX6t6sHCcJjLzlZi+zLJsYeVLV6BwJyejh/S55E0zOvIeqINC+qURZzVwpFuO6f1xMrFZCawEPcrMDXT0Z7qHuhbryCzZvUY5iZ3J4wnzIlTYUfRN4sYiSKsWXKReAu7yZ6xrW7ckk89Y2D8CFCYwtiV3Ds7J0FSYji9zEbsNuOsQtHfHr201xkAWltxZpRmw7ljzhDS50N1CjAuZS8CdXbP8rnRlhV1YgBr/uvjZWxqpZQm6yqBbDzPHJN18WzAm//npPuaArAnIAFyd0QhXoId5KPW9eE00EDEuOQ2lad7ryrHwGGG5cStQzq4ypIk4FqxrZmufddw33iz6o4kTe/YzQ07gueGk62cHKrNFCyg9y1cNijmvi9/VsdttQCzuYK8Fy7Ap+Ia684FzDb1gCBbAexngUjQOKV72E="
   - MYCI_GIT_ACCESS_TOKEN=$HOMEBREW_GITHUB_ACCESS_TOKEN
   - MYCI_GIT_USERNAME=igagis
-  - USE_ANDROID_NDK_VERSION=15c
   - PACKAGE_NAME=prorab
   matrix:
   - OS_REL=xenial OS=ubuntu DOCKER_IMAGE=$OS:$OS_REL PACKAGE_TYPE=deb
   - OS_REL=bionic OS=ubuntu DOCKER_IMAGE=$OS:$OS_REL PACKAGE_TYPE=deb
   - OS_REL=stretch OS=debian DOCKER_IMAGE=$OS:$OS_REL PACKAGE_TYPE=deb
+  - OS_REL=buster OS=debian DOCKER_IMAGE=$OS:$OS_REL PACKAGE_TYPE=deb
   - OS_REL=stretch OS=raspbian DOCKER_IMAGE=igagis/$OS:$OS_REL PACKAGE_TYPE=deb
 
 before_install:
@@ -56,13 +62,7 @@ before_install:
     fi;
   fi
 - if [ "$TRAVIS_JOB_NAME" == "macosx" ]; then
-    rvm install ruby-2.3.3 &&
-    rvm use ruby-2.3.3 &&
-
-    brew update > /dev/null &&
-    brew tap igagis/tap &&
-    brew update > /dev/null &&
-    brew install myci;
+    echo "nothing to do before install for macosx";
   fi
 
 install:
