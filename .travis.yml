@@ -71,7 +71,7 @@ before_install:
   fi
 - if [ "$TRAVIS_JOB_NAME" == "msys2" ]; then
     choco upgrade --no-progress -y msys2 &&
-    export msys2="/c/tools/msys64/msys2_shell.cmd -defterm -no-start -full-path -msys -here -c" &&
+    export msys2="/c/tools/msys64/msys2_shell.cmd -defterm -no-start -msys -here -c" &&
     $msys2 "echo -e '[igagis_msys]\\nSigLevel = Optional TrustAll\\nServer = https://dl.bintray.com/igagis/msys2/msys' >> /etc/pacman.conf" &&
     $msys2 "pacman --noconfirm --ask 20 --sync --refresh --refresh --sysupgrade --sysupgrade" &&
     $msys2 "pacman --noconfirm --ask 20 --sync --refresh --refresh --sysupgrade --sysupgrade" &&
