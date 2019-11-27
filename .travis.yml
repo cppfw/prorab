@@ -72,8 +72,6 @@ before_install:
 - if [ "$TRAVIS_JOB_NAME" == "msys2" ]; then
     choco upgrade --no-progress -y msys2 &&
     export msys2="/c/tools/msys64/msys2_shell.cmd -defterm -no-start -full-path -msys -here -c" &&
-    $msys2 echo PATH=\$PATH &&
-    $msys2 echo MSYSTEM=\$MSYSTEM &&
     $msys2 "echo -e '[igagis_msys]\\nSigLevel = Optional TrustAll\\nServer = https://dl.bintray.com/igagis/msys2/msys' >> /etc/pacman.conf" &&
     $msys2 "pacman --noconfirm --ask 20 --sync --refresh --refresh --sysupgrade --sysupgrade" &&
     $msys2 "pacman --noconfirm --ask 20 --sync --refresh --refresh --sysupgrade --sysupgrade" &&
@@ -100,6 +98,8 @@ script:
   fi
 # running MSYS2 script from deployment provider did not work for some reason, so we do it here if the commit is a tagged one.
 - if [ "$TRAVIS_JOB_NAME" == "msys2" ]; then
+    $msys2 "echo PATH=\$PATH" &&
+    $msys2 "echo MSYSTEM=\$MSYSTEM" &&
     $msys2 "(cd msys2 && makepkg --syncdeps --noconfirm --skipinteg)" &&
     if [ ! -z "$TRAVIS_TAG" ]; then
       $msys2 "myci-deploy-pacman-bintray.sh -u igagis -r msys2 -p msys -d igagis_msys msys2/*.tar.xz";
