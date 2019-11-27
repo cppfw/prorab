@@ -12,7 +12,7 @@ groups=()
 #Need 'diffutils' package for 'cmp' program
 depends=('make' 'diffutils' 'sed')
 
-makedepends=('myci')
+makedepends=('myci' 'coreutils')
 checkdepends=('myci')
 optdepends=()
 provides=()
