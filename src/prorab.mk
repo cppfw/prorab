@@ -297,7 +297,9 @@ ifneq ($(prorab_is_included),true)
 
         $(eval prorab_private_makefilename := $(if $(filter-out ,$1),$1,makefile))
 
-        $(foreach path,$(wildcard $(d)*/$(prorab_private_makefilename)),$(call prorab-try-include,$(patsubst $(d)%,%,$(path))))
+        $(foreach path,$(wildcard $(d)*/$(prorab_private_makefilename)), \
+                $$(eval $$(call prorab-try-include,$(patsubst $(d)%,%,$(path)))) \
+            )
 
         # need empty line here to avoid merging with adjacent macro instantiations
 

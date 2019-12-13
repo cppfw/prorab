@@ -8,9 +8,9 @@ include $(d)../common.mk
 define this_rules
 .PHONY: test
 test::
-	@$(this_running) $(this_test)
-	+$(prorab_echo)$(MAKE) --no-print-directory -C $(d)src clean || $(this_err) "initial 'make clean' failed"
-	+$(prorab_echo)$(MAKE) --no-print-directory -C $(d)src || $(this_err) "'make' failed"
-	@$(this_pass)
+$(.RECIPEPREFIX)@$(this_running) $(this_test)
+$(.RECIPEPREFIX)+$(prorab_echo)$(MAKE) --no-print-directory -C $(d)src clean || $(this_err) "initial 'make clean' failed"
+$(.RECIPEPREFIX)+$(prorab_echo)$(MAKE) --no-print-directory -C $(d)src || $(this_err) "'make' failed"
+$(.RECIPEPREFIX)@$(this_pass)
 endef
 $(eval $(this_rules))
