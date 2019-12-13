@@ -1,3 +1,9 @@
+prorab (1.14.3) unstable; urgency=medium
+
+  * include order bug fixed
+
+ -- Ivan Gagis <igagis@gmail.com>  Fri, 13 Dec 2019 21:05:53 +0200
+
 prorab (1.14.2) unstable; urgency=medium
 
   * deploy from travis msys2
