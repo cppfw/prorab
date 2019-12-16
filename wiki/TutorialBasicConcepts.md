@@ -78,7 +78,7 @@ After invoking some **prorab** macro there might be some output variables define
 
 ## Including other makefiles
 
-In order to include some other makefile one can use `prorab-try-include` macro. This macro will check if the makefile was already included or not and only include it if necessary and the `makefile` being included is present.
+In order to include some other makefile one can use `prorab-include` macro. This macro will check if the makefile was already included or not and only include it if necessary and the `makefile` being included is present.
 
 Example:
 
@@ -93,10 +93,12 @@ $(prorab_this_name): $(abspath $(d)../stuff/libstuff$(soext))
 
 # include makefile which defines rules for building the libstuff
 
-$(eval $(call prorab-try-include, ../stuff/makefile))
+$(eval $(call prorab-include, ../stuff/makefile))
 
 ...
 ```
+
+There is also `prorab-try-include` macro which is similar to `prorab-include` but also does not fail if the `makefile` does not exist, it does nothing in this case.
 
 
 ## Echoing commands from recipes
