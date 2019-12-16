@@ -238,13 +238,14 @@ ifneq ($(prorab_is_included),true)
 
         # need empty line here to avoid merging with adjacent macro instantiations
 
-        $(info DEPRECATED: 'prorab-include' is deprecated, use 'prorab-try-include' instead)
+        # NOTE: filter-out is needed to trim spaces from input parameter $1
+        $(eval prorab_private_path_to_makefile := $(d)$(filter-out ,$1))
 
         # if makefile is already included do nothing
-        $(if $(filter $(abspath $1),$(prorab_included_makefiles)), \
+        $(if $(filter $(abspath $(prorab_private_path_to_makefile)),$(prorab_included_makefiles)), \
             , \
-                $(eval prorab_included_makefiles += $(abspath $1)) \
-                $(call prorab-private-include,$1) \
+                $(eval prorab_included_makefiles += $(abspath $(prorab_private_path_to_makefile))) \
+                $(call prorab-private-include,$(prorab_private_path_to_makefile)) \
             )
 
         # need empty line here to avoid merging with adjacent macro instantiations
@@ -262,7 +263,7 @@ ifneq ($(prorab_is_included),true)
         $(if $(filter $(abspath $(prorab_private_path_to_makefile)),$(prorab_included_makefiles)), \
             , \
                 $(eval prorab_included_makefiles += $(abspath $(prorab_private_path_to_makefile))) \
-                $(call prorab-private-include,$(prorab_private_path_to_makefile)) \
+                $(call prorab-private-include,$(prorab_private_path_to_makefile),-) \
             )
 
         # need empty line here to avoid merging with adjacent macro instantiations
@@ -280,7 +281,7 @@ ifneq ($(prorab_is_included),true)
         prorab_private_this_makefiles += $$(prorab_this_makefile)
         prorab_this_makefile := $1
         d := $$(dir $$(prorab_this_makefile))
-        -include $1
+        $2include $1
         prorab_this_makefile := $$(lastword $$(prorab_private_this_makefiles))
         d := $$(dir $$(prorab_this_makefile))
         prorab_private_this_makefiles := $$(wordlist 1,$$(call prorab-num,$$(call prorab-dec,$$(prorab_private_this_makefiles))),$$(prorab_private_this_makefiles))
@@ -298,7 +299,7 @@ ifneq ($(prorab_is_included),true)
         $(eval prorab_private_makefilename := $(if $(filter-out ,$1),$1,makefile))
 
         $(foreach path,$(wildcard $(d)*/$(prorab_private_makefilename)), \
-                $$(eval $$(call prorab-try-include,$(patsubst $(d)%,%,$(path)))) \
+                $$(eval $$(call prorab-include,$(patsubst $(d)%,%,$(path)))) \
             )
 
         # need empty line here to avoid merging with adjacent macro instantiations

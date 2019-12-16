@@ -2,7 +2,7 @@ include $(d)../../../../src/prorab.mk
 
 test_var_a := test_value_a
 
-$(eval $(call prorab-try-include, ../b/makefile))
+$(eval $(call prorab-include, ../b/makefile))
 
 $(info test_var_b = $(test_var_b))
 
