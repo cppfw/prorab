@@ -1,3 +1,9 @@
+prorab (1.14.4) unstable; urgency=medium
+
+  * undeprecate prorab-include
+
+ -- Ivan Gagis <igagis@gmail.com>  Mon, 16 Dec 2019 15:17:51 +0200
+
 prorab (1.14.3) unstable; urgency=medium
 
   * include order bug fixed
