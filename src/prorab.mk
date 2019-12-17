@@ -146,7 +146,7 @@ ifneq ($(prorab_is_included),true)
     else ifeq ($(v),)
         override v := false
     else ifeq ($(v),false)
-        #do nothing
+        # do nothing
     else
         override v := true
     endif
@@ -155,6 +155,7 @@ ifneq ($(prorab_is_included),true)
         # NOTE: prorab_echo is kept for backwards compatibility
         prorab_echo := @
         Q := @
+        GNUMAKEFLAGS += --no-print-directory
     else
         prorab_echo :=
         Q :=
@@ -333,8 +334,8 @@ $(.RECIPEPREFIX)@test -t 1 && printf "\e[0;32mCleaning\e[0m\n" || printf "Cleani
 
         # target for rebuilding all
         re:
-$(.RECIPEPREFIX)$(Q)$(MAKE) --no-print-directory clean
-$(.RECIPEPREFIX)$(Q)$(MAKE) --no-print-directory
+$(.RECIPEPREFIX)$(Q)$(MAKE) clean
+$(.RECIPEPREFIX)$(Q)$(MAKE)
 
     endef
     $(eval $(prorab-private-rules))

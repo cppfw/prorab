@@ -6,7 +6,7 @@
         {
             "label": "test",
             "type": "shell",
-            "command": "make --no-print-directory test aj=t"
+            "command": "make test aj=t"
         }
     ]
 }
