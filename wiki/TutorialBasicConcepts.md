@@ -26,8 +26,8 @@ Basically, all makefiles in the project are supposed to use **prorab** and have 
 Right after inclusion of `prorab.mk` there will be following variables defined:
 - `d` - directory where this `makefile` resides
 - `os` - operating system where makefile is run, can be `linux`, `macosx`, `windows`. Note, that `windows` is when building under `Cygwin` or `Msys`.
-- `dot_so` - typical extension for dynamically linked libraries in the OS (windows: `.dll`, linux: `.so`, macosx: `.dylib`)
-- `dot_exe` - typical executable extension (windows: `.exe`, linux: empty, macosx: empty)
+- `dot_so` - typical suffix for dynamically linked libraries in the OS (windows: `.dll`, linux: `.so`, macosx: `.dylib`)
+- `dot_exe` - typical suffix for executable files (windows: `.exe`, linux: empty, macosx: empty)
 - `.RECIPEPREFIX` - this is a built-in variable of `GNU make`, but by default it is empty which means the default recipe prefix will be the tab character. Prorab explicitly sets the value of this variable to tab character, so that this variable could be used in user's makefiles.
 - `Q` - this variable is either empty or set to `@` depending on value of `verbose` or `v` variables. See about verbosity below.
 
@@ -136,7 +136,7 @@ $(eval $(prorab-build-app))
 
 ## Adding all source files from all subdirectories to the build
 
-It is often needed in the build to use all source files from a certain directory subtree. There is a `prorab-src-dir` function for that. The directory to search for source files is relative to the `makefile` directory. It only searches for `.c` files and files with extension defined by `this_cxxext` variable which defaults to `.cpp`.
+It is often needed in the build to use all source files from a certain directory subtree. There is a `prorab-src-dir` function for that. The directory to search for source files is relative to the `makefile` directory. It only searches for `.c` files and files with suffix defined by `this_dot_cxx` variable which defaults to `.cpp`.
 
 ```
 include prorab.mk
