@@ -6,7 +6,7 @@
         {
             "label": "test",
             "type": "shell",
-            "command": "make test aj=t"
+            "command": "make test"
         }
     ]
 }

@@ -1,6 +1,6 @@
 # The MIT License (MIT)
 #
-# Copyright (c) 2019 Ivan Gagis <igagis@gmail.com>
+# Copyright (c) 2020 Ivan Gagis <igagis@gmail.com>
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -190,20 +190,25 @@ ifneq ($(prorab_is_included),true)
 
     # set library extension
     ifeq ($(os), windows)
-        prorab_lib_extension := .dll
+        dot_so := .dll
     else ifeq ($(os), macosx)
-        prorab_lib_extension := .dylib
+        dot_so := .dylib
     else
-        prorab_lib_extension := .so
+        dot_so := .so
     endif
 
+    # TODO: prorab_lib_extension and soext are deprecated, remove.
+    prorab_lib_extension := $(dot_so)
     soext := $(prorab_lib_extension)
 
     ifeq ($(os), windows)
-        exeext := .exe
+        dot_exe := .exe
     else
-        exeext :=
+        dot_exe :=
     endif
+
+    # TODO: exeext is deprecated, remove.
+    exeext := $(dot_exe)
 
     # 'autojobs' valid values are only 'true' or 'false'
     ifeq ($(autojobs),true)
@@ -356,7 +361,7 @@ $(.RECIPEPREFIX)$(Q)$(MAKE)
 
         $(eval prorab_private_ldflags := )
 
-        $(eval prorab_this_name := $(abspath $(d)$(prorab_private_out_dir)$(this_name)$(exeext)))
+        $(eval prorab_this_name := $(abspath $(d)$(prorab_private_out_dir)$(this_name)$(dot_exe)))
 
         $(eval prorab_this_symbolic_name := $(prorab_this_name))
 
@@ -383,10 +388,10 @@ $(.RECIPEPREFIX)$(if $(filter $(this_no_install),true),, \
 
         $(if $(this_soname),,$(error this_soname is not defined))
 
-        $(eval prorab_this_symbolic_name := $(abspath $(d)$(prorab_private_out_dir)lib$(this_name)$(soext)))
+        $(eval prorab_this_symbolic_name := $(abspath $(d)$(prorab_private_out_dir)lib$(this_name)$(dot_so)))
 
         $(if $(filter macosx,$(os)), \
-                $(eval prorab_this_name := $(abspath $(d)$(prorab_private_out_dir)lib$(this_name).$(this_soname)$(soext))) \
+                $(eval prorab_this_name := $(abspath $(d)$(prorab_private_out_dir)lib$(this_name).$(this_soname)$(dot_so))) \
                 $(eval prorab_private_ldflags := -dynamiclib -Wl,-install_name,$(prorab_this_name),-headerpad_max_install_names,-undefined,dynamic_lookup,-compatibility_version,1.0,-current_version,1.0) \
             ,\
                 $(eval prorab_this_name := $(prorab_this_symbolic_name).$(this_soname)) \
@@ -461,8 +466,8 @@ $(.RECIPEPREFIX)$(if $(filter $(this_no_install),true),, \
         $(if $(this_name),,$(error this_name is not defined))
 
         $(if $(filter windows,$(os)), \
-                $(eval prorab_this_name := $(abspath $(d)$(prorab_private_out_dir)lib$(this_name)$(soext))) \
-                $(eval prorab_private_ldflags = -shared -s -Wl,--out-implib=$$(d)$(prorab_private_out_dir)lib$(this_name)$(soext).a) \
+                $(eval prorab_this_name := $(abspath $(d)$(prorab_private_out_dir)lib$(this_name)$(dot_so))) \
+                $(eval prorab_private_ldflags = -shared -s -Wl,--out-implib=$$(d)$(prorab_private_out_dir)lib$(this_name)$(dot_so).a) \
                 $(eval prorab_this_symbolic_name := $(prorab_this_name)) \
             , \
                 $(prorab-private-dynamic-lib-specific-rules-nix-systems) \
