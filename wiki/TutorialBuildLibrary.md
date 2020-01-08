@@ -4,7 +4,7 @@ To build a C/C++ library with prorab we can use a `prorab-build-lib` macro.
 
 But before we have to set some input variables if needed:
 - `this_soname` - 'so' name for shared library, for example 0.
-- `this_hxxext` - file extension for C++ header files. Defaults to `.hpp`.
+- `this_dot_hxx` - file suffix for C++ header files. Defaults to `.hpp`.
 - `this_headers_dir` - header files root directory, all headers from this directory subtree will be installed by `make install`. The directory is relative to the `makefile` directory. Can be empty.
 - `this_static_lib_only` - build only static library if equals to `true`. Otherwise, both static and dynamic libraries will be built.
 - `this_ar` - archiver program for creating static libraries. By default equals to value of `AR` variable.
@@ -41,7 +41,7 @@ $(eval $(prorab-build-lib))
 
 **prorab** will define an `install` target for the library.
 
-Note, that it only installs `.h` header files and files with extension defined by `this_hxxext` variable to the `PREFIX/include` directory.
+Note, that it only installs `.h` header files and files with suffix defined by `this_dot_hxx` variable to the `PREFIX/include` directory.
 
 Shared and static library files are installed to `PREFIX/lib` directory.
 
