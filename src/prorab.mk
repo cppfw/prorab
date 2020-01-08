@@ -82,7 +82,7 @@ ifneq ($(prorab_is_included),true)
 
     # function to find all source files from specified directory recursively
     # NOTE: filter-out of empty strings from input path is needed when path is supplied with preceding or trailing spaces, to prevent searching sources from root directory also.
-    prorab-src-dir = $(patsubst $(d)%, %, $(call prorab-rwildcard, $(d)$(filter-out ,$1), *$(this_cxxext) *.c))
+    prorab-src-dir = $(patsubst $(d)%, %, $(call prorab-rwildcard, $(d)$(filter-out ,$1), *$(this_dot_cxx) *.c))
 
     # function which clears all 'this_'-prefixed variables and sets default values
     define prorab-clear-this-vars
@@ -92,8 +92,13 @@ ifneq ($(prorab_is_included),true)
         # clear all vars
         $(foreach var,$(filter this_%,$(.VARIABLES)),$(eval $(var) := ))
 
+        # TODO: these are deprecated, remove.
         $(eval this_cxxext := .cpp)
         $(eval this_hxxext := .hpp)
+
+        # TODO: assign := .cpp and .hpp when this_cxxext and this_hxxext are removed.
+        $(eval this_dot_cxx = $$(this_cxxext))
+        $(eval this_dot_hxx = $$(this_hxxext))
 
         # set default values for compilers
         $(eval this_cc := $(CC))
@@ -437,7 +442,7 @@ $(.RECIPEPREFIX)$(Q)rm -f $(prorab_this_symbolic_name)
 
         $(eval prorab_private_headers_dir := $(d)$(this_headers_dir)/)
 
-        $(eval prorab_private_headers := $(patsubst $(prorab_private_headers_dir)%,%,$(call prorab-rwildcard, $(prorab_private_headers_dir), *.h *$(this_hxxext))))
+        $(eval prorab_private_headers := $(patsubst $(prorab_private_headers_dir)%,%,$(call prorab-rwildcard, $(prorab_private_headers_dir), *.h *$(this_dot_hxx))))
 
         $(if $(filter $(this_no_install),true),, install::)
 $(.RECIPEPREFIX)$(if $(filter $(this_no_install),true),, \
@@ -584,7 +589,7 @@ $(.RECIPEPREFIX)$(Q)echo '$2' > $$@
         $(eval prorab_this_obj_dir := $(d)$(prorab_private_out_dir)obj_$(this_name)/)
 
         # Prepare list of object files
-        $(eval prorab_this_cxx_objs := $(addsuffix .o,$(filter %$(this_cxxext),$(this_srcs))))
+        $(eval prorab_this_cxx_objs := $(addsuffix .o,$(filter %$(this_dot_cxx),$(this_srcs))))
         $(eval prorab_this_c_objs := $(addsuffix .o,$(filter %.c,$(this_srcs))))
 
         $(eval prorab_objs_file := $(prorab_this_obj_dir)objs.txt)
