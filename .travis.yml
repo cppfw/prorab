@@ -96,7 +96,7 @@ script:
   fi
 # running MSYS2 script from deployment provider did not work for some reason, so we do it here if the commit is a tagged one.
 - if [ "$TRAVIS_JOB_NAME" == "msys2" ]; then
-    $msys2 "(cd msys2 && makepkg --syncdeps --noconfirm --skipinteg)" &&
+    $msys2 "^(cd msys2 ^&^& makepkg --syncdeps --noconfirm --skipinteg^)" &&
     if [ ! -z "$TRAVIS_TAG" ]; then
       $msys2 "myci-deploy-pacman-bintray.sh -u igagis -r msys2 -p msys -d igagis_msys msys2/*.tar.xz";
     fi;
