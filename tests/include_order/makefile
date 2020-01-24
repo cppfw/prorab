@@ -9,7 +9,7 @@ define this_rules
 .PHONY: test
 test::
 $(.RECIPEPREFIX)@$(this_running) $(this_test)
-$(.RECIPEPREFIX)+$(Q)$(MAKE) -C $(d)test test || $(this_err) "'make test' failed"
+$(.RECIPEPREFIX)+$(a)$(MAKE) -C $(d)test test || $(this_err) "'make test' failed"
 $(.RECIPEPREFIX)@$(this_pass)
 endef
 $(eval $(this_rules))
