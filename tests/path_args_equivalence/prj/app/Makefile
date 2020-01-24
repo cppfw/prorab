@@ -8,8 +8,10 @@ this_ldlibs += -lstdc++
 
 this_ldflags += -L$(d)../app
 
+this_include_path := -I$(d)some_path
+
 this_cxxflags += -Werror -O2 -g
-this_cxxflags += -I$(d)../app
+this_cxxflags += -I$(d)../app $(this_include_path)
 
 this_cflags += -I$(d)../app
 

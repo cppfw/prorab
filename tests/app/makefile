@@ -15,7 +15,7 @@ $(.RECIPEPREFIX)$(Q)if [ ! -d $(d)src/obj_tests ]; then $(this_err) "src/obj_tes
 $(.RECIPEPREFIX)$(Q)if [ ! -d $(d)src/obj_tests_no_install ]; then $(this_err) "src/obj_tests_no_install directory not found"; fi
 
 $(.RECIPEPREFIX)$(Q)rm -rf $(d)src/tmp
-$(.RECIPEPREFIX)+$(Q)$(MAKE) -C $(d)src install v=t DESTDIR=tmp PREFIX=/usr || $(this_err) "'make install' failed"
+$(.RECIPEPREFIX)+$(Q)$(MAKE) -C $(d)src install verbose=true DESTDIR=tmp PREFIX=/usr || $(this_err) "'make install' failed"
 $(.RECIPEPREFIX)$(Q)if [ ! -f $(d)src/tmp/usr/bin/tests$(exeext) ]; then $(this_err) "src/tmp/usr/bin/tests$(exeext) file not found"; fi
 $(.RECIPEPREFIX)$(Q)if [ -f $(d)src/tmp/usr/bin/tests_no_install$(exeext) ]; then $(this_err) "src/tmp/usr/bin/tests_no_install$(exeext) file found, must not be there"; fi
 

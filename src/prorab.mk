@@ -106,12 +106,11 @@ ifneq ($(prorab_is_included),true)
         $(eval this_ar := $(AR))
 
         # set default values for flags
-        # NOTE: we need deferred assignment here because we want that $(d) would be substituted after saving arguments to command line arguments dependency files.
-        $(eval this_cppflags = $(CPPFLAGS))
-        $(eval this_cflags = $(CFLAGS))
-        $(eval this_cxxflags = $(CXXFLAGS))
-        $(eval this_ldflags = $(LDFLAGS))
-        $(eval this_ldlibs = $(LDLIBS))
+        $(eval this_cppflags := $(CPPFLAGS))
+        $(eval this_cflags := $(CFLAGS))
+        $(eval this_cxxflags := $(CXXFLAGS))
+        $(eval this_ldflags := $(LDFLAGS))
+        $(eval this_ldlibs := $(LDLIBS))
 
         # need empty line here to avoid merging with adjacent macro instantiations
 
@@ -121,14 +120,16 @@ ifneq ($(prorab_is_included),true)
     #############
     # variables #
 
-    # directory of makefile which includes 'prorab.mk'
-    prorab_this_makefile := $(word $(call prorab-num,$(call prorab-dec,$(MAKEFILE_LIST))),$(MAKEFILE_LIST))
+    prorab_root_makefile := $(abspath $(word $(call prorab-num,$(call prorab-dec,$(MAKEFILE_LIST))),$(MAKEFILE_LIST)))
+    prorab_root_dir := $(dir $(prorab_root_makefile))
+
+    prorab_this_makefile := $(prorab_root_makefile)
+
     d := $(dir $(prorab_this_makefile))
 
+    # TODO: deprecated, remove
     # defining alias for 'd'
     prorab_this_dir = $(d)
-
-    prorab_root_makefile_abs_dir := $(abspath $(d))/
 
     # define a blank variable
     prorab-blank :=
@@ -157,14 +158,15 @@ ifneq ($(prorab_is_included),true)
     endif
 
     ifeq ($(v),false)
-        # NOTE: prorab_echo is kept for backwards compatibility
-        prorab_echo := @
-        Q := @
+        a := @
         GNUMAKEFLAGS += --no-print-directory
     else
-        prorab_echo :=
-        Q :=
+        a :=
     endif
+
+    # TODO: deprecated, remove.
+    prorab_echo := $(a)
+    Q := $(a)
 
     # directory of prorab.mk
     prorab_dir := $(dir $(lastword $(MAKEFILE_LIST)))
@@ -324,7 +326,7 @@ ifneq ($(prorab_is_included),true)
     # Delete target file in case its recepie has failed
     .DELETE_ON_ERROR:
 
-    .PHONY: clean all install uninstall distclean phony re echo-cleaning
+    .PHONY: clean all test install uninstall distclean phony re echo-cleaning
 
     # define the very first default target
     all:
@@ -562,18 +564,6 @@ $(.RECIPEPREFIX)$(Q)echo '$2' > $$@
 
     endef
 
-
-    define prorab-private-assert-deferred
-
-        $(eval prorab_private_tmp := $($1))
-        $(eval prorab_private_probe := x)
-        $(eval $1 += $$(prorab_private_probe))
-        $(eval prorab_private_probe :=)
-        $(if $(call prorab-eq, $($1), $(prorab_private_tmp)),,$(error [$(d)makefile]: Variable '$1' must be a deferred expansion variable))
-
-    endef
-
-
     define prorab-private-compile-rules
 
         # need empty line here to avoid merging with adjacent macro instantiations
@@ -601,10 +591,6 @@ $(.RECIPEPREFIX)$(Q)echo '$2' > $$@
         $(eval prorab_this_c_objs := $(addprefix $(prorab_this_obj_dir)$(prorab_private_objspacer),$(prorab_this_c_objs)))
         $(eval prorab_this_objs := $(prorab_this_cxx_objs) $(prorab_this_c_objs))
 
-        $(call prorab-private-assert-deferred,this_cxxflags)
-        $(call prorab-private-assert-deferred,this_cflags)
-        $(call prorab-private-assert-deferred,this_cppflags)
-
         $(eval prorab_cxxargs = $$(this_cppflags) $$(this_cxxflags))
         $(eval prorab_cargs = $$(this_cppflags) $$(this_cflags))
 
@@ -612,12 +598,8 @@ $(.RECIPEPREFIX)$(Q)echo '$2' > $$@
         $(eval prorab_cargs_file := $(prorab_this_obj_dir)cargs.txt)
 
         # compile command line flags dependency
-        # we don't want to store equivalent paths in a different way, so substitute 'd' to empty string
-        $(eval prorab_private_temp_d := $(d))
-        $(eval d := )
         $(call prorab-private-args-file-rules, $(prorab_cxxargs_file),$(this_cxx) $(prorab_cxxargs))
         $(call prorab-private-args-file-rules, $(prorab_cargs_file),$(this_cc) $(prorab_cargs))
-        $(eval d := $(prorab_private_temp_d))
 
         $(eval prorab_private_d_for_sed := $(subst .,\.,$(subst /,\/,$(patsubst ./%,%,$(d)))))
         $(if $(prorab_private_d_for_sed),
@@ -627,14 +609,14 @@ $(.RECIPEPREFIX)$(Q)echo '$2' > $$@
 
         # compile .cpp static pattern rule
         $(prorab_this_cxx_objs): $(prorab_this_obj_dir)$(prorab_private_objspacer)%.o: $(d)% $(prorab_cxxargs_file)
-$(.RECIPEPREFIX)@test -t 1 && printf "\e[1;34mCompiling\e[0m $$<\n" || printf "Compiling $$<\n"
+$(.RECIPEPREFIX)@test -t 1 && printf "\e[1;34mCompiling\e[0m $$(patsubst $(prorab_root_dir)%,%,$$<)\n" || printf "Compiling $$(patsubst $(prorab_root_dir)%,%,$$<)\n"
 $(.RECIPEPREFIX)$(Q)mkdir -p $$(dir $$@)
 $(.RECIPEPREFIX)$(Q)$(this_cxx) -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -MP -o "$$@" $(prorab_cxxargs) $$<
 $(.RECIPEPREFIX)$(Q)$(prorab_private_d_file_sed_command)
 
         # compile .c static pattern rule
         $(prorab_this_c_objs): $(prorab_this_obj_dir)$(prorab_private_objspacer)%.o: $(d)% $(prorab_cargs_file)
-$(.RECIPEPREFIX)@test -t 1 && printf "\e[0;35mCompiling\e[0m $$<\n" || printf "Compiling $$<\n"
+$(.RECIPEPREFIX)@test -t 1 && printf "\e[0;35mCompiling\e[0m $$(patsubst $(prorab_root_dir)%,%,$$<)\n" || printf "Compiling $$(patsubst $(prorab_root_dir)%,%,$$<)\n"
 $(.RECIPEPREFIX)$(Q)mkdir -p $$(dir $$@)
 $(.RECIPEPREFIX)$(Q)$(this_cc) -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -MP -o "$$@" $(prorab_cargs) $$<
 $(.RECIPEPREFIX)$(Q)$(prorab_private_d_file_sed_command)
@@ -655,25 +637,18 @@ $(.RECIPEPREFIX)$(Q)rm -rf $(prorab_this_obj_dir)
 
         $(if $(prorab_this_obj_dir),,$(error prorab_this_obj_dir is not defined))
 
-        $(call prorab-private-assert-deferred,this_ldflags)
-        $(call prorab-private-assert-deferred,this_ldlibs)
-
         $(eval prorab_ldflags = $$(this_ldflags) $$(prorab_private_ldflags))
         $(eval prorab_ldlibs = $$(this_ldlibs))
 
         $(eval prorab_ldargs_file := $(prorab_this_obj_dir)ldargs.txt)
 
-        # we don't want to store equivalent paths in a different way, so substitute 'd' to empty string
-        $(eval prorab_private_temp_d := $(d))
-        $(eval d := )
         $(call prorab-private-args-file-rules, $(prorab_ldargs_file),$(this_cc) $(prorab_ldflags) $(prorab_ldlibs))
-        $(eval d := $(prorab_private_temp_d))
 
         all: $(prorab_this_name)
 
         # link rule
         $(prorab_this_name): $(prorab_this_objs) $(prorab_ldargs_file) $(prorab_objs_file)
-$(.RECIPEPREFIX)@test -t 1 && printf "\e[0;31mLinking\e[0m $$(patsubst $(prorab_root_makefile_abs_dir)%,%,$$@)\n" || printf "Linking $$(patsubst $(prorab_root_makefile_abs_dir)%,%,$$@)\n"
+$(.RECIPEPREFIX)@test -t 1 && printf "\e[0;31mLinking\e[0m $$(patsubst $(prorab_root_dir)%,%,$$@)\n" || printf "Linking $$(patsubst $(prorab_root_dir)%,%,$$@)\n"
 $(.RECIPEPREFIX)$(Q)mkdir -p $(d)$(prorab_private_out_dir)
 $(.RECIPEPREFIX)$(Q)$(this_cc) $(prorab_ldflags) $$(filter %.o,$$^) $(prorab_ldlibs) -o "$$@"
 
