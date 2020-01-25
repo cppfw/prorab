@@ -362,7 +362,7 @@ $(.RECIPEPREFIX)$(a)$(MAKE)
 
     define prorab-private-app-specific-rules
 
-        #need empty line here to avoid merging with adjacent macro instantiations
+        # need empty line here to avoid merging with adjacent macro instantiations
 
         $(if $(this_name),,$(error this_name is not defined))
 
@@ -383,7 +383,7 @@ $(.RECIPEPREFIX)$(if $(filter $(this_no_install),true),, \
                 $(a)rm -f $(DESTDIR)$(PREFIX)/bin/$(notdir $(prorab_this_name)) \
             )
 
-        #need empty line here to avoid merging with adjacent macro instantiations
+        # need empty line here to avoid merging with adjacent macro instantiations
 
     endef
 
@@ -391,7 +391,7 @@ $(.RECIPEPREFIX)$(if $(filter $(this_no_install),true),, \
 
     define prorab-private-dynamic-lib-specific-rules-nix-systems
 
-        #need empty line here to avoid merging with adjacent macro instantiations
+        # need empty line here to avoid merging with adjacent macro instantiations
 
         $(if $(this_soname),,$(error this_soname is not defined))
 
@@ -405,7 +405,7 @@ $(.RECIPEPREFIX)$(if $(filter $(this_no_install),true),, \
                 $(eval prorab_private_ldflags := -shared -Wl,-soname,$(notdir $(prorab_this_name))) \
             )
 
-        #symbolic link to shared library rule
+        # symbolic link to shared library rule
         $(prorab_this_symbolic_name): $(prorab_this_name)
 $(.RECIPEPREFIX)@test -t 1 && printf "\e[1;36mCreating symbolic link\e[0m $$(notdir $$@) -> $$(notdir $$<)\n" || printf "Creating symbolic link $$(notdir $$@) -> $$(notdir $$<)\n"
 $(.RECIPEPREFIX)$(a)(cd $$(dir $$<) && ln -f -s $$(notdir $$<) $$(notdir $$@))
@@ -433,14 +433,14 @@ $(.RECIPEPREFIX)$(if $(filter $(this_no_install),true),, \
         clean::
 $(.RECIPEPREFIX)$(a)rm -f $(prorab_this_symbolic_name)
 
-        #need empty line here to avoid merging with adjacent macro instantiations
+        # need empty line here to avoid merging with adjacent macro instantiations
 
     endef
 
 
     define prorab-private-lib-install-headers-rule
 
-        #need empty line here to avoid merging with adjacent macro instantiations
+        # need empty line here to avoid merging with adjacent macro instantiations
 
         $(eval prorab_private_headers_dir := $(d)$(this_headers_dir)/)
 
@@ -462,25 +462,25 @@ $(.RECIPEPREFIX)$(if $(filter $(this_no_install),true),, \
                 done \
             )
 
-        #need empty line here to avoid merging with adjacent macro instantiations
+        # need empty line here to avoid merging with adjacent macro instantiations
 
     endef
 
     define prorab-private-dynamic-lib-specific-rules
 
-        #need empty line here to avoid merging with adjacent macro instantiations
+        # need empty line here to avoid merging with adjacent macro instantiations
 
         $(if $(this_name),,$(error this_name is not defined))
 
         $(if $(filter windows,$(os)), \
                 $(eval prorab_this_name := $(abspath $(d)$(prorab_private_out_dir)lib$(this_name)$(dot_so))) \
-                $(eval prorab_private_ldflags = -shared -s -Wl,--out-implib=$$(d)$(prorab_private_out_dir)lib$(this_name)$(dot_so).a) \
+                $(eval prorab_private_ldflags := -shared -s -Wl,--out-implib=$(abspath $(d)$(prorab_private_out_dir)lib$(this_name)$(dot_so).a)) \
                 $(eval prorab_this_symbolic_name := $(prorab_this_name)) \
             , \
                 $(prorab-private-dynamic-lib-specific-rules-nix-systems) \
             )
 
-        #in Cygwin and Msys2 the .dll files go to /usr/bin and .a and .dll.a files go to /usr/lib
+        # in Cygwin and Msys2 the .dll files go to /usr/bin and .a and .dll.a files go to /usr/lib
         $(if $(filter $(this_no_install),true),, install:: \
                 $(if $(filter windows,$(os)), \
                         $(prorab_this_name), \
@@ -512,13 +512,13 @@ $(.RECIPEPREFIX)$(if $(filter $(this_no_install),true),, \
                     ) \
             )
 
-        #need empty line here to avoid merging with adjacent macro instantiations
+        # need empty line here to avoid merging with adjacent macro instantiations
 
     endef
 
     define prorab-private-lib-static-library-rule
 
-        #need empty line here to avoid merging with adjacent macro instantiations
+        # need empty line here to avoid merging with adjacent macro instantiations
 
         $(if $(this_name),,$(error this_name is not defined))
 
@@ -637,8 +637,8 @@ $(.RECIPEPREFIX)$(a)rm -rf $(prorab_this_obj_dir)
 
         $(if $(prorab_this_obj_dir),,$(error prorab_this_obj_dir is not defined))
 
-        $(eval prorab_ldflags = $$(this_ldflags) $$(prorab_private_ldflags))
-        $(eval prorab_ldlibs = $$(this_ldlibs))
+        $(eval prorab_ldflags := $(this_ldflags) $(prorab_private_ldflags))
+        $(eval prorab_ldlibs := $(this_ldlibs))
 
         $(eval prorab_ldargs_file := $(prorab_this_obj_dir)ldargs.txt)
 
