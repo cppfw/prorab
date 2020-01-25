@@ -29,7 +29,7 @@ Right after inclusion of `prorab.mk` there will be following variables defined:
 - `dot_so` - typical suffix for dynamically linked libraries in the OS (windows: `.dll`, linux: `.so`, macosx: `.dylib`)
 - `dot_exe` - typical suffix for executable files (windows: `.exe`, linux: empty, macosx: empty)
 - `.RECIPEPREFIX` - this is a built-in variable of `GNU make`, but by default it is empty which means the default recipe prefix will be the tab character. Prorab explicitly sets the value of this variable to tab character, so that this variable could be used in user's makefiles.
-- `Q` - this variable is either empty or set to `@` depending on value of `verbose` or `v` variables. See about verbosity below.
+- `a` - this variable is either empty or set to `@` depending on value of `verbose` or `v` variables. See about verbosity below.
 
 ## Prorab macros and variables naming conventions
 
@@ -201,10 +201,11 @@ define this_rules
 
 test:: my_executable_binary
 $(.RECIPEPREFIX)@echo "Running my_executable_binary"
-$(.RECIPEPREFIX)@(cd $(d); $$^)
+$(.RECIPEPREFIX)$(a)(cd $(d); $$^)
 $(.RECIPEPREFIX)@echo "program finished"
 
 endef
 $(eval $(this_rules))
 ```
 
+Note the use of `$(a)` variable which normally just equals to `@`.
