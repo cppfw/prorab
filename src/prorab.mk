@@ -292,7 +292,7 @@ ifneq ($(prorab_is_included),true)
         # need empty line here to avoid merging with adjacent macro instantiations
 
         prorab_private_this_makefiles += $$(prorab_this_makefile)
-        prorab_this_makefile := $1
+        prorab_this_makefile := $(abspath $1)
         d := $$(dir $$(prorab_this_makefile))
         $2include $1
         prorab_this_makefile := $$(lastword $$(prorab_private_this_makefiles))

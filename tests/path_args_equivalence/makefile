@@ -1,6 +1,5 @@
 include $(d)../../src/prorab.mk
 
-
 include $(d)../common.mk
 
 define this_rules

@@ -6,7 +6,14 @@
         {
             "label": "test",
             "type": "shell",
-            "command": "make test"
+            "command": "make test",
+            "problemMatcher": []
+        },
+        {
+            "label": "test_path_args_equivalence",
+            "type": "shell",
+            "command": "make -C tests/path_args_equivalence test --no-print-directory",
+            "problemMatcher": []
         }
     ]
 }
