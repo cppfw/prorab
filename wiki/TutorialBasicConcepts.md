@@ -183,9 +183,9 @@ It is often necessary to add custom rules. `GNU make` expands variables in `make
 ```
 define this_rules
 
-test:: my_executable_binary
+test:: $(d)my_executable_binary
     @echo "Running my_executable_binary"
-    @(cd $(d); $$^)
+    @$$^
     @echo "program finished"
 
 endef
@@ -199,9 +199,9 @@ User can override the value of `.RECIPEPREFIX` variable to any character he/she 
 ```
 define this_rules
 
-test:: my_executable_binary
+test:: $(d)my_executable_binary
 $(.RECIPEPREFIX)@echo "Running my_executable_binary"
-$(.RECIPEPREFIX)$(a)(cd $(d); $$^)
+$(.RECIPEPREFIX)$(a)$$^
 $(.RECIPEPREFIX)@echo "program finished"
 
 endef
