@@ -8,7 +8,7 @@ But before we have to set some input variables if needed:
 - `this_headers_dir` - header files root directory, all headers from this directory subtree will be installed by `make install`. The directory is relative to the `makefile` directory. Can be empty.
 - `this_static_lib_only` - build only static library if equals to `true`. Otherwise, both static and dynamic libraries will be built.
 - `this_ar` - archiver program for creating static libraries. By default equals to value of `AR` variable.
-- `this_name`, `this_cc`, `this_cxx`, `this_cxxext`, `this_srcs`, `this_cflags`, `this_cxxflags`, `this_ldflags`, `this_ldlibs`, `this_cppflags`, `this_out_dir`, `this_no_install` - same as for [application](TutorialBuildApplication.md).
+- `this_name`, `this_cc`, `this_cxx`, `this_dot_cxx`, `this_srcs`, `this_cflags`, `this_cxxflags`, `this_ldflags`, `this_ldlibs`, `this_cppflags`, `this_out_dir`, `this_no_install` - same as for [application](TutorialBuildApplication.md).
 
 Note: `this_ldlibs` and `this_ldflags` are separated because sometimes order of linker flags, object files and libraries matters. So, linker flags go first, then go object files and then go linker libs.
 
