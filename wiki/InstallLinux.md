@@ -6,7 +6,7 @@
   deb http://dl.bintray.com/igagis/<distro> <release> main
   ```
   where
-  - `<distro>` is `debian` or `ubuntu` or raspbian
+  - `<distro>` is `debian` or `ubuntu` or `raspbian`
   - `<release>` is `buster`, `stretch`, `xenial`, `bionic` etc.
   
 
