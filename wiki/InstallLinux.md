@@ -6,8 +6,8 @@
   deb http://dl.bintray.com/igagis/<distro> <release> main
   ```
   where
-  - `<distro>` is `debian` or `ubuntu`
-  - `<release>` is `stretch`, `xenial`, `bionic` etc.
+  - `<distro>` is `debian` or `ubuntu` or raspbian
+  - `<release>` is `buster`, `stretch`, `xenial`, `bionic` etc.
   
 
 - Import APT key
