@@ -99,7 +99,7 @@ script:
 - if [ "$TRAVIS_JOB_NAME" == "msys2" ]; then
     $msys2 "(cd msys2 && makepkg --syncdeps --noconfirm --skipinteg)" &&
     if [ ! -z "$TRAVIS_TAG" ]; then
-      $msys2 "myci-deploy-pacman-bintray.sh -u igagis -r msys2 -p msys -d igagis_msys msys2/*.tar.xz";
+      $msys2 "myci-deploy-pacman-bintray.sh -u igagis -r msys2 -p msys -d igagis_msys msys2/$PACKAGE_NAME-*-any.pkg.*";
     fi;
   fi
 
