@@ -412,10 +412,11 @@ $(.RECIPEPREFIX)$(a)(cd $$(dir $$<) && ln -f -s $$(notdir $$<) $$(notdir $$@))
 
         all: $(prorab_this_symbolic_name)
 
-        $(if $(filter $(this_no_install),true),, install:: $(DESTDIR)$(PREFIX)/lib/$(notdir $(prorab_this_name)))
-$(.RECIPEPREFIX)$(if $(filter $(this_no_install),true),, \
-                $(a)install -d $(DESTDIR)$(PREFIX)/lib/ && \
-                        (cd $(DESTDIR)$(PREFIX)/lib/ && ln -f -s $(notdir $(prorab_this_name)) $(notdir $(prorab_this_symbolic_name))) \
+        $(if $(filter $(this_no_install),true),
+                ,
+                install:: $(DESTDIR)$(PREFIX)/lib/$(notdir $(prorab_this_name))
+$(.RECIPEPREFIX)$(a)install -d $(DESTDIR)$(PREFIX)/lib/ && \
+                        (cd $(DESTDIR)$(PREFIX)/lib/ && ln -f -s $(notdir $(prorab_this_name)) $(notdir $(prorab_this_symbolic_name)))
             )
 
         $(if $(filter $(this_no_install),true),, $(DESTDIR)$(PREFIX)/lib/$(notdir $(prorab_this_name)): $(prorab_this_name))
