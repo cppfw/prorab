@@ -14,6 +14,12 @@
             "type": "shell",
             "command": "make -C tests/path_args_equivalence test --no-print-directory",
             "problemMatcher": []
+		},
+        {
+            "label": "test_lib_depends_on_lib",
+            "type": "shell",
+            "command": "make -C tests/lib_depends_on_lib test --no-print-directory",
+            "problemMatcher": []
         }
     ]
 }
