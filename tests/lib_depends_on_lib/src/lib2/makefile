@@ -10,6 +10,8 @@ this_out_dir := build
 
 this_cxxflags += -fPIC
 
+this_no_install := true
+
 $(eval $(prorab-build-lib))
 
 $(prorab_this_name): $(abspath $(d)../lib1/build/liblib1$(dot_so))
