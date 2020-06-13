@@ -372,15 +372,18 @@ $(.RECIPEPREFIX)$(a)$(MAKE)
 
         $(eval prorab_this_symbolic_name := $(prorab_this_name))
 
-        $(if $(filter $(this_no_install),true),, install:: $(prorab_this_name))
-$(.RECIPEPREFIX)$(if $(filter $(this_no_install),true),, \
-                $(a)install -d $(DESTDIR)$(PREFIX)/bin/ && \
-                        install $(prorab_this_name) $(DESTDIR)$(PREFIX)/bin/ \
+        $(if $(filter $(this_no_install),true),
+                ,
+                install:: $(prorab_this_name)
+$(.RECIPEPREFIX)$(a) \
+                    install -d $(DESTDIR)$(PREFIX)/bin/ && \
+                    install $(prorab_this_name) $(DESTDIR)$(PREFIX)/bin/ \
             )
 
-        $(if $(filter $(this_no_install),true),, uninstall::)
-$(.RECIPEPREFIX)$(if $(filter $(this_no_install),true),, \
-                $(a)rm -f $(DESTDIR)$(PREFIX)/bin/$(notdir $(prorab_this_name)) \
+        $(if $(filter $(this_no_install),true),
+                ,
+                uninstall::
+$(.RECIPEPREFIX)$(a)rm -f $(DESTDIR)$(PREFIX)/bin/$(notdir $(prorab_this_name)) \
             )
 
         # need empty line here to avoid merging with adjacent macro instantiations
@@ -419,16 +422,18 @@ $(.RECIPEPREFIX)$(a)install -d $(DESTDIR)$(PREFIX)/lib/ && \
                         (cd $(DESTDIR)$(PREFIX)/lib/ && ln -f -s $(notdir $(prorab_this_name)) $(notdir $(prorab_this_symbolic_name)))
             )
 
-        $(if $(filter $(this_no_install),true),, $(DESTDIR)$(PREFIX)/lib/$(notdir $(prorab_this_name)): $(prorab_this_name))
-$(.RECIPEPREFIX)$(if $(filter $(this_no_install),true),, \
-                $(a) \
+        $(if $(filter $(this_no_install),true),
+                ,
+                $(DESTDIR)$(PREFIX)/lib/$(notdir $(prorab_this_name)): $(prorab_this_name)
+$(.RECIPEPREFIX)$(a) \
                         install -d $(DESTDIR)$(PREFIX)/lib/ && \
-                        install $(prorab_this_name) $(DESTDIR)$(PREFIX)/lib/ \
+                        install $(prorab_this_name) $(DESTDIR)$(PREFIX)/lib/
             )
 
-        $(if $(filter $(this_no_install),true),, uninstall::)
-$(.RECIPEPREFIX)$(if $(filter $(this_no_install),true),, \
-                $(a)rm -f $(DESTDIR)$(PREFIX)/lib/$(notdir $(prorab_this_symbolic_name))
+        $(if $(filter $(this_no_install),true),
+                ,
+                uninstall::
+$(.RECIPEPREFIX)$(a)rm -f $(DESTDIR)$(PREFIX)/lib/$(notdir $(prorab_this_symbolic_name))
             )
 
         clean::
@@ -447,20 +452,22 @@ $(.RECIPEPREFIX)$(a)rm -f $(prorab_this_symbolic_name)
 
         $(eval prorab_private_headers := $(patsubst $(prorab_private_headers_dir)%,%,$(call prorab-rwildcard, $(prorab_private_headers_dir), *.h *$(this_dot_hxx))))
 
-        $(if $(filter $(this_no_install),true),, install::)
-$(.RECIPEPREFIX)$(if $(filter $(this_no_install),true),, \
-                $(a)for i in $(prorab_private_headers); do \
+        $(if $(filter $(this_no_install),true),
+                ,
+                install::
+$(.RECIPEPREFIX)$(a)for i in $(prorab_private_headers); do \
                     install -d $(DESTDIR)$(PREFIX)/include/$$$$(dirname $$$$i) && \
                     install -m 644 $(prorab_private_headers_dir)$$$$i $(DESTDIR)$(PREFIX)/include/$$$$i; \
-                done \
+                done
             )
 
-        $(if $(filter $(this_no_install),true),, uninstall::)
-$(.RECIPEPREFIX)$(if $(filter $(this_no_install),true),, \
-                $(a)for i in $(prorab_private_headers); do \
+        $(if $(filter $(this_no_install),true),
+                ,
+                uninstall::
+$(.RECIPEPREFIX)$(a)for i in $(prorab_private_headers); do \
                     path=$$$$(echo $$$$i | cut -d "/" -f1) && \
                     rm -rf $(DESTDIR)$(PREFIX)/include/$$$$path; \
-                done \
+                done
             )
 
         # need empty line here to avoid merging with adjacent macro instantiations
@@ -482,35 +489,28 @@ $(.RECIPEPREFIX)$(if $(filter $(this_no_install),true),, \
             )
 
         # in Cygwin and Msys2 the .dll files go to /usr/bin and .a and .dll.a files go to /usr/lib
-        $(if $(filter $(this_no_install),true),, install:: \
-                $(if $(filter windows,$(os)), \
-                        $(prorab_this_name), \
-                        $(DESTDIR)$(PREFIX)/lib/$(notdir $(prorab_this_name)) \
-                    ) \
-            )
-$(.RECIPEPREFIX)$(if $(filter $(this_no_install),true),, \
-                $(if $(filter windows,$(os)), \
-                        $(a) \
-                                install -d $(DESTDIR)$(PREFIX)/bin/ && \
-                                install $(prorab_this_name) $(DESTDIR)$(PREFIX)/bin/ && \
-                                install -d $(DESTDIR)$(PREFIX)/lib/ && \
-                                install $(prorab_this_name).a $(DESTDIR)$(PREFIX)/lib/ \
-                    ,) \
-            )
-$(.RECIPEPREFIX)$(if $(filter $(this_no_install),true),, \
-                $(if $(filter macosx,$(os)), \
-                        $(a)install_name_tool -id "$(PREFIX)/lib/$(notdir $(prorab_this_name))" $(DESTDIR)$(PREFIX)/lib/$(notdir $(prorab_this_name)) \
-                    ) \
+        $(if $(filter $(this_no_install),true),
+                ,
+                install:: $(if $(filter windows,$(os)), $(prorab_this_name), $(DESTDIR)$(PREFIX)/lib/$(notdir $(prorab_this_name)))
+$(if $(filter windows,$(os)),$(.RECIPEPREFIX)$(a) \
+                    install -d $(DESTDIR)$(PREFIX)/bin/ && \
+                    install $(prorab_this_name) $(DESTDIR)$(PREFIX)/bin/ && \
+                    install -d $(DESTDIR)$(PREFIX)/lib/ && \
+                    install $(prorab_this_name).a $(DESTDIR)$(PREFIX)/lib/ )
+$(if $(filter macosx,$(os)),$(.RECIPEPREFIX)$(a) \
+                    install_name_tool -id "$(PREFIX)/lib/$(notdir $(prorab_this_name))" $(DESTDIR)$(PREFIX)/lib/$(notdir $(prorab_this_name)) )
             )
 
-        $(if $(filter $(this_no_install),true),, uninstall::)
-$(.RECIPEPREFIX)$(if $(filter $(this_no_install),true),, \
-                $(if $(filter windows,$(os)), \
-                        $(a)rm -f $(DESTDIR)$(PREFIX)/lib/$(notdir $(prorab_this_name).a) && \
-                                rm -f $(DESTDIR)$(PREFIX)/bin/$(notdir $(prorab_this_name)) \
-                    , \
-                        $(a)rm -f $(DESTDIR)$(PREFIX)/lib/$(notdir $(prorab_this_name)) \
-                    ) \
+        $(if $(filter $(this_no_install),true),
+                ,
+                uninstall::
+$(if $(filter windows,$(os)),
+$(.RECIPEPREFIX)$(a) \
+                    rm -f $(DESTDIR)$(PREFIX)/lib/$(notdir $(prorab_this_name).a) && \
+                    rm -f $(DESTDIR)$(PREFIX)/bin/$(notdir $(prorab_this_name)) \
+                    ,
+$(.RECIPEPREFIX)$(a)rm -f $(DESTDIR)$(PREFIX)/lib/$(notdir $(prorab_this_name)) \
+                )
             )
 
         # need empty line here to avoid merging with adjacent macro instantiations
@@ -530,15 +530,18 @@ $(.RECIPEPREFIX)$(if $(filter $(this_no_install),true),, \
         clean::
 $(.RECIPEPREFIX)$(a)rm -f $(prorab_this_static_lib)
 
-        $(if $(filter $(this_no_install),true),, install:: $(prorab_this_static_lib))
-$(.RECIPEPREFIX)$(if $(filter $(this_no_install),true),, \
-                $(a)install -d $(DESTDIR)$(PREFIX)/lib/ && \
-                        install -m 644 $(prorab_this_static_lib) $(DESTDIR)$(PREFIX)/lib/ \
+        $(if $(filter $(this_no_install),true),
+                ,
+                install:: $(prorab_this_static_lib)
+$(.RECIPEPREFIX)$(a) \
+                    install -d $(DESTDIR)$(PREFIX)/lib/ && \
+                    install -m 644 $(prorab_this_static_lib) $(DESTDIR)$(PREFIX)/lib/ \
             )
 
-        $(if $(filter $(this_no_install),true),, uninstall::)
-$(.RECIPEPREFIX)$(if $(filter $(this_no_install),true),, \
-                $(a)rm -f $(DESTDIR)$(PREFIX)/lib/$(notdir $(prorab_this_static_lib)) \
+        $(if $(filter $(this_no_install),true),
+                ,
+                uninstall::
+$(.RECIPEPREFIX)$(a)rm -f $(DESTDIR)$(PREFIX)/lib/$(notdir $(prorab_this_static_lib)) \
             )
 
         # static library rule
