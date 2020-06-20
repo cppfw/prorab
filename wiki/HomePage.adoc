@@ -1,0 +1,12 @@
+= prorab
+**GNU make**-based build system
+
+# Installation
+- [Linux](InstallLinux.md)
+- [MacOSX](InstallMacOSX.md)
+- [Windows (Msys2)](InstallMSYS.md)
+
+== Tutorials
+- link:TutorialBasicConcepts.md[Basic concepts]
+- link:TutorialBuildApplication.md[Building C++ application]
+- link:TutorialBuildLibrary.md[Building C++ library]
