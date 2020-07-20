@@ -595,15 +595,15 @@ $(.RECIPEPREFIX)$(a)echo '$2' > $$@
         $(eval prorab_this_c_objs := $(addprefix $(prorab_this_obj_dir)$(prorab_private_objspacer),$(prorab_this_c_objs)))
         $(eval prorab_this_objs := $(prorab_this_cxx_objs) $(prorab_this_c_objs))
 
-        $(eval prorab_cxxargs = $$(this_cppflags) $$(this_cxxflags))
-        $(eval prorab_cargs = $$(this_cppflags) $$(this_cflags))
+        $(eval prorab_cxxflags = $$(this_cppflags) $$(this_cxxflags))
+        $(eval prorab_cflags = $$(this_cppflags) $$(this_cflags))
 
-        $(eval prorab_cxxargs_file := $(prorab_this_obj_dir)cxxargs.txt)
-        $(eval prorab_cargs_file := $(prorab_this_obj_dir)cargs.txt)
+        $(eval prorab_cxxflags_file := $(prorab_this_obj_dir)cxxargs.txt)
+        $(eval prorab_cflags_file := $(prorab_this_obj_dir)cargs.txt)
 
         # compile command line flags dependency
-        $(call prorab-private-args-file-rules, $(prorab_cxxargs_file),$(this_cxx) $(prorab_cxxargs))
-        $(call prorab-private-args-file-rules, $(prorab_cargs_file),$(this_cc) $(prorab_cargs))
+        $(call prorab-private-args-file-rules, $(prorab_cxxflags_file),$(this_cxx) $(prorab_cxxflags))
+        $(call prorab-private-args-file-rules, $(prorab_cflags_file),$(this_cc) $(prorab_cflags))
 
         $(eval prorab_private_d_for_sed := $(subst .,\.,$(subst /,\/,$(patsubst ./%,%,$(d)))))
         $(if $(prorab_private_d_for_sed),
@@ -612,17 +612,17 @@ $(.RECIPEPREFIX)$(a)echo '$2' > $$@
             )
 
         # compile .cpp static pattern rule
-        $(prorab_this_cxx_objs): $(prorab_this_obj_dir)$(prorab_private_objspacer)%.o: $(d)% $(prorab_cxxargs_file)
+        $(prorab_this_cxx_objs): $(prorab_this_obj_dir)$(prorab_private_objspacer)%.o: $(d)% $(prorab_cxxflags_file)
 $(.RECIPEPREFIX)@test -t 1 && printf "\e[1;34mcompile\e[0m $$(patsubst $(prorab_root_dir)%,%,$$<)\n" || printf "compile $$(patsubst $(prorab_root_dir)%,%,$$<)\n"
 $(.RECIPEPREFIX)$(a)mkdir -p $$(dir $$@)
-$(.RECIPEPREFIX)$(a)$(this_cxx) -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -MP -o "$$@" $(prorab_cxxargs) $$<
+$(.RECIPEPREFIX)$(a)$(this_cxx) -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -MP -o "$$@" $(prorab_cxxflags) $$<
 $(.RECIPEPREFIX)$(a)$(prorab_private_d_file_sed_command)
 
         # compile .c static pattern rule
-        $(prorab_this_c_objs): $(prorab_this_obj_dir)$(prorab_private_objspacer)%.o: $(d)% $(prorab_cargs_file)
+        $(prorab_this_c_objs): $(prorab_this_obj_dir)$(prorab_private_objspacer)%.o: $(d)% $(prorab_cflags_file)
 $(.RECIPEPREFIX)@test -t 1 && printf "\e[0;35mcompile\e[0m $$(patsubst $(prorab_root_dir)%,%,$$<)\n" || printf "compile $$(patsubst $(prorab_root_dir)%,%,$$<)\n"
 $(.RECIPEPREFIX)$(a)mkdir -p $$(dir $$@)
-$(.RECIPEPREFIX)$(a)$(this_cc) -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -MP -o "$$@" $(prorab_cargs) $$<
+$(.RECIPEPREFIX)$(a)$(this_cc) -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -MP -o "$$@" $(prorab_cflags) $$<
 $(.RECIPEPREFIX)$(a)$(prorab_private_d_file_sed_command)
 
         # include rules for header dependencies
