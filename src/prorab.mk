@@ -70,11 +70,11 @@ ifneq ($(prorab_is_included),true)
     # subtract one variable from another, negative result is clamped to zero
     prorab-sub = $(if $(call prorab-gte,$1,$2),$(filter-out xx,$(join $1,$2)),$(error subtraction goes negative))
 
-
     ####################
     # useful functions #
 
     # function for recursive wildcard
+    # TODO: test $(call prorab-rwildcard somedir. , *.cpp *.hpp)
     prorab-rwildcard = $(foreach dd,$(wildcard $(patsubst %.,%,$1)*),$(call prorab-rwildcard,$(dd)/,$2) $(filter $(subst *,%,$2),$(dd)))
 
     # function for calculating number of ../ in a file path
