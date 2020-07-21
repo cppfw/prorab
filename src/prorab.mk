@@ -26,19 +26,16 @@
 ifneq ($(prorab_is_included),true)
     prorab_is_included := true
 
-
     # check if running minimal supported GNU make version
     prorab_min_gnumake_version := 3.81
     ifeq ($(filter $(prorab_min_gnumake_version),$(firstword $(sort $(MAKE_VERSION) $(prorab_min_gnumake_version)))),)
         $(error GNU make $(prorab_min_gnumake_version) or higher is needed, but found only $(MAKE_VERSION))
     endif
 
-
     # check that prorab.mk is the first file included
     ifneq ($(words $(MAKEFILE_LIST)),2)
         $(error prorab.mk is not a first include in the makefile, include prorab.mk should be the very first thing done in the makefile.)
     endif
-
 
     ###############################
     # define arithmetic functions #
@@ -115,7 +112,6 @@ ifneq ($(prorab_is_included),true)
         # need empty line here to avoid merging with adjacent macro instantiations
 
     endef
-
 
     #############
     # variables #
@@ -240,7 +236,6 @@ ifneq ($(prorab_is_included),true)
         endif
     endif
 
-
     ################################
     # makefile inclusion functions #
 
@@ -319,7 +314,6 @@ ifneq ($(prorab_is_included),true)
 
     endef
 
-
     #######################
     # common rules #
 
@@ -351,8 +345,6 @@ $(.RECIPEPREFIX)$(a)$(MAKE)
 
     endef
     $(eval $(prorab-private-rules))
-
-
 
     ####################################
     # prorab rule generation functions #
@@ -389,8 +381,6 @@ $(.RECIPEPREFIX)$(a)rm -f $(DESTDIR)$(PREFIX)/bin/$(notdir $(prorab_this_name)) 
         # need empty line here to avoid merging with adjacent macro instantiations
 
     endef
-
-
 
     define prorab-private-dynamic-lib-specific-rules-nix-systems
 
@@ -442,7 +432,6 @@ $(.RECIPEPREFIX)$(a)rm -f $(prorab_this_symbolic_name)
         # need empty line here to avoid merging with adjacent macro instantiations
 
     endef
-
 
     define prorab-private-lib-install-headers-rule
 
@@ -666,7 +655,6 @@ $(.RECIPEPREFIX)$(a)rm -f $(prorab_this_name)
 
     endef
 
-
     # if there are no any sources in this_srcs then just install headers, no need to build binaries
     define prorab-build-lib
 
@@ -688,7 +676,6 @@ $(.RECIPEPREFIX)$(a)rm -f $(prorab_this_name)
 
     endef
 
-
     define prorab-build-app
 
         # need empty line here to avoid merging with adjacent macro instantiations
@@ -702,7 +689,6 @@ $(.RECIPEPREFIX)$(a)rm -f $(prorab_this_name)
     endef
 
 endif # ~include guard
-
 
 $(if $(filter $(prorab_this_makefile),$(prorab_included_makefiles)), \
         \
