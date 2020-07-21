@@ -10,7 +10,7 @@ Provides rules for C/C++ library/application. Allows hierarchical makefile inclu
 
 == Installation and tutorials
 
-See **link:wiki/HomePage.md[WiKi]**
+See **link:wiki/HomePage.adoc[WiKi]**
 
 == Questions
 
