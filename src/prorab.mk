@@ -566,6 +566,9 @@ $(.RECIPEPREFIX)$(a)echo '$2' > $$@
         $(foreach var,$(this_srcs),\
                 $(eval prorab_private_numobjspacers := $(call prorab-max,$(call prorab-count-stepups,$(var)),$(prorab_private_numobjspacers))) \
             )
+        $(foreach var,$(this_hdrs),\
+                $(eval prorab_private_numobjspacers := $(call prorab-max,$(call prorab-count-stepups,$(var)),$(prorab_private_numobjspacers))) \
+            )
         $(eval prorab_private_objspacer := )
         $(foreach var,$(prorab_private_numobjspacers), $(eval prorab_private_objspacer := $(prorab_private_objspacer)_spacer/))
 
@@ -575,6 +578,9 @@ $(.RECIPEPREFIX)$(a)echo '$2' > $$@
         $(eval prorab_this_cxx_objs := $(addsuffix .o,$(filter %$(this_dot_cxx),$(this_srcs))))
         $(eval prorab_this_c_objs := $(addsuffix .o,$(filter %.c,$(this_srcs))))
 
+        $(eval proab_this_hxx_objs := $(addsuffix .o,$(filter %$(this_dot_hxx),$(this_hdrs))))
+        $(eval proab_this_h_objs := $(addsuffix .o,$(filter %.h,$(this_hdrs))))
+
         $(eval prorab_objs_file := $(prorab_this_obj_dir)objs.txt)
 
         # save list of objects to text file and only after that add $(d) prefix to those object files
@@ -583,6 +589,10 @@ $(.RECIPEPREFIX)$(a)echo '$2' > $$@
         $(eval prorab_this_cxx_objs := $(addprefix $(prorab_this_obj_dir)$(prorab_private_objspacer),$(prorab_this_cxx_objs)))
         $(eval prorab_this_c_objs := $(addprefix $(prorab_this_obj_dir)$(prorab_private_objspacer),$(prorab_this_c_objs)))
         $(eval prorab_this_objs := $(prorab_this_cxx_objs) $(prorab_this_c_objs))
+
+        $(eval prorab_this_hxx_objs := $(addprefix $(prorab_this_obj_dir)$(prorab_private_objspacer),$(prorab_this_hxx_objs)))
+        $(eval prorab_this_h_objs := $(addprefix $(prorab_this_obj_dir)$(prorab_private_objspacer),$(prorab_this_h_objs)))
+        $(eval prorab_this_hdr_objs := $(prorab_this_hxx_objs) $(prorab_this_h_objs))
 
         $(eval prorab_cxxflags = $$(this_cppflags) $$(this_cxxflags))
         $(eval prorab_cflags = $$(this_cppflags) $$(this_cflags))
