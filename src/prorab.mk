@@ -78,7 +78,7 @@ ifneq ($(prorab_is_included),true)
     prorab-rwildcard = $(foreach dd,$(wildcard $(patsubst %.,%,$1)*),$(call prorab-rwildcard,$(dd)/,$2) $(filter $(subst *,%,$2),$(dd)))
 
     # function for calculating number of ../ in a file path
-    prorab-calculate-stepups = $(foreach var,$(filter ..,$(subst /, ,$(dir $1))),x)
+    prorab-count-stepups = $(foreach var,$(filter ..,$(subst /, ,$(dir $1))),x)
 
     # function to find all source files from specified directory recursively
     # NOTE: filter-out of empty strings from input path is needed when path is supplied with preceding or trailing spaces, to prevent searching sources from root directory also.
@@ -575,7 +575,7 @@ $(.RECIPEPREFIX)$(a)echo '$2' > $$@
         # calculate max number of steps up in source paths and prepare obj directory spacer
         $(eval prorab_private_numobjspacers := )
         $(foreach var,$(this_srcs),\
-                $(eval prorab_private_numobjspacers := $(call prorab-max,$(call prorab-calculate-stepups,$(var)),$(prorab_private_numobjspacers))) \
+                $(eval prorab_private_numobjspacers := $(call prorab-max,$(call prorab-count-stepups,$(var)),$(prorab_private_numobjspacers))) \
             )
         $(eval prorab_private_objspacer := )
         $(foreach var,$(prorab_private_numobjspacers), $(eval prorab_private_objspacer := $(prorab_private_objspacer)_spacer/))
