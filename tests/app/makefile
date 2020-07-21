@@ -12,9 +12,6 @@ $(.RECIPEPREFIX)+$(a)$(MAKE) -C $(d)src || $(this_err) "'make' failed"
 $(.RECIPEPREFIX)$(a)if [ ! -f $(d)src/tests$(exeext) ]; then $(this_err) "src/tests$(exeext) file not found"; fi
 $(.RECIPEPREFIX)$(a)if [ ! -f $(d)src/tests_no_install$(exeext) ]; then $(this_err) "src/tests_no_install$(exeext) file not found"; fi
 $(.RECIPEPREFIX)$(a)if [ ! -d $(d)src/obj_tests ]; then $(this_err) "src/obj_tests directory not found"; fi
-$(.RECIPEPREFIX)$(a)if [ ! -d $(d)src/obj_tests/_spacer ]; then $(this_err) "src/obj_tests/_spacer directory not found"; fi
-$(.RECIPEPREFIX)$(a)if [ ! -d $(d)src/obj_tests/_spacer/_spacer ]; then $(this_err) "src/obj_tests/_spacer/_spacer directory not found"; fi
-$(.RECIPEPREFIX)$(a)if [ -d $(d)src/obj_tests/_spacer/_spacer/_spacer ]; then $(this_err) "src/obj_tests/_spacer/_spacer/_spacer directory found"; fi
 $(.RECIPEPREFIX)$(a)if [ ! -d $(d)src/obj_tests_no_install ]; then $(this_err) "src/obj_tests_no_install directory not found"; fi
 
 $(.RECIPEPREFIX)$(a)rm -rf $(d)src/tmp

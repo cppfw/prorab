@@ -78,15 +78,7 @@ ifneq ($(prorab_is_included),true)
     prorab-rwildcard = $(foreach dd,$(wildcard $(patsubst %.,%,$1)*),$(call prorab-rwildcard,$(dd)/,$2) $(filter $(subst *,%,$2),$(dd)))
 
     # function for calculating number of ../ in a file path
-    prorab-count-stepups = $(foreach var,$(filter ..,$(subst /, ,$(dir $1))),x)
-
-    # function for calculating maximum number of stepups (../) in a set of file paths
-    define prorab-get-max-stepups 
-        $(eval prorab_private_max_stepups :=)
-        $(foreach var,$1,\
-                $(eval prorab_private_max_stepups := $(call prorab-max,$(call prorab-count-stepups,$(var)),$(prorab_private_max_stepups))) \
-            )
-    endef
+    prorab-calculate-stepups = $(foreach var,$(filter ..,$(subst /, ,$(dir $1))),x)
 
     # function to find all source files from specified directory recursively
     # NOTE: filter-out of empty strings from input path is needed when path is supplied with preceding or trailing spaces, to prevent searching sources from root directory also.
@@ -327,6 +319,7 @@ ifneq ($(prorab_is_included),true)
 
     endef
 
+
     #######################
     # common rules #
 
@@ -358,6 +351,8 @@ $(.RECIPEPREFIX)$(a)$(MAKE)
 
     endef
     $(eval $(prorab-private-rules))
+
+
 
     ####################################
     # prorab rule generation functions #
@@ -394,6 +389,8 @@ $(.RECIPEPREFIX)$(a)rm -f $(DESTDIR)$(PREFIX)/bin/$(notdir $(prorab_this_name)) 
         # need empty line here to avoid merging with adjacent macro instantiations
 
     endef
+
+
 
     define prorab-private-dynamic-lib-specific-rules-nix-systems
 
@@ -445,6 +442,7 @@ $(.RECIPEPREFIX)$(a)rm -f $(prorab_this_symbolic_name)
         # need empty line here to avoid merging with adjacent macro instantiations
 
     endef
+
 
     define prorab-private-lib-install-headers-rule
 
@@ -575,8 +573,10 @@ $(.RECIPEPREFIX)$(a)echo '$2' > $$@
         # need empty line here to avoid merging with adjacent macro instantiations
 
         # calculate max number of steps up in source paths and prepare obj directory spacer
-        $(eval prorab_private_numobjspacers := $(call prorab-get-max-stepups,$(this_srcs)))
-
+        $(eval prorab_private_numobjspacers := )
+        $(foreach var,$(this_srcs),\
+                $(eval prorab_private_numobjspacers := $(call prorab-max,$(call prorab-calculate-stepups,$(var)),$(prorab_private_numobjspacers))) \
+            )
         $(eval prorab_private_objspacer := )
         $(foreach var,$(prorab_private_numobjspacers), $(eval prorab_private_objspacer := $(prorab_private_objspacer)_spacer/))
 
@@ -666,6 +666,7 @@ $(.RECIPEPREFIX)$(a)rm -f $(prorab_this_name)
 
     endef
 
+
     # if there are no any sources in this_srcs then just install headers, no need to build binaries
     define prorab-build-lib
 
@@ -687,6 +688,7 @@ $(.RECIPEPREFIX)$(a)rm -f $(prorab_this_name)
 
     endef
 
+
     define prorab-build-app
 
         # need empty line here to avoid merging with adjacent macro instantiations
@@ -700,6 +702,7 @@ $(.RECIPEPREFIX)$(a)rm -f $(prorab_this_name)
     endef
 
 endif # ~include guard
+
 
 $(if $(filter $(prorab_this_makefile),$(prorab_included_makefiles)), \
         \
