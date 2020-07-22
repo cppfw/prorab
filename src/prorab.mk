@@ -81,6 +81,9 @@ ifneq ($(prorab_is_included),true)
     # NOTE: filter-out of empty strings from input path is needed when path is supplied with preceding or trailing spaces, to prevent searching sources from root directory also.
     prorab-src-dir = $(patsubst $(d)%, %, $(call prorab-rwildcard, $(d)$(filter-out ,$1), *$(this_dot_cxx) *.c))
 
+    # function to find all header files from specified directory recursively
+    prorab-hdr-dir = $(patsubst $(d)%, %, $(call prorab-rwildcard, $(d)$(filter-out ,$1), *$(this_dot_hxx) *.h))
+
     # function which clears all 'this_'-prefixed variables and sets default values
     define prorab-clear-this-vars
 
@@ -588,7 +591,7 @@ $(.RECIPEPREFIX)$(a)echo '$2' > $$@
         $(eval prorab_this_objs := $(prorab_this_cxx_objs) $(prorab_this_c_objs))
 
         # prepare list of header object files (for testing headers compilation)
-        $(eval prorab_this_hxx_srcs := $(addsuffix $(this_dot_cxx)_,$(filter %$(this_dot_hxx),$(this_hdrs))))
+        $(eval prorab_this_hxx_srcs := $(addsuffix .cpp_,$(filter %$(this_dot_hxx),$(this_hdrs))))
         $(eval prorab_this_h_srcs := $(addsuffix .c_,$(filter %.h,$(this_hdrs))))
         $(eval prorab_this_hxx_srcs := $(addprefix $(prorab_this_obj_dir)$(prorab_private_objspacer),$(prorab_this_hxx_srcs)))
         $(eval prorab_this_h_srcs := $(addprefix $(prorab_this_obj_dir)$(prorab_private_objspacer),$(prorab_this_h_srcs)))
@@ -617,8 +620,8 @@ $(.RECIPEPREFIX)$(a)echo '$2' > $$@
                 $(eval prorab_private_d_file_sed_command := sed -E -i -e "s/(^| )([^ /\][^ ]*)/\1\$$$$$$$$\(d\)\2/g" $$$$(patsubst %.o,%.d,$$$$@) )
             )
 
-        # gerenarte dummy source files for each header (for testing headers)
-        $(prorab_this_hxx_srcs): $(prorab_this_obj_dir)$(prorab_private_objspacer)%$(this_dot_cxx)_ : $(d)%
+        # gerenarte dummy source files for each header (for testing headers compilation)
+        $(prorab_this_hxx_srcs): $(prorab_this_obj_dir)$(prorab_private_objspacer)%.cpp_ : $(d)%
 $(.RECIPEPREFIX)@test -t 1 && printf "\e[1;90mgenerate\e[0m $$(patsubst $(prorab_root_dir)%,%,$$@)\n" || printf "generate $$(patsubst $(prorab_root_dir)%,%,$$@)\n"
 $(.RECIPEPREFIX)$(a)mkdir -p $$(dir $$@)
 $(.RECIPEPREFIX)$(a)echo "#include \"$$<\"\n#include \"$$<\"\nint main(int c, const char** v){return 0;}" > $$@
@@ -635,6 +638,7 @@ $(.RECIPEPREFIX)$(a)mkdir -p $$(dir $$@)
 $(.RECIPEPREFIX)$(a)$(this_cxx) --language c++ -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -MP -o "$$@" $(prorab_cxxflags) $$<
 $(.RECIPEPREFIX)$(a)$(prorab_private_d_file_sed_command)
 
+        # compile .hpp.cpp_ static pattern rule
         $(prorab_this_hxx_objs): $(d)%.o: $(d)% $(prorab_cxxflags_file)
 $(.RECIPEPREFIX)@test -t 1 && printf "\e[1;34mcompile\e[0m $$(patsubst $(prorab_root_dir)%,%,$$<)\n" || printf "compile $$(patsubst $(prorab_root_dir)%,%,$$<)\n"
 $(.RECIPEPREFIX)$(a)mkdir -p $$(dir $$@)
@@ -648,6 +652,7 @@ $(.RECIPEPREFIX)$(a)mkdir -p $$(dir $$@)
 $(.RECIPEPREFIX)$(a)$(this_cc) --language c -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -MP -o "$$@" $(prorab_cflags) $$<
 $(.RECIPEPREFIX)$(a)$(prorab_private_d_file_sed_command)
 
+        # compile .h.c_ static pattern rule
         $(prorab_this_h_objs): $(d)%.o: $(d)% $(prorab_cflags_file)
 $(.RECIPEPREFIX)@test -t 1 && printf "\e[0;35mcompile\e[0m $$(patsubst $(prorab_root_dir)%,%,$$<)\n" || printf "compile $$(patsubst $(prorab_root_dir)%,%,$$<)\n"
 $(.RECIPEPREFIX)$(a)mkdir -p $$(dir $$@)
