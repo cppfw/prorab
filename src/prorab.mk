@@ -317,7 +317,7 @@ ifneq ($(prorab_is_included),true)
 
     endef
 
-    #######################
+    ################
     # common rules #
 
     # Delete target file in case its recepie has failed
@@ -325,13 +325,13 @@ ifneq ($(prorab_is_included),true)
 
     .PHONY: clean all test install uninstall distclean phony re echo-cleaning
 
-    # define the very first default target
+    # the very first default target
     all:
 
-    # define dummy phony target
+    # dummy phony target
     phony:
 
-    # define distclean target which does same as clean. This is to make some older versions of debhelper happy.
+    # distclean target which does same as clean to make some older versions of debhelper happy
     distclean: clean
 
     define prorab-private-rules
@@ -443,6 +443,63 @@ $(.RECIPEPREFIX)$(a)rm -f $(prorab_this_symbolic_name)
         $(eval prorab_private_headers_dir := $(d)$(this_headers_dir)/)
 
         $(eval prorab_private_headers := $(patsubst $(prorab_private_headers_dir)%,%,$(call prorab-rwildcard, $(prorab_private_headers_dir), *.h *$(this_dot_hxx))))
+
+        ######################################################
+        # Test that headers being installed can be compiled. #
+        # This checks that header does not miss any includes #
+        # and has proper include guard.                      #
+        # The headers are compiled without any specific      #
+        # compile flags.                                     #
+        ######################################################
+
+        # calculate max number of steps up in source paths and prepare obj directory spacer
+        $(eval prorab_private_numobjspacers := )
+        $(foreach var,$(prorab_private_headers),\
+                $(eval prorab_private_numobjspacers := $(call prorab-max,$(call prorab-count-stepups,$(var)),$(prorab_private_numobjspacers))) \
+            )
+        $(eval prorab_private_objspacer := )
+        $(foreach var,$(prorab_private_numobjspacers), $(eval prorab_private_objspacer := $(prorab_private_objspacer)_spacer/))
+
+        $(eval prorab_this_obj_dir := $(d)$(prorab_private_out_dir)obj_$(this_name)/)
+
+        # prepare list of header object files (for testing headers compilation)
+        $(eval prorab_this_hxx_test_srcs := $(addsuffix .test.cpp_,$(filter %$(this_dot_hxx),$(prorab_private_headers))))
+        $(eval prorab_this_h_test_srcs := $(addsuffix .test.c_,$(filter %.h,$(prorab_private_headers))))
+        $(eval prorab_this_hxx_test_srcs := $(addprefix $(prorab_this_obj_dir)$(prorab_private_objspacer),$(prorab_this_hxx_test_srcs)))
+        $(eval prorab_this_h_test_srcs := $(addprefix $(prorab_this_obj_dir)$(prorab_private_objspacer),$(prorab_this_h_test_srcs)))
+
+        $(eval prorab_this_hxx_test_objs := $(addsuffix .o,$(prorab_this_hxx_test_srcs)))
+        $(eval prorab_this_h_test_objs := $(addsuffix .o,$(prorab_this_h_test_srcs)))
+
+        # gerenarte dummy source files for each header (for testing headers compilation)
+        $(prorab_this_hxx_test_srcs): $(prorab_this_obj_dir)$(prorab_private_objspacer)%.test.cpp_ : $(prorab_private_headers_dir)%
+$(.RECIPEPREFIX)@test -t 1 && printf "\e[1;90mgenerate\e[0m $$(patsubst $(prorab_root_dir)%,%,$$@)\n" || printf "generate $$(patsubst $(prorab_root_dir)%,%,$$@)\n"
+$(.RECIPEPREFIX)$(a)mkdir -p $$(dir $$@)
+$(.RECIPEPREFIX)$(a)echo "#include \"$$<\"\n#include \"$$<\"\nint main(int c, const char** v){return 0;}" > $$@
+
+        $(prorab_this_h_test_srcs): $(prorab_this_obj_dir)$(prorab_private_objspacer)%.test.c_ : $(prorab_private_headers_dir)%
+$(.RECIPEPREFIX)@test -t 1 && printf "\e[1;90mgenerate\e[0m $$(patsubst $(prorab_root_dir)%,%,$$@)\n" || printf "generate $$(patsubst $(prorab_root_dir)%,%,$$@)\n"
+$(.RECIPEPREFIX)$(a)mkdir -p $$(dir $$@)
+$(.RECIPEPREFIX)$(a)echo "#include \"$$<\"\n#include \"$$<\"\nint main(int c, const char** v){return 0;}" > $$@
+
+        # compile .hpp.cpp_ static pattern rule
+        $(prorab_this_hxx_test_objs): $(d)%.o: $(d)%
+$(.RECIPEPREFIX)@test -t 1 && printf "\e[1;34mcompile\e[0m $$(patsubst $(prorab_root_dir)%,%,$$<)\n" || printf "compile $$(patsubst $(prorab_root_dir)%,%,$$<)\n"
+$(.RECIPEPREFIX)$(a)mkdir -p $$(dir $$@)
+$(.RECIPEPREFIX)$(a)$(this_cxx) --language c++ -c -o "$$@" $$<
+
+        # compile .h.c_ static pattern rule
+        $(prorab_this_h_test_objs): $(d)%.o: $(d)%
+$(.RECIPEPREFIX)@test -t 1 && printf "\e[0;35mcompile\e[0m $$(patsubst $(prorab_root_dir)%,%,$$<)\n" || printf "compile $$(patsubst $(prorab_root_dir)%,%,$$<)\n"
+$(.RECIPEPREFIX)$(a)mkdir -p $$(dir $$@)
+$(.RECIPEPREFIX)$(a)$(this_cc) --language c -c -o "$$@" $$<
+
+        .PHONY: $(prorab_this_hxx_test_objs) $(prorab_this_h_test_objs)
+        test:: $(prorab_this_hxx_test_objs) $(prorab_this_h_test_objs)
+
+        ##############################
+        # Generate 'install' targets #
+        ##############################
 
         $(if $(filter $(this_no_install),true),
                 ,
@@ -564,6 +621,11 @@ $(.RECIPEPREFIX)$(a)echo '$2' > $$@
 
         # need empty line here to avoid merging with adjacent macro instantiations
 
+        ############################################################################################
+        # NOTE: here we also compile header files listed in this_hdrs variable to check that those #
+        #       are compileable with the same compiler flags as source files                       #
+        ############################################################################################
+
         # calculate max number of steps up in source paths and prepare obj directory spacer
         $(eval prorab_private_numobjspacers := )
         $(foreach var,$(this_srcs),\
@@ -598,7 +660,6 @@ $(.RECIPEPREFIX)$(a)echo '$2' > $$@
 
         $(eval prorab_this_hxx_objs := $(addsuffix .o,$(prorab_this_hxx_srcs)))
         $(eval prorab_this_h_objs := $(addsuffix .o,$(prorab_this_h_srcs)))
-        $(eval prorab_this_hdr_objs := $(prorab_this_hxx_objs) $(prorab_this_h_objs))
 
         # header objects are always compiled
         all: $(prorab_this_hxx_objs) $(prorab_this_h_objs)

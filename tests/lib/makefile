@@ -70,6 +70,8 @@ $(.RECIPEPREFIX)$(a)if [ -d $(d)tmp/usr/include/test/ ]; then $(this_err) "tmp/u
 
 $(.RECIPEPREFIX)$(a)rm -rf $(d)tmp
 
+$(.RECIPEPREFIX)+$(a)$(MAKE) -C $(d)src test || $(this_err) "final 'make test' failed"
+
 $(.RECIPEPREFIX)+$(a)$(MAKE) -C $(d)src clean || $(this_err) "final 'make clean' failed"
 $(.RECIPEPREFIX)$(a)if [ -f $(d)src/libtests.a ]; then $(this_err) "src/libtests.a file remained after clean"; fi
 $(.RECIPEPREFIX)$(a)if [ -f $(d)src/libtests.so ]; then $(this_err) "src/libtests.so file remained after clean"; fi
