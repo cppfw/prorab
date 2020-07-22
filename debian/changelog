@@ -1,3 +1,9 @@
+prorab (1.15.6) unstable; urgency=medium
+
+  * do not test headers if this_no_install is true
+
+ -- Ivan Gagis <igagis@gmail.com>  Wed, 22 Jul 2020 18:20:46 +0300
+
 prorab (1.15.5) unstable; urgency=medium
 
   * add headers testing facility
