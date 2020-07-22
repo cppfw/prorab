@@ -497,7 +497,11 @@ $(.RECIPEPREFIX)$(a)mkdir -p $$(dir $$@)
 $(.RECIPEPREFIX)$(a)$(this_cc) --language c -c -o "$$@" $$<
 
         .PHONY: $(prorab_this_hxx_test_objs) $(prorab_this_h_test_objs)
-        test:: $(prorab_this_hxx_test_objs) $(prorab_this_h_test_objs)
+
+        $(if $(filter $(this_no_install),true),
+                ,
+                test:: $(prorab_this_hxx_test_objs) $(prorab_this_h_test_objs)
+            )
 
         ##############################
         # Generate 'install' targets #
