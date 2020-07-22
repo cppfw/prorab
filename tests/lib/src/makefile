@@ -6,6 +6,8 @@ this_soname := 0
 
 this_srcs += $(call prorab-src-dir, .)
 
+this_hdrs += $(call prorab-rwildcard, ., *.h *.hpp)
+
 $(eval $(prorab-build-lib))
 
 

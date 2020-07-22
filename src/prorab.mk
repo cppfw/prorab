@@ -574,12 +574,9 @@ $(.RECIPEPREFIX)$(a)echo '$2' > $$@
 
         $(eval prorab_this_obj_dir := $(d)$(prorab_private_out_dir)obj_$(this_name)/)
 
-        # Prepare list of object files
+        # prepare list of object files
         $(eval prorab_this_cxx_objs := $(addsuffix .o,$(filter %$(this_dot_cxx),$(this_srcs))))
         $(eval prorab_this_c_objs := $(addsuffix .o,$(filter %.c,$(this_srcs))))
-
-        $(eval proab_this_hxx_objs := $(addsuffix .o,$(filter %$(this_dot_hxx),$(this_hdrs))))
-        $(eval proab_this_h_objs := $(addsuffix .o,$(filter %.h,$(this_hdrs))))
 
         $(eval prorab_objs_file := $(prorab_this_obj_dir)objs.txt)
 
@@ -590,10 +587,20 @@ $(.RECIPEPREFIX)$(a)echo '$2' > $$@
         $(eval prorab_this_c_objs := $(addprefix $(prorab_this_obj_dir)$(prorab_private_objspacer),$(prorab_this_c_objs)))
         $(eval prorab_this_objs := $(prorab_this_cxx_objs) $(prorab_this_c_objs))
 
-        $(eval prorab_this_hxx_objs := $(addprefix $(prorab_this_obj_dir)$(prorab_private_objspacer),$(prorab_this_hxx_objs)))
-        $(eval prorab_this_h_objs := $(addprefix $(prorab_this_obj_dir)$(prorab_private_objspacer),$(prorab_this_h_objs)))
+        # prepare list of header object files (for testing headers compilation)
+        $(eval prorab_this_hxx_srcs := $(addsuffix $(this_dot_cxx)_,$(filter %$(this_dot_hxx),$(this_hdrs))))
+        $(eval prorab_this_h_srcs := $(addsuffix .c_,$(filter %.h,$(this_hdrs))))
+        $(eval prorab_this_hxx_srcs := $(addprefix $(prorab_this_obj_dir)$(prorab_private_objspacer),$(prorab_this_hxx_srcs)))
+        $(eval prorab_this_h_srcs := $(addprefix $(prorab_this_obj_dir)$(prorab_private_objspacer),$(prorab_this_h_srcs)))
+
+        $(eval prorab_this_hxx_objs := $(addsuffix .o,$(prorab_this_hxx_srcs)))
+        $(eval prorab_this_h_objs := $(addsuffix .o,$(prorab_this_h_srcs)))
         $(eval prorab_this_hdr_objs := $(prorab_this_hxx_objs) $(prorab_this_h_objs))
 
+        # header objects are always compiled
+        all: $(prorab_this_hxx_objs) $(prorab_this_h_objs)
+
+        # combine all compilation flags
         $(eval prorab_cxxflags = $$(this_cppflags) $$(this_cxxflags))
         $(eval prorab_cflags = $$(this_cppflags) $$(this_cflags))
 
@@ -610,18 +617,41 @@ $(.RECIPEPREFIX)$(a)echo '$2' > $$@
                 $(eval prorab_private_d_file_sed_command := sed -E -i -e "s/(^| )([^ /\][^ ]*)/\1\$$$$$$$$\(d\)\2/g" $$$$(patsubst %.o,%.d,$$$$@) )
             )
 
+        # gerenarte dummy source files for each header (for testing headers)
+        $(prorab_this_hxx_srcs): $(prorab_this_obj_dir)$(prorab_private_objspacer)%$(this_dot_cxx)_ : $(d)%
+$(.RECIPEPREFIX)@test -t 1 && printf "\e[1;90mgenerate\e[0m $$(patsubst $(prorab_root_dir)%,%,$$@)\n" || printf "generate $$(patsubst $(prorab_root_dir)%,%,$$@)\n"
+$(.RECIPEPREFIX)$(a)mkdir -p $$(dir $$@)
+$(.RECIPEPREFIX)$(a)echo "#include \"$$<\"\n#include \"$$<\"\nint main(int c, const char** v){return 0;}" > $$@
+
+        $(prorab_this_h_srcs): $(prorab_this_obj_dir)$(prorab_private_objspacer)%.c_ : $(d)%
+$(.RECIPEPREFIX)@test -t 1 && printf "\e[1;90mgenerate\e[0m $$(patsubst $(prorab_root_dir)%,%,$$@)\n" || printf "generate $$(patsubst $(prorab_root_dir)%,%,$$@)\n"
+$(.RECIPEPREFIX)$(a)mkdir -p $$(dir $$@)
+$(.RECIPEPREFIX)$(a)echo "#include \"$$<\"\n#include \"$$<\"\nint main(int c, const char** v){return 0;}" > $$@
+
         # compile .cpp static pattern rule
         $(prorab_this_cxx_objs): $(prorab_this_obj_dir)$(prorab_private_objspacer)%.o: $(d)% $(prorab_cxxflags_file)
 $(.RECIPEPREFIX)@test -t 1 && printf "\e[1;34mcompile\e[0m $$(patsubst $(prorab_root_dir)%,%,$$<)\n" || printf "compile $$(patsubst $(prorab_root_dir)%,%,$$<)\n"
 $(.RECIPEPREFIX)$(a)mkdir -p $$(dir $$@)
-$(.RECIPEPREFIX)$(a)$(this_cxx) -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -MP -o "$$@" $(prorab_cxxflags) $$<
+$(.RECIPEPREFIX)$(a)$(this_cxx) --language c++ -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -MP -o "$$@" $(prorab_cxxflags) $$<
+$(.RECIPEPREFIX)$(a)$(prorab_private_d_file_sed_command)
+
+        $(prorab_this_hxx_objs): $(d)%.o: $(d)% $(prorab_cxxflags_file)
+$(.RECIPEPREFIX)@test -t 1 && printf "\e[1;34mcompile\e[0m $$(patsubst $(prorab_root_dir)%,%,$$<)\n" || printf "compile $$(patsubst $(prorab_root_dir)%,%,$$<)\n"
+$(.RECIPEPREFIX)$(a)mkdir -p $$(dir $$@)
+$(.RECIPEPREFIX)$(a)$(this_cxx) --language c++ -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -MP -o "$$@" $(prorab_cxxflags) $$<
 $(.RECIPEPREFIX)$(a)$(prorab_private_d_file_sed_command)
 
         # compile .c static pattern rule
         $(prorab_this_c_objs): $(prorab_this_obj_dir)$(prorab_private_objspacer)%.o: $(d)% $(prorab_cflags_file)
 $(.RECIPEPREFIX)@test -t 1 && printf "\e[0;35mcompile\e[0m $$(patsubst $(prorab_root_dir)%,%,$$<)\n" || printf "compile $$(patsubst $(prorab_root_dir)%,%,$$<)\n"
 $(.RECIPEPREFIX)$(a)mkdir -p $$(dir $$@)
-$(.RECIPEPREFIX)$(a)$(this_cc) -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -MP -o "$$@" $(prorab_cflags) $$<
+$(.RECIPEPREFIX)$(a)$(this_cc) --language c -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -MP -o "$$@" $(prorab_cflags) $$<
+$(.RECIPEPREFIX)$(a)$(prorab_private_d_file_sed_command)
+
+        $(prorab_this_h_objs): $(d)%.o: $(d)% $(prorab_cflags_file)
+$(.RECIPEPREFIX)@test -t 1 && printf "\e[0;35mcompile\e[0m $$(patsubst $(prorab_root_dir)%,%,$$<)\n" || printf "compile $$(patsubst $(prorab_root_dir)%,%,$$<)\n"
+$(.RECIPEPREFIX)$(a)mkdir -p $$(dir $$@)
+$(.RECIPEPREFIX)$(a)$(this_cc) --language c -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -MP -o "$$@" $(prorab_cflags) $$<
 $(.RECIPEPREFIX)$(a)$(prorab_private_d_file_sed_command)
 
         # include rules for header dependencies
