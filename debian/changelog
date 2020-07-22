@@ -1,3 +1,9 @@
+prorab (1.15.7) unstable; urgency=medium
+
+  * pass c++ standard flag to compiler when testing headers compilation
+
+ -- Ivan Gagis <igagis@gmail.com>  Wed, 22 Jul 2020 23:04:11 +0300
+
 prorab (1.15.6) unstable; urgency=medium
 
   * do not test headers if this_no_install is true
