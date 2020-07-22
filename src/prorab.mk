@@ -440,7 +440,9 @@ $(.RECIPEPREFIX)$(a)rm -f $(prorab_this_symbolic_name)
 
         # need empty line here to avoid merging with adjacent macro instantiations
 
-        $(eval prorab_private_headers_dir := $(d)$(this_headers_dir)/)
+        # NOTE: Use 'abspath' to avoid second trailing slash in case 'this_headers_dir' already contains one.
+        #       It is ok to use 'abspath' here because $(d) is absolute path anyway.
+        $(eval prorab_private_headers_dir := $(abspath $(d)$(this_headers_dir))/)
 
         $(eval prorab_private_headers := $(patsubst $(prorab_private_headers_dir)%,%,$(call prorab-rwildcard, $(prorab_private_headers_dir), *.h *$(this_dot_hxx))))
 
