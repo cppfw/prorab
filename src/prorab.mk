@@ -488,7 +488,7 @@ $(.RECIPEPREFIX)$(a)echo "#include \"$$<\"\n#include \"$$<\"\nint main(int c, co
         $(prorab_this_hxx_test_objs): $(d)%.o: $(d)%
 $(.RECIPEPREFIX)@test -t 1 && printf "\e[1;34mcompile\e[0m $$(patsubst $(prorab_root_dir)%,%,$$<)\n" || printf "compile $$(patsubst $(prorab_root_dir)%,%,$$<)\n"
 $(.RECIPEPREFIX)$(a)mkdir -p $$(dir $$@)
-$(.RECIPEPREFIX)$(a)$(this_cxx) --language c++ -c -o "$$@" $$<
+$(.RECIPEPREFIX)$(a)$(this_cxx) --language c++ $(filter -std=c++%,$(this_cxxflags)) -c -o "$$@" $$<
 
         # compile .h.c_ static pattern rule
         $(prorab_this_h_test_objs): $(d)%.o: $(d)%
