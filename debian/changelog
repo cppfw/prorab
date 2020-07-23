@@ -1,3 +1,9 @@
+prorab (1.15.9) unstable; urgency=medium
+
+  * disable headers testing in windows environment
+
+ -- Ivan Gagis <igagis@gmail.com>  Fri, 24 Jul 2020 01:06:47 +0300
+
 prorab (1.15.8) unstable; urgency=medium
 
   * msys2 line endings fix
