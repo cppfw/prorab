@@ -502,9 +502,13 @@ $(.RECIPEPREFIX)$(a)$(this_cc) --language c -c -o "$$@" $$<
 
         .PHONY: $(prorab_this_hxx_test_objs) $(prorab_this_h_test_objs)
 
+        # NOTE: testing headers is disabled for windows due to problems with absolute paths in windows starting with drive letter, like C:/
         $(if $(filter $(this_no_install),true),
                 ,
-                test:: $(prorab_this_hxx_test_objs) $(prorab_this_h_test_objs)
+                $(if $(filter windows,$(os)),
+                        ,
+                        test:: $(prorab_this_hxx_test_objs) $(prorab_this_h_test_objs)
+                    )
             )
 
         ##############################
