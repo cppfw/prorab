@@ -1,3 +1,9 @@
+prorab (1.15.8) unstable; urgency=medium
+
+  * msys2 line endings fix
+
+ -- Ivan Gagis <igagis@gmail.com>  Thu, 23 Jul 2020 13:14:39 +0300
+
 prorab (1.15.7) unstable; urgency=medium
 
   * pass c++ standard flag to compiler when testing headers compilation
