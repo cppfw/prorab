@@ -645,6 +645,12 @@ $(.RECIPEPREFIX)$(a)echo '$2' > $$@
         $(foreach var,$(this_srcs),\
                 $(eval prorab_private_numobjspacers := $(call prorab-max,$(call prorab-count-stepups,$(var)),$(prorab_private_numobjspacers))) \
             )
+        $(foreach var,$(this_c_srcs),\
+                $(eval prorab_private_numobjspacers := $(call prorab-max,$(call prorab-count-stepups,$(var)),$(prorab_private_numobjspacers))) \
+            )
+        $(foreach var,$(this_cxx_srcs),\
+                $(eval prorab_private_numobjspacers := $(call prorab-max,$(call prorab-count-stepups,$(var)),$(prorab_private_numobjspacers))) \
+            )
         $(foreach var,$(this_hdrs),\
                 $(eval prorab_private_numobjspacers := $(call prorab-max,$(call prorab-count-stepups,$(var)),$(prorab_private_numobjspacers))) \
             )
@@ -660,8 +666,8 @@ $(.RECIPEPREFIX)$(a)echo '$2' > $$@
         $(eval prorab_this_obj_dir := $(d)$(prorab_private_out_dir)obj_$(this_name)/)
 
         # prepare list of object files
-        $(eval prorab_this_cxx_objs := $(addsuffix .o,$(filter %$(this_dot_cxx),$(this_srcs))))
-        $(eval prorab_this_c_objs := $(addsuffix .o,$(filter %.c,$(this_srcs))))
+        $(eval prorab_this_cxx_objs := $(addsuffix .o,$(filter %$(this_dot_cxx),$(this_srcs))$(this_cxx_srcs)))
+        $(eval prorab_this_c_objs := $(addsuffix .o,$(filter %.c,$(this_srcs))$(this_c_srcs)))
 
         $(eval prorab_objs_file := $(prorab_this_obj_dir)objs.txt)
 
@@ -791,7 +797,7 @@ $(.RECIPEPREFIX)$(a)rm -f $(prorab_this_name)
         # need empty line here to avoid merging with adjacent macro instantiations
 
         $(prorab-private-lib-install-headers-rule)
-        $(if $(this_srcs), \
+        $(if $(this_srcs)$(this_c_srcs)$(this_cxx_srcs), \
                 $(prorab-private-compile-rules) \
                 $(prorab-private-lib-static-library-rule) \
                 $(if $(filter $(this_static_lib_only),true), \
