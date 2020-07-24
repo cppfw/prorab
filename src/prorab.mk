@@ -648,6 +648,12 @@ $(.RECIPEPREFIX)$(a)echo '$2' > $$@
         $(foreach var,$(this_hdrs),\
                 $(eval prorab_private_numobjspacers := $(call prorab-max,$(call prorab-count-stepups,$(var)),$(prorab_private_numobjspacers))) \
             )
+        $(foreach var,$(this_c_hdrs),\
+                $(eval prorab_private_numobjspacers := $(call prorab-max,$(call prorab-count-stepups,$(var)),$(prorab_private_numobjspacers))) \
+            )
+        $(foreach var,$(this_cxx_hdrs),\
+                $(eval prorab_private_numobjspacers := $(call prorab-max,$(call prorab-count-stepups,$(var)),$(prorab_private_numobjspacers))) \
+            )
         $(eval prorab_private_objspacer := )
         $(foreach var,$(prorab_private_numobjspacers), $(eval prorab_private_objspacer := $(prorab_private_objspacer)_spacer/))
 
@@ -667,8 +673,8 @@ $(.RECIPEPREFIX)$(a)echo '$2' > $$@
         $(eval prorab_this_objs := $(prorab_this_cxx_objs) $(prorab_this_c_objs))
 
         # prepare list of header object files (for testing headers compilation)
-        $(eval prorab_this_hxx_srcs := $(addsuffix .cpp_,$(filter %$(this_dot_hxx),$(this_hdrs))))
-        $(eval prorab_this_h_srcs := $(addsuffix .c_,$(filter %.h,$(this_hdrs))))
+        $(eval prorab_this_hxx_srcs := $(addsuffix .cpp_,$(filter %$(this_dot_hxx),$(this_hdrs)) $(this_cxx_hdrs) ))
+        $(eval prorab_this_h_srcs := $(addsuffix .c_,$(filter %.h,$(this_hdrs)) $(this_c_hdrs) ))
         $(eval prorab_this_hxx_srcs := $(addprefix $(prorab_this_obj_dir)$(prorab_private_objspacer),$(prorab_this_hxx_srcs)))
         $(eval prorab_this_h_srcs := $(addprefix $(prorab_this_obj_dir)$(prorab_private_objspacer),$(prorab_this_h_srcs)))
 

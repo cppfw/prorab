@@ -8,6 +8,9 @@ this_srcs += $(call prorab-src-dir, .)
 
 this_hdrs += $(call prorab-hdr-dir, .)
 
+this_c_hdrs += ../no_install_headers/test_no_install.h
+this_cxx_hdrs += ../no_install_headers/test_no_install.hpp
+
 $(eval $(prorab-build-lib))
 
 
