@@ -1,3 +1,9 @@
+prorab (1.15.10) unstable; urgency=medium
+
+  * add possibility to specify c and c++ sources separately
+
+ -- Ivan Gagis <igagis@gmail.com>  Sat, 25 Jul 2020 00:23:53 +0300
+
 prorab (1.15.9) unstable; urgency=medium
 
   * disable headers testing in windows environment
