@@ -4,7 +4,7 @@ this_name := tests
 
 this_soname := 0
 
-this_srcs += $(patsubst $(d)%, %, $(call prorab-rwildcard, $(d), *test.cpp *test.c))
+this_srcs += $(call prorab-rwildcard, ., *test.cpp *test.c)
 
 this_cflags += -g
 this_cxxflags += -g
@@ -23,7 +23,7 @@ this_name := tests
 
 this_soname := 0
 
-this_srcs += $(patsubst $(d)%, %, $(call prorab-rwildcard, $(d), *test.cpp *test.c))
+this_srcs += $(call prorab-rwildcard, ., *test.cpp *test.c)
 
 this_cflags += -g
 this_cxxflags += -g
@@ -40,7 +40,7 @@ $(eval $(prorab-clear-this-vars))
 
 this_name := tests
 
-this_srcs += $(patsubst $(d)%, %, $(call prorab-rwildcard, $(d), *test.cpp *test.c)) main.cpp
+this_srcs += $(call prorab-rwildcard, ., *test.cpp *test.c) main.cpp
 
 this_cflags += -g
 this_cxxflags += -g

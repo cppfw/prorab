@@ -70,19 +70,21 @@ ifneq ($(prorab_is_included),true)
     ####################
     # useful functions #
 
-    # function for recursive wildcard
-    # TODO: test $(call prorab-rwildcard somedir. , *.cpp *.hpp)
-    prorab-rwildcard = $(foreach dd,$(wildcard $(patsubst %.,%,$1)*),$(call prorab-rwildcard,$(dd)/,$2) $(filter $(subst *,%,$2),$(dd)))
-
     # function for calculating number of ../ in a file path
     prorab-count-stepups = $(foreach var,$(filter ..,$(subst /, ,$(dir $1))),x)
 
+    # TODO: test $(call prorab-private-rwildcard somedir. , *.cpp *.hpp)
+    prorab-private-rwildcard = $(foreach dd,$(wildcard $(patsubst %.,%,$1)*),$(call prorab-private-rwildcard,$(dd)/,$2) $(filter $(subst *,%,$2),$(dd)))
+
+    # function for recursive wildcard
+    # NOTE: filter-out of empty strings from input path is needed when path is supplied with preceding or trailing spaces, to prevent searching from root directory also.
+    prorab-rwildcard = $(patsubst $(d)%,%,$(call prorab-private-rwildcard, $(d)$(filter-out ,$1),$2))
+
     # function to find all source files from specified directory recursively
-    # NOTE: filter-out of empty strings from input path is needed when path is supplied with preceding or trailing spaces, to prevent searching sources from root directory also.
-    prorab-src-dir = $(patsubst $(d)%, %, $(call prorab-rwildcard, $(d)$(filter-out ,$1), *$(this_dot_cxx) *.c))
+    prorab-src-dir = $(call prorab-rwildcard,$1,*$(this_dot_cxx) *.c)
 
     # function to find all header files from specified directory recursively
-    prorab-hdr-dir = $(patsubst $(d)%, %, $(call prorab-rwildcard, $(d)$(filter-out ,$1), *$(this_dot_hxx) *.h))
+    prorab-hdr-dir = $(call prorab-rwildcard,$1,*$(this_dot_hxx) *.h)
 
     # function which clears all 'this_'-prefixed variables and sets default values
     define prorab-clear-this-vars
@@ -444,7 +446,7 @@ $(.RECIPEPREFIX)$(a)rm -f $(prorab_this_symbolic_name)
         #       It is ok to use 'abspath' here because $(d) is absolute path anyway.
         $(eval prorab_private_headers_dir := $(abspath $(d)$(this_headers_dir))/)
 
-        $(eval prorab_private_headers := $(patsubst $(prorab_private_headers_dir)%,%,$(call prorab-rwildcard, $(prorab_private_headers_dir), *.h *$(this_dot_hxx))))
+        $(eval prorab_private_headers := $(patsubst $(prorab_private_headers_dir)%,%,$(call prorab-private-rwildcard,$(prorab_private_headers_dir),*.h *$(this_dot_hxx))))
 
         ######################################################
         # Test that headers being installed can be compiled. #
