@@ -481,14 +481,14 @@ $(.RECIPEPREFIX)@test -t 1 && printf "\e[1;90mgenerate\e[0m $$(patsubst $(prorab
 $(.RECIPEPREFIX)$(a)mkdir -p $$(dir $$@)
 $(.RECIPEPREFIX)$(a)echo '#include "$$<"' > $$@
 $(.RECIPEPREFIX)$(a)echo '#include "$$<"' >> $$@
-$(.RECIPEPREFIX)$(a)echo 'int main(int c, const char** v){return 0;}' >> $$@
+$(.RECIPEPREFIX)$(a)echo 'int main(int c, const char** v){(void)c;(void)v;return 0;}' >> $$@
 
         $(prorab_this_h_test_srcs): $(prorab_this_obj_dir)$(prorab_private_objspacer)%.test.c_ : $(prorab_private_headers_dir)%
 $(.RECIPEPREFIX)@test -t 1 && printf "\e[1;90mgenerate\e[0m $$(patsubst $(prorab_root_dir)%,%,$$@)\n" || printf "generate $$(patsubst $(prorab_root_dir)%,%,$$@)\n"
 $(.RECIPEPREFIX)$(a)mkdir -p $$(dir $$@)
 $(.RECIPEPREFIX)$(a)echo '#include "$$<"' > $$@
 $(.RECIPEPREFIX)$(a)echo '#include "$$<"' >> $$@
-$(.RECIPEPREFIX)$(a)echo 'int main(int c, const char** v){return 0;}' >> $$@
+$(.RECIPEPREFIX)$(a)echo 'int main(int c, const char** v){(void)c;(void)v;return 0;}' >> $$@
 
         # compile .hpp.cpp_ static pattern rule
         $(prorab_this_hxx_test_objs): $(d)%.o: $(d)%
@@ -715,14 +715,14 @@ $(.RECIPEPREFIX)@test -t 1 && printf "\e[1;90mgenerate\e[0m $$(patsubst $(prorab
 $(.RECIPEPREFIX)$(a)mkdir -p $$(dir $$@)
 $(.RECIPEPREFIX)$(a)echo '#include "$$<"' > $$@
 $(.RECIPEPREFIX)$(a)echo '#include "$$<"' >> $$@
-$(.RECIPEPREFIX)$(a)echo 'int main(int c, const char** v){return 0;}' >> $$@
+$(.RECIPEPREFIX)$(a)echo 'int main(int c, const char** v){(void)c;(void)v;return 0;}' >> $$@
 
         $(prorab_this_h_srcs): $(prorab_this_obj_dir)$(prorab_private_objspacer)%.c_ : $(d)%
 $(.RECIPEPREFIX)@test -t 1 && printf "\e[1;90mgenerate\e[0m $$(patsubst $(prorab_root_dir)%,%,$$@)\n" || printf "generate $$(patsubst $(prorab_root_dir)%,%,$$@)\n"
 $(.RECIPEPREFIX)$(a)mkdir -p $$(dir $$@)
 $(.RECIPEPREFIX)$(a)echo '#include "$$<"' > $$@
 $(.RECIPEPREFIX)$(a)echo '#include "$$<"' >> $$@
-$(.RECIPEPREFIX)$(a)echo 'int main(int c, const char** v){return 0;}' >> $$@
+$(.RECIPEPREFIX)$(a)echo 'int main(int c, const char** v){(void)c;(void)v;return 0;}' >> $$@
 
         # compile .cpp static pattern rule
         $(prorab_this_cxx_objs): $(prorab_this_obj_dir)$(prorab_private_objspacer)%.o: $(d)% $(prorab_cxxflags_file)
