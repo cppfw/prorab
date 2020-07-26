@@ -1,3 +1,10 @@
+prorab (1.15.11) unstable; urgency=medium
+
+  * touch unused parameters in generated main() function for headers
+    testing
+
+ -- Ivan Gagis <igagis@gmail.com>  Sun, 26 Jul 2020 14:03:43 +0300
+
 prorab (1.15.10) unstable; urgency=medium
 
   * add possibility to specify c and c++ sources separately
