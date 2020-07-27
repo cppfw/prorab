@@ -7,9 +7,9 @@
 . Setup your OS-preferred package system repo following link:https://github.com/igagis/pravila/blob/master/EnableRepo.adoc[this manual]
 . Install package
 +
-- **deb** (Linux): **{package_name}**
-- **homebrew** (MacOS X): **{package_name}**
-- **Msys2** (Windows): **{package_name}**
+- **deb** (Linux): `{package_name}`
+- **homebrew** (MacOS X): `{package_name}`
+- **Msys2** (Windows): `{package_name}`
 
 == Tutorials
 - link:TutorialBasicConcepts.md[Basic concepts]
