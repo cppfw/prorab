@@ -6,6 +6,7 @@ this_srcs += test.cpp
 this_srcs += ../src/../src/test1.c
 this_srcs += test.S
 
+# This is just for demonstration that it is possible to generate temporary compilation files
 this_cxxflags += -save-temps=obj
 this_cflags += -save-temps=obj
 
