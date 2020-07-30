@@ -6,7 +6,8 @@ this_srcs += test.cpp
 this_srcs += ../src/../src/test1.c
 this_srcs += test.S
 
-# this_cxxflags += -save-temps
+this_cxxflags += -save-temps=obj
+this_cflags += -save-temps=obj
 
 this_ldlibs += -lstdc++
 
