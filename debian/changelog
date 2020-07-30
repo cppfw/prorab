@@ -1,3 +1,9 @@
+prorab (1.15.12) unstable; urgency=medium
+
+  * add support for compiling assembler files
+
+ -- Ivan Gagis <igagis@gmail.com>  Thu, 30 Jul 2020 16:15:43 +0300
+
 prorab (1.15.11) unstable; urgency=medium
 
   * touch unused parameters in generated main() function for headers
