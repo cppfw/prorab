@@ -4,10 +4,11 @@ this_name := tests
 
 this_srcs += test.cpp
 this_srcs += ../src/../src/test1.c
-this_srcs += test.S
 
 ifeq ($(os),macosx)
     this_as_supports_deps_gen := false
+else
+    this_srcs += test.S
 endif
 
 # This is just for demonstration that it is possible to generate temporary compilation files
