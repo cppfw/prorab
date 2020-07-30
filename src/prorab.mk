@@ -106,11 +106,15 @@ ifneq ($(prorab_is_included),true)
         $(eval this_cc := $(CC))
         $(eval this_cxx := $(CXX))
         $(eval this_ar := $(AR))
+        $(eval this_as := $(AS))
+        # NOTE: the deferred assignment to allow changing just C compiler, and linker will change automatically if not explicitly set
+        $(eval this_ld = $(this_cc))
 
         # set default values for flags
         $(eval this_cppflags := $(CPPFLAGS))
         $(eval this_cflags := $(CFLAGS))
         $(eval this_cxxflags := $(CXXFLAGS))
+        $(eval this_asflags := $(ASFLAGS))
         $(eval this_ldflags := $(LDFLAGS))
         $(eval this_ldlibs := $(LDLIBS))
 
@@ -653,6 +657,9 @@ $(.RECIPEPREFIX)$(a)echo '$2' > $$@
         $(foreach var,$(this_cxx_srcs),\
                 $(eval prorab_private_numobjspacers := $(call prorab-max,$(call prorab-count-stepups,$(var)),$(prorab_private_numobjspacers))) \
             )
+        $(foreach var,$(this_as_srcs),\
+                $(eval prorab_private_numobjspacers := $(call prorab-max,$(call prorab-count-stepups,$(var)),$(prorab_private_numobjspacers))) \
+            )
         $(foreach var,$(this_hdrs),\
                 $(eval prorab_private_numobjspacers := $(call prorab-max,$(call prorab-count-stepups,$(var)),$(prorab_private_numobjspacers))) \
             )
@@ -670,15 +677,17 @@ $(.RECIPEPREFIX)$(a)echo '$2' > $$@
         # prepare list of object files
         $(eval prorab_this_cxx_objs := $(addsuffix .o,$(filter %$(this_dot_cxx),$(this_srcs))$(this_cxx_srcs)))
         $(eval prorab_this_c_objs := $(addsuffix .o,$(filter %.c,$(this_srcs))$(this_c_srcs)))
+        $(eval prorab_this_as_objs := $(addsuffix .o,$(filter %.S,$(this_srcs))$(this_as_srcs)))
 
         $(eval prorab_objs_file := $(prorab_this_obj_dir)objs.txt)
 
         # save list of objects to text file and only after that add $(d) prefix to those object files
-        $(call prorab-private-args-file-rules, $(prorab_objs_file),$(prorab_this_cxx_objs) $(prorab_this_c_objs))
+        $(call prorab-private-args-file-rules, $(prorab_objs_file),$(prorab_this_cxx_objs) $(prorab_this_c_objs) $(prorab_this_as_objs))
 
         $(eval prorab_this_cxx_objs := $(addprefix $(prorab_this_obj_dir)$(prorab_private_objspacer),$(prorab_this_cxx_objs)))
         $(eval prorab_this_c_objs := $(addprefix $(prorab_this_obj_dir)$(prorab_private_objspacer),$(prorab_this_c_objs)))
-        $(eval prorab_this_objs := $(prorab_this_cxx_objs) $(prorab_this_c_objs))
+        $(eval prorab_this_as_objs := $(addprefix $(prorab_this_obj_dir)$(prorab_private_objspacer),$(prorab_this_as_objs)))
+        $(eval prorab_this_objs := $(prorab_this_cxx_objs) $(prorab_this_c_objs) $(prorab_this_as_objs))
 
         # prepare list of header object files (for testing headers compilation)
         $(eval prorab_this_hxx_srcs := $(addsuffix .cpp_,$(filter %$(this_dot_hxx),$(this_hdrs)) $(this_cxx_hdrs) ))
@@ -695,13 +704,16 @@ $(.RECIPEPREFIX)$(a)echo '$2' > $$@
         # combine all compilation flags
         $(eval prorab_cxxflags = $$(this_cppflags) $$(this_cxxflags))
         $(eval prorab_cflags = $$(this_cppflags) $$(this_cflags))
+        $(eval prorab_asflags = $$(this_cppflags) $$(this_asflags))
 
-        $(eval prorab_cxxflags_file := $(prorab_this_obj_dir)cxxargs.txt)
-        $(eval prorab_cflags_file := $(prorab_this_obj_dir)cargs.txt)
+        $(eval prorab_cxxflags_file := $(prorab_this_obj_dir)cxx_args.txt)
+        $(eval prorab_cflags_file := $(prorab_this_obj_dir)c_args.txt)
+        $(eval prorab_asflags_file := $(prorab_this_obj_dir)as_args.txt)
 
         # compile command line flags dependency
         $(call prorab-private-args-file-rules, $(prorab_cxxflags_file),$(this_cxx) $(prorab_cxxflags))
         $(call prorab-private-args-file-rules, $(prorab_cflags_file),$(this_cc) $(prorab_cflags))
+        $(call prorab-private-args-file-rules, $(prorab_asflags_file),$(this_as) $(prorab_asflags))
 
         $(eval prorab_private_d_for_sed := $(subst .,\.,$(subst /,\/,$(patsubst ./%,%,$(d)))))
         $(if $(prorab_private_d_for_sed),
@@ -752,6 +764,13 @@ $(.RECIPEPREFIX)$(a)mkdir -p $$(dir $$@)
 $(.RECIPEPREFIX)$(a)$(this_cc) --language c -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -MP -o "$$@" $(prorab_cflags) $$<
 $(.RECIPEPREFIX)$(a)$(prorab_private_d_file_sed_command)
 
+        # compile .S static pattern rule
+        $(prorab_this_as_objs): $(prorab_this_obj_dir)$(prorab_private_objspacer)%.o: $(d)% $(prorab_asflags_file)
+$(.RECIPEPREFIX)@test -t 1 && printf "\e[0;35mcompile\e[0m $$(patsubst $(prorab_root_dir)%,%,$$<)\n" || printf "compile $$(patsubst $(prorab_root_dir)%,%,$$<)\n"
+$(.RECIPEPREFIX)$(a)mkdir -p $$(dir $$@)
+$(.RECIPEPREFIX)$(a)$(this_as) -MD "$$(patsubst %.o,%.d,$$@)" -o "$$@" $(prorab_asflags) $$<
+$(.RECIPEPREFIX)$(a)$(prorab_private_d_file_sed_command)
+
         # include rules for header dependencies
         include $(wildcard $(addsuffix *.d,$(dir $(prorab_this_objs))))
 
@@ -781,7 +800,7 @@ $(.RECIPEPREFIX)$(a)rm -rf $(prorab_this_obj_dir)
         $(prorab_this_name): $(prorab_this_objs) $(prorab_ldargs_file) $(prorab_objs_file)
 $(.RECIPEPREFIX)@test -t 1 && printf "\e[0;31mlink\e[0m $$(patsubst $(prorab_root_dir)%,%,$$@)\n" || printf "link $$(patsubst $(prorab_root_dir)%,%,$$@)\n"
 $(.RECIPEPREFIX)$(a)mkdir -p $(d)$(prorab_private_out_dir)
-$(.RECIPEPREFIX)$(a)$(this_cc) $(prorab_ldflags) $$(filter %.o,$$^) $(prorab_ldlibs) -o "$$@"
+$(.RECIPEPREFIX)$(a)$(this_ld) $(prorab_ldflags) $$(filter %.o,$$^) $(prorab_ldlibs) -o "$$@"
 
         clean::
 $(.RECIPEPREFIX)$(if $(filter windows,$(os)), \

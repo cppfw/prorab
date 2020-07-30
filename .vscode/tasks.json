@@ -14,6 +14,12 @@
             "type": "shell",
             "command": "make -C tests/lib test --no-print-directory",
             "problemMatcher": []
+        },
+        {
+            "label": "test_app",
+            "type": "shell",
+            "command": "make -C tests/app test --no-print-directory",
+            "problemMatcher": []
 		},
         {
             "label": "test_path_args_equivalence",

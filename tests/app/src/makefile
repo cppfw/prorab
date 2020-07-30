@@ -4,6 +4,7 @@ this_name := tests
 
 this_srcs += test.cpp
 this_srcs += ../src/../src/test1.c
+this_srcs += test.S
 
 this_ldlibs += -lstdc++
 
