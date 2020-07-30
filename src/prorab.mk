@@ -107,6 +107,7 @@ ifneq ($(prorab_is_included),true)
         $(eval this_cxx := $(CXX))
         $(eval this_ar := $(AR))
         $(eval this_as := $(AS))
+        $(eval this_as_supports_deps_gen := true)
         # NOTE: the deferred assignment to allow changing just C compiler, and linker will change automatically if not explicitly set
         $(eval this_ld = $(this_cc))
 
@@ -768,8 +769,8 @@ $(.RECIPEPREFIX)$(a)$(prorab_private_d_file_sed_command)
         $(prorab_this_as_objs): $(prorab_this_obj_dir)$(prorab_private_objspacer)%.o: $(d)% $(prorab_asflags_file)
 $(.RECIPEPREFIX)@test -t 1 && printf "\e[0;35mcompile\e[0m $$(patsubst $(prorab_root_dir)%,%,$$<)\n" || printf "compile $$(patsubst $(prorab_root_dir)%,%,$$<)\n"
 $(.RECIPEPREFIX)$(a)mkdir -p $$(dir $$@)
-$(.RECIPEPREFIX)$(a)$(this_as) -MD "$$(patsubst %.o,%.d,$$@)" -o "$$@" $(prorab_asflags) $$<
-$(.RECIPEPREFIX)$(a)$(prorab_private_d_file_sed_command)
+$(.RECIPEPREFIX)$(a)$(this_as) $(if $(filter true,$(this_as_supports_deps_gen)),-MD "$$(patsubst %.o,%.d,$$@)") -o "$$@" $(prorab_asflags) $$<
+$(if $(filter true,$(this_as_supports_deps_gen)),$(.RECIPEPREFIX)$(a)$(prorab_private_d_file_sed_command))
 
         # include rules for header dependencies
         include $(wildcard $(addsuffix *.d,$(dir $(prorab_this_objs))))
