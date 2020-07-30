@@ -704,7 +704,7 @@ $(.RECIPEPREFIX)$(a)echo '$2' > $$@
         # combine all compilation flags
         $(eval prorab_cxxflags = $$(this_cppflags) $$(this_cxxflags))
         $(eval prorab_cflags = $$(this_cppflags) $$(this_cflags))
-        $(eval prorab_asflags = $$(this_cppflags) $$(this_asflags))
+        $(eval prorab_asflags = $$(this_asflags))
 
         $(eval prorab_cxxflags_file := $(prorab_this_obj_dir)cxx_args.txt)
         $(eval prorab_cflags_file := $(prorab_this_obj_dir)c_args.txt)

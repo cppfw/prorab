@@ -6,6 +6,8 @@ this_srcs += test.cpp
 this_srcs += ../src/../src/test1.c
 this_srcs += test.S
 
+# this_cxxflags += -save-temps
+
 this_ldlibs += -lstdc++
 
 $(eval $(prorab-build-app))
