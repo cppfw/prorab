@@ -94,6 +94,7 @@ this_name := myapp
 
 this_cxxflags += -Wall
 this_cxxflags += -DDEBUG
+this_cxxflags += -I $(d)my_includes/some_dir
 this_cflags += -Wall
 
 this_ldlibs += -lpthread
