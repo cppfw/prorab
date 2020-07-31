@@ -74,11 +74,11 @@ $(eval $(prorab-build-app))
 - `this_ldflags` - linker flags. Defaults to `$(LDFLAGS)`.
 - `this_ldlibs` - linker libraries. Defaults to `$(LDLIBS)`.
 - `this_cppflags` - preprocessor flags. Defaults to `$(CPPFLAGS)`.
-- `this_out_dir` - output directory. This is where all the build artefacts are to be stored. Defaults to `./`.
+- `this_out_dir` - output directory. This is where all the build artefacts are to be stored. Relative to `$(d)`. Defaults to `./`.
 - `this_no_install` - disable `install` targets. Can be `true` or `false`. Defaults to `false`.
-- `this_hdrs` - list of header files to check compilation for (see explanation below). The files with suffix `$(this_dot_hxx)` will be compiled with C++ compiler, files with suffix `.h` will be compiled with C compiler.
-- `this_c_hdrs` - list of C header files to check compilation for (see explanation below).
-- `this_cxx_hdrs` - list of C++ header files to check compilation for (see explanation below).
+- `this_hdrs` - list of header files to check compilation for (see explanation below). The files with suffix `$(this_dot_hxx)` will be compiled with C++ compiler, files with suffix `.h` will be compiled with C compiler. Rleative to `$(d)`.
+- `this_c_hdrs` - list of C header files to check compilation for (see explanation below). Rleative to `$(d)`.
+- `this_cxx_hdrs` - list of C++ header files to check compilation for (see explanation below). Rleative to `$(d)`.
 - `this_dot_hxx` - C++ header files suffix. Used to filter C++ header files from `$(this_hdrs)`. Defaults to `.hpp`.
 
 Note: `this_ldlibs` and `this_ldflags` are separated because sometimes order of linker flags, object files and libraries matters. So, linker flags go first, then go object files and then go linker libraries.
