@@ -2,18 +2,105 @@
 
 == prorab-rwildcard
 
-The `prorab-rwildcard` macro recursively searches the given directory for all files matching pattern.
+Recursively search the given directory for all files matching pattern.
 
 .syntax
-`$(call prorab-rwildcard, <dir>, <pattern>)`
+[source,makefile]
+....
+$(call prorab-rwildcard, <dir>, <pattern>)
+....
 
 .arguments
  - `dir` - root directory to search, relative to `$(d)`.
  - `pattern` - pattern to match files, can be several patterns separated by space.
 
 .example
+[source,makefile]
 ....
+include prorab.mk
+
 this_as_srcs := $(call prorab-rwildcard, src/asm, *.asm *.S)
+....
+
+== prorab-build-app
+
+Generate application build targets.
+
+.syntax
+[source,makefile]
+------
+this_name := <name>
+this_srcs := <c-plusplus-as-sources>
+this_c_srcs := <c-sources>
+this_cxx_srcs := <plusplus-sources>
+this_as_srcs := <assembler-sources>
+this_cc := <c-compiler>
+this_cxx := <cplusplus-compiler>
+this_as := <assembler-compiler>
+this_ld := <linker>
+this_dot_cxx := <cplusplus-file-suffix>
+this_cflags :=/+= <c-compiler-flags>
+this_cxxflags :=/+= <cxx-compiler-flags>
+this_asflags :=/+= <assembler-flags>
+this_as_supports_deps_gen := <enable-assembler-deps-gen> # default = true
+this_ldflags :=/+= <linker-flags> # default = $(LDFLAGS)
+this_ldlibs :=/+= <linker-libs> # default = $(LDLIBS)
+this_cppflags :=/+= <preprocessor-flags> # default = $(CPPFLAGS)
+this_out_dir := <out-directory> # default = ./
+this_no_install := <disable-install-targets> # default = false
+this_hdrs := <c-cplusplus-header-files>
+this_c_hdrs := <c-header-files>
+this_cxx_hdrs := <cplusplus-header-files>
+this_dot_hxx := <cplusplus-header-file-suffix> # default = .hpp
+
+$(eval $(prorab-build-app))
+------
+
+.arguments
+- `this_name` - name of the application. It will be used to generate the output binary filename. **Mandatory**.
+- `this_srcs` - list of sources, ok to use `+=` right a way. Relative to `$(d)`. Files with suffix `$(this_dot_cxx)` will be compiled by C++ compiler, files with suffix `.c` will be compiled with C compiler, files with suffix `.S` will be compiled with assembler.
+- `this_c_srcs` - list of source files to be compiled by C compiler. Rleative to `$(d)`.
+- `this_cxx_srcs` - list of source files to be compiled by C++ compiler. Relative to `$(d)`.
+- `this_as_srcs` - list of sources files to be compiled by assembler. Relative to `$(d)`.
+- `this_cc` - C compiler to use. Defaults to `$(CC)`.
+- `this_cxx` - C++ compiler to use. Defaults to `$(CXX)`.
+- `this_as` - assembler to use. Defaults to `$(AS)`.
+- `this_ld` - linker to use. Defaults to `$(this_cc)`.
+- `this_dot_cxx` - C++ source files suffix. Used to filter C++ source files from `$(this_srcs)`. Defaults to `.cpp`.
+- `this_cflags` - C compiler flags. Defaults to `$(CFLAGS)`.
+- `this_cxxflags` - C++ compiler flags. Defaults to `$(CXXFLAGS)`.
+- `this_asflags` - assembler flags. Defaults to `$(ASFLAGS)`.
+- `this_as_supports_deps_gen` - enable dependency files generation for assembler. Defaults to `true`.
+- `this_ldflags` - linker flags. Defaults to `$(LDFLAGS)`.
+- `this_ldlibs` - linker libraries. Defaults to `$(LDLIBS)`.
+- `this_cppflags` - preprocessor flags. Defaults to `$(CPPFLAGS)`.
+- `this_out_dir` - output directory. This is where all the build artefacts are to be stored. Defaults to `./`.
+- `this_no_install` - disable `install` targets. Can be `true` or `false`. Defaults to `false`.
+- `this_hdrs` - list of header files to check compilation for (see explanation below). The files with suffix `$(this_dot_hxx)` will be compiled with C++ compiler, files with suffix `.h` will be compiled with C compiler.
+- `this_c_hdrs` - list of C header files to check compilation for (see explanation below).
+- `this_cxx_hdrs` - list of C++ header files to check compilation for (see explanation below).
+- `this_dot_hxx` - C++ header files suffix. Used to filter C++ header files from `$(this_hdrs)`. Defaults to `.hpp`.
+
+Note: `this_ldlibs` and `this_ldflags` are separated because sometimes order of linker flags, object files and libraries matters. So, linker flags go first, then go object files and then go linker libraries.
+
+The `this_hdrs`, `this_cxx_hdrs` and `this_c_hdrs` specify the header files to check for compilation. For each header file a trivial C/C++ source file will be generated which includes the header file twice. Then those generated C++ files are compiled. This checks that the header file does not miss include guard and itself includes all the needed dependency header files. Compilation is done with the same compiler flags as the normal source files.
+
+.example
+[source,makefile]
+....
+include prorab.mk
+
+this_name := myapp
+
+this_cxxflags += -Wall
+this_cxxflags += -DDEBUG
+this_cflags += -Wall
+
+this_ldlibs += -lpthread
+
+this_srcs += main.cpp myapp.cpp legacy.c
+
+$(eval $(prorab-build-app))
 ....
 
 == TODO
