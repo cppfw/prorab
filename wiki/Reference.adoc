@@ -40,18 +40,18 @@ this_as := <assembler-compiler>
 this_ld := <linker>
 this_dot_cxx := <cplusplus-file-suffix>
 this_cflags :=/+= <c-compiler-flags>
-this_cxxflags :=/+= <cxx-compiler-flags>
+this_cxxflags :=/+= <cplusplus-compiler-flags>
 this_asflags :=/+= <assembler-flags>
-this_as_supports_deps_gen := <enable-assembler-deps-gen> # default = true
-this_ldflags :=/+= <linker-flags> # default = $(LDFLAGS)
-this_ldlibs :=/+= <linker-libs> # default = $(LDLIBS)
-this_cppflags :=/+= <preprocessor-flags> # default = $(CPPFLAGS)
-this_out_dir := <out-directory> # default = ./
-this_no_install := <disable-install-targets> # default = false
+this_as_supports_deps_gen := <enable-assembler-deps-gen>
+this_ldflags :=/+= <linker-flags>
+this_ldlibs :=/+= <linker-libs>
+this_cppflags :=/+= <preprocessor-flags>
+this_out_dir := <out-directory>
+this_no_install := <disable-install-targets>
 this_hdrs := <c-cplusplus-header-files>
 this_c_hdrs := <c-header-files>
 this_cxx_hdrs := <cplusplus-header-files>
-this_dot_hxx := <cplusplus-header-file-suffix> # default = .hpp
+this_dot_hxx := <cplusplus-header-file-suffix>
 
 $(eval $(prorab-build-app))
 ------
