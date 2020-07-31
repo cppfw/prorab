@@ -24,7 +24,7 @@ this_as_srcs := $(call prorab-rwildcard, src/asm, *.asm *.S)
 
 == prorab-build-app
 
-Generate application build targets.
+Generate application build targets. TODO: list generated targets.
 
 .syntax
 [source,makefile]
@@ -84,6 +84,10 @@ $(eval $(prorab-build-app))
 Note: `this_ldlibs` and `this_ldflags` are separated because sometimes order of linker flags, object files and libraries matters. So, linker flags go first, then go object files and then go linker libraries.
 
 The `this_hdrs`, `this_cxx_hdrs` and `this_c_hdrs` specify the header files to check for compilation. For each header file a trivial C/C++ source file will be generated which includes the header file twice. Then those generated C++ files are compiled. This checks that the header file does not miss include guard and itself includes all the needed dependency header files. Compilation is done with the same compiler flags as the normal source files.
+
+.output variables
+- `prorab_this_name` - resulting name of the binary file (for example on Windows it will have .exe suffix appended). Absolute path.
+- `prorab_this_objs` - list of generated object files. Absolute path.
 
 .example
 [source,makefile]
