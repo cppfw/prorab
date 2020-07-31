@@ -1,0 +1,19 @@
+= prorab reference
+
+== prorab-rwildcard
+
+The `prorab-rwildcard` macro recursively searches the given directory for all files matching pattern.
+
+.syntax
+`$(call prorab-rwildcard, <dir>, <pattern>)`
+
+.arguments
+ - `dir` - root directory to search, relative to `$(d)`.
+ - `pattern` - pattern to match files, can be several patterns separated by space.
+
+.example
+....
+this_as_srcs := $(call prorab-rwildcard, src/asm, *.asm *.S)
+....
+
+== TODO
