@@ -201,7 +201,7 @@ Some variables, instead of clearing, are set to their default values.
 $(eval $(prorab-clear-this-vars))
 ....
 
-Note, that `prorab.mk` already have a call to this macro at its end. So, right after including `prorab.mk` one can be sure that all `this_`-prefixed variables are empty.
+Note, that `prorab.mk` already have a call to this macro at its end. So, right after including `prorab.mk` one can be sure that all `this_`-prefixed variables are empty or set to their default values.
 
 .example
 [source,makefile]
