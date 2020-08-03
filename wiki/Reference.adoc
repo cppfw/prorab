@@ -92,11 +92,11 @@ The `this_hdrs`, `this_cxx_hdrs` and `this_c_hdrs` specify the header files to c
 - `prorab_this_obj_spacer` - spacer for object files output. See details in generated object files target below.
 
 .generated targets
-- `$(this_name)$(dot_exe)` - link executable. This target is added to `all` target dependencies.
+- `$(prorab_this_name)` - link executable. This target is added to `all` target dependencies.
 - `install` - install the executable to the system. Install path is prefixed with `$(DESTDIR)$(PREFIX)`. The target is only generated if `$(this_no_install)` is `false`.
 - `uninstall` - remove the executable from the system. The executable is deleted from install path. The target is only generated if `$(this_no_install)` is `false`.
 - `clean` - remove build artifacts.
-- `$(prorab_this_obj_dir)$(prorab_this_obj_spacer)%.o: $(d)%` - compile source files to object files.
+- `$(prorab_this_obj_dir)$(prorab_this_obj_spacer)%.o` - compile source files to object files.
 
 .example
 [source,makefile]
