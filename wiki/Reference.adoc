@@ -28,8 +28,6 @@ TODO:
 
 TODO:
 
-
-
 == prorab-inlcude
 
 TODO:
@@ -179,4 +177,6 @@ this_srcs += main.cpp myapp.cpp legacy.c
 $(eval $(prorab-build-app))
 ....
 
-== TODO
+== prorab-build-lib
+
+TODO:
