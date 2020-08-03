@@ -287,7 +287,7 @@ Generate application build targets.
 
 .syntax
 [source,makefile]
-------
+....
 this_name := <name>
 this_srcs := <c-plusplus-as-sources>
 this_c_srcs := <c-sources>
@@ -313,7 +313,7 @@ this_cxx_hdrs := <cplusplus-header-files>
 this_dot_hxx := <cplusplus-header-file-suffix>
 
 $(eval $(prorab-build-app))
-------
+....
 
 .arguments
 - `this_name` - name of the application. It will be used to generate the output binary filename. **Mandatory**.
@@ -378,4 +378,109 @@ $(eval $(prorab-build-app))
 
 == prorab-build-lib
 
-TODO:
+Generate library build targets.
+
+.syntax
+[source,makefile]
+....
+# library specific input variables
+this_soname := <so-name>
+this_headers_dir := <headers-dir>
+this_static_lib_only := <static-lib-only>
+this_ar := <archiver>
+
+# same input variables as for application
+this_name := <name>
+this_srcs := <c-plusplus-as-sources>
+this_c_srcs := <c-sources>
+this_cxx_srcs := <plusplus-sources>
+this_as_srcs := <assembler-sources>
+this_cc := <c-compiler>
+this_cxx := <cplusplus-compiler>
+this_as := <assembler-compiler>
+this_ld := <linker>
+this_dot_cxx := <cplusplus-file-suffix>
+this_cflags :=/+= <c-compiler-flags>
+this_cxxflags :=/+= <cplusplus-compiler-flags>
+this_asflags :=/+= <assembler-flags>
+this_as_supports_deps_gen := <enable-assembler-deps-gen>
+this_ldflags :=/+= <linker-flags>
+this_ldlibs :=/+= <linker-libs>
+this_cppflags :=/+= <preprocessor-flags>
+this_out_dir := <out-directory>
+this_no_install := <disable-install-targets>
+this_hdrs := <c-cplusplus-header-files>
+this_c_hdrs := <c-header-files>
+this_cxx_hdrs := <cplusplus-header-files>
+this_dot_hxx := <cplusplus-header-file-suffix>
+
+$(eval $(prorab-build-lib))
+....
+
+.arguments
+- `this_soname` - so name for dynamic library. **Mandatory**
+- `this_headers_dir` - root directory of the header files which are to be installed with the library. Relative to `$(d)`. The directory is searched recursively for C (`.h`) and C++ header files (`$(this_dot_hxx)`). The `install` target will install these header files to `$(DESTDIR)$(PREFIX)/include` preserving directory structure. Also, the `test` target will test these headers for compilation, same as headers from `this_hdrs`, but with no compilation flags, except `-std=...` filtered from `$(this_cflags)`/`$(this_cxxflags)`.
+- `this_static_lib_only` - disables building of shared library. If `true` only static library is built. Otherwise both, shared and static libraries are built. Defaults to empty.
+- `this_ar` - the archiver program to use. Defaults to `$(AR)`.
+- `this_name` - name of the library. It will be used to generate the output binary filename. **Mandatory**.
+- `this_srcs` - list of sources, ok to use `+=` right a way. Relative to `$(d)`. Files with suffix `$(this_dot_cxx)` will be compiled by C++ compiler, files with suffix `.c` will be compiled with C compiler, files with suffix `.S` will be compiled with assembler.
+- `this_c_srcs` - list of source files to be compiled by C compiler. Rleative to `$(d)`.
+- `this_cxx_srcs` - list of source files to be compiled by C++ compiler. Relative to `$(d)`.
+- `this_as_srcs` - list of sources files to be compiled by assembler. Relative to `$(d)`.
+- `this_cc` - C compiler to use. Defaults to `$(CC)`.
+- `this_cxx` - C++ compiler to use. Defaults to `$(CXX)`.
+- `this_as` - assembler to use. Defaults to `$(AS)`.
+- `this_ld` - linker to use. Defaults to `$(this_cc)`.
+- `this_dot_cxx` - C++ source files suffix. Used to filter C++ source files from `$(this_srcs)`. Defaults to `.cpp`.
+- `this_cflags` - C compiler flags. Defaults to `$(CFLAGS)`.
+- `this_cxxflags` - C++ compiler flags. Defaults to `$(CXXFLAGS)`.
+- `this_asflags` - assembler flags. Defaults to `$(ASFLAGS)`.
+- `this_as_supports_deps_gen` - enable dependency files generation for assembler. Defaults to `true`.
+- `this_ldflags` - linker flags. Defaults to `$(LDFLAGS)`.
+- `this_ldlibs` - linker libraries. Defaults to `$(LDLIBS)`.
+- `this_cppflags` - preprocessor flags. Defaults to `$(CPPFLAGS)`.
+- `this_out_dir` - output directory. This is where all the build artefacts are to be stored. Relative to `$(d)`. Defaults to `./`.
+- `this_no_install` - disable `install` targets. Can be `true` or `false`. Defaults to `false`.
+- `this_hdrs` - list of header files to check compilation for (see explanation below). The files with suffix `$(this_dot_hxx)` will be compiled with C++ compiler, files with suffix `.h` will be compiled with C compiler. Rleative to `$(d)`.
+- `this_c_hdrs` - list of C header files to check compilation for (see explanation below). Rleative to `$(d)`.
+- `this_cxx_hdrs` - list of C++ header files to check compilation for (see explanation below). Rleative to `$(d)`.
+- `this_dot_hxx` - C++ header files suffix. Used to filter C++ header files from `$(this_hdrs)`. Defaults to `.hpp`.
+
+Note: `this_ldlibs` and `this_ldflags` are separated because sometimes order of linker flags, object files and libraries matters. So, linker flags go first, then go object files and then go linker libraries.
+
+The `this_hdrs`, `this_cxx_hdrs` and `this_c_hdrs` specify the header files to check for compilation. For each header file a trivial C/C++ source file will be generated which includes the header file twice. Then those generated C++ files are compiled. This checks that the header file does not miss include guard and itself includes all the needed dependency header files. Compilation is done with the same compiler flags as the normal source files.
+
+.output variables
+- `prorab_this_name` - resulting name of the binary file. Absolute path.
+- `prorab_this_symbolic_name` - resulting symbolic link to shared library. Absolute path.
+- `prorab_this_static_lib` - resulting filename of the static library. Absolute path.
+- `prorab_this_objs` - list of generated object files. Absolute paths.
+- `prorab_this_obj_dir` - object files output directory.
+- `prorab_this_obj_spacer` - spacer for object files output. See details in generated object files target below.
+
+.generated targets
+- `$(prorab_this_name)` - link the binary. This target is added to `all` target dependencies.
+- `$(prorab_this_static_lib)` - create static library. This target is added to `all` target dependencies.
+- `install` - install the binary, its symbolic link and header files to the system. The binary is installed to `$(DESTDIR)$(PREFIX)/lib/`, header files are installed to `$(DESTDIR)$(PREFIX)/inlcude/`. The target is only generated if `$(this_no_install)` is `false`.
+- `uninstall` - remove the binary and header files from the system. The binary and header files are deleted from install path. The target is only generated if `$(this_no_install)` is `false`.
+- `clean` - remove build artifacts.
+- `$(prorab_this_obj_dir)$(prorab_this_obj_spacer)%.o` - compile source files to object files.
+
+.example
+[source,makefile]
+....
+include prorab.mk
+
+this_name := mylib
+
+this_soname := 0
+
+this_cxxflags += -Wall
+this_cxxflags += -DDEBUG
+this_cflags += -Wall
+this_ldlibs += -lpthread
+
+this_srcs += main.cpp myapp.cpp
+
+$(eval $(prorab-build-lib))
+....
