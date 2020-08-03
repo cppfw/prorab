@@ -310,7 +310,7 @@ ifneq ($(prorab_is_included),true)
     # !!!NOTE: the trailing empty line in 'prorab-private-include' definition is needed so that include files would be separated from each other
 
     # include all makefiles in subdirectories
-    define prorab-build-subdirs
+    define prorab-include-subdirs
 
         # need empty line here to avoid merging with adjacent macro instantiations
 
@@ -323,6 +323,9 @@ ifneq ($(prorab_is_included),true)
         # need empty line here to avoid merging with adjacent macro instantiations
 
     endef
+
+    # TODO: deprecated, remove
+    prorab-build-subdirs = $(prorab-include-subdirs)
 
     ################
     # common rules #
