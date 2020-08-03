@@ -77,7 +77,7 @@ Input variable which controls the parallel execution. It allows setting number o
 
 .values
 - `true` - set number of parallel `make` jobs to number of CPU cores present on the system.
-- `false` - do not change number of parallel jobs. It can be 1 by default or the value specified by user via `make`'s `-j` command line argument.
+- `false` - do not change number of parallel jobs. It can be 1 by default or the value specified by user via `-j` command line argument of `make`.
 - empty - set parallel jobs in accordance with value of `aj` variable. See below for more info about `aj` variable.
 
 .example
