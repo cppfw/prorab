@@ -108,7 +108,7 @@ In case `PREFIX` variable is empty, prorab sets it to `/usr/local`
 
 == dot_so
 
-Prorab sets the `dot_so` variable to the suffix for shared lybrary files which is native for the host system.
+Prorab sets the `dot_so` variable to the shared library files suffix which is native for the host system.
 
 .values
 - `.so` - for Linux
@@ -117,7 +117,7 @@ Prorab sets the `dot_so` variable to the suffix for shared lybrary files which i
 
 == dot_exe
 
-Prorab sets the `dot_exe` variable to the suffix for executable files which is native for the host system.
+Prorab sets the `dot_exe` variable to the executable files suffix which is native for the host system.
 
 .values
 - empty - for Linux and Mac OS X
