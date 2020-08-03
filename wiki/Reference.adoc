@@ -91,7 +91,7 @@ $ make autojobs=true
 Shorthand for `autojobs` input variable.
 
 .values
-- empty, `0`, `flase` - same as `autojobs` being set to `false`.
+- empty, `0`, `false` - same as `autojobs` being set to `false`.
 - any other value - same as `autojobs` being set to `true.
 
 Note that priority of `aj` variable is less than `autojobs` variable. For example if `aj=1` and `autojobs=false` the number of parallel jobs will not be touched.
