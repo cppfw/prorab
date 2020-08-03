@@ -346,10 +346,10 @@ ifneq ($(prorab_is_included),true)
 
     define prorab-private-rules
 
-        echo-cleaning:
+        echo-clean:
 $(.RECIPEPREFIX)@test -t 1 && printf "\e[0;32mclean\e[0m\n" || printf "clean\n"
 
-        clean:: echo-cleaning
+        clean:: echo-clean
 
         # target for rebuilding all
         re:
