@@ -1,5 +1,59 @@
 = prorab reference
 
+== d
+
+TODO:
+
+== os
+
+TODO:
+
+== a
+
+TODO:
+
+== .RECIPEPREFIX
+
+TODO:
+
+== PREFIX
+
+TODO:
+
+== dot_so
+
+TODO:
+
+== dot_exe
+
+TODO:
+
+
+
+== prorab-inlcude
+
+TODO:
+
+== prorab-try-include
+
+TODO:
+
+== prorab-include-subdirs
+
+TODO:
+
+== prorab-clear-this-vars
+
+TODO:
+
+== prorab-src-dir
+
+TODO:
+
+== prorab-hdr-dir
+
+TODO:
+
 == prorab-rwildcard
 
 Recursively search the given directory for all files matching pattern.
@@ -21,6 +75,14 @@ include prorab.mk
 
 this_as_srcs := $(call prorab-rwildcard, src/asm, *.asm *.S)
 ....
+
+== prorab-include
+
+TODO:
+
+== prorab-try-include
+
+TODO:
 
 == prorab-build-app
 
@@ -93,7 +155,7 @@ The `this_hdrs`, `this_cxx_hdrs` and `this_c_hdrs` specify the header files to c
 
 .generated targets
 - `$(prorab_this_name)` - link executable. This target is added to `all` target dependencies.
-- `install` - install the executable to the system. Install path is prefixed with `$(DESTDIR)$(PREFIX)`. The target is only generated if `$(this_no_install)` is `false`.
+- `install` - install the executable to the system. The executable binary is installed to `$(DESTDIR)$(PREFIX)/bin/`. The target is only generated if `$(this_no_install)` is `false`.
 - `uninstall` - remove the executable from the system. The executable is deleted from install path. The target is only generated if `$(this_no_install)` is `false`.
 - `clean` - remove build artifacts.
 - `$(prorab_this_obj_dir)$(prorab_this_obj_spacer)%.o` - compile source files to object files.
