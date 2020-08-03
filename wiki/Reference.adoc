@@ -1,5 +1,59 @@
 = prorab reference
 
+== d
+
+TODO:
+
+== os
+
+TODO:
+
+== a
+
+TODO:
+
+== .RECIPEPREFIX
+
+TODO:
+
+== PREFIX
+
+TODO:
+
+== dot_so
+
+TODO:
+
+== dot_exe
+
+TODO:
+
+
+
+== prorab-inlcude
+
+TODO:
+
+== prorab-try-include
+
+TODO:
+
+== prorab-include-subdirs
+
+TODO:
+
+== prorab-clear-this-vars
+
+TODO:
+
+== prorab-src-dir
+
+TODO:
+
+== prorab-hdr-dir
+
+TODO:
+
 == prorab-rwildcard
 
 Recursively search the given directory for all files matching pattern.
@@ -21,6 +75,14 @@ include prorab.mk
 
 this_as_srcs := $(call prorab-rwildcard, src/asm, *.asm *.S)
 ....
+
+== prorab-include
+
+TODO:
+
+== prorab-try-include
+
+TODO:
 
 == prorab-build-app
 
