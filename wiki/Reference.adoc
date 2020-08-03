@@ -98,19 +98,30 @@ Note that priority of `aj` variable is less than `autojobs` variable. For exampl
 
 == .RECIPEPREFIX
 
-TODO:
+By default in `GNU make` the prefix for recipe lines is the **tab** character. `GNU make` allows overriding the character by setting the `.RECIPEPREFIX` variable but the initial value of the `.RECIPEPREFIX` is empty, which results in using the default recipe prefix character, i.e. **tab** character.
+
+Prorab explicitly sets the `.RECIPEPREFIX` to the actual **tab** character.
 
 == PREFIX
 
-TODO:
+In case `PREFIX` variable is empty, prorab sets it to `/usr/local`
 
 == dot_so
 
-TODO:
+Prorab sets the `dot_so` variable to the suffix for shared lybrary files which is native for the host system.
+
+.values
+- `.so` - for Linux
+- `.dylib` - for Mac OS X
+- `.dll` - for Windows
 
 == dot_exe
 
-TODO:
+Prorab sets the `dot_exe` variable to the suffix for executable files which is native for the host system.
+
+.values
+- empty - for Linux and Mac OS X
+- `.exe` - for Windows
 
 == prorab-inlcude
 
