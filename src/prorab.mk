@@ -81,7 +81,7 @@ ifneq ($(prorab_is_included),true)
     prorab-rwildcard = $(patsubst $(d)%,%,$(call prorab-private-rwildcard, $(d)$(filter-out ,$1),$2))
 
     # function to find all source files from specified directory recursively
-    prorab-src-dir = $(call prorab-rwildcard,$1,*$(this_dot_cxx) *.c)
+    prorab-src-dir = $(call prorab-rwildcard,$1,*$(this_dot_cxx) *.c *.S)
 
     # function to find all header files from specified directory recursively
     prorab-hdr-dir = $(call prorab-rwildcard,$1,*$(this_dot_hxx) *.h)
