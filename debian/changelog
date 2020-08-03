@@ -1,3 +1,9 @@
+prorab (1.15.13) unstable; urgency=medium
+
+  * prorab-include-subdirs introduced
+
+ -- Ivan Gagis <igagis@gmail.com>  Mon, 03 Aug 2020 18:25:44 +0300
+
 prorab (1.15.12) unstable; urgency=medium
 
   * add support for compiling assembler files
