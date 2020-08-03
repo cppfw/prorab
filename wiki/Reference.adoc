@@ -17,7 +17,7 @@ When one makefile includes another one using `prorab-include` or `prorab-try-inc
 
 == prorab_root_dir
 
-The directory of the root makefile. The root makefile is the initial makefile evaluated when `make` is executed. For root makefile `d` is same as `prorab_root_dir`.
+Prorab defines `prorab_root_dir` variable which represents the directory of the root makefile. The root makefile is the initial makefile evaluated when `make` is executed. For root makefile `d` is same as `prorab_root_dir`.
 
 == os
 
