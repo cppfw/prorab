@@ -1,16 +1,96 @@
 = prorab reference
 
+before using **prorab** one has to include it
+[source,makefile]
+....
+include prorab.mk
+....
+
 == d
 
-TODO:
+Prorab defines the `d` variable which represents the directory in which the `makefile` resides. Absolute path.
+When one makefile includes another one using `prorab-include` or `prorab-try-include` macro the `d` variable is substituted accordingly for the included makefile while it is evaluated.
+
+== prorab_root_dir
+
+The directory of the root makefile. The root makefile is the initial makefile evaluated when `make` is executed. For root makefile `d` is same as `prorab_root_dir`.
 
 == os
 
-TODO:
+Prorab defines the `os` variable which indicates the host system on which the `make` is executed.
+
+.values
+- `linux` - any linux system
+- `macosx` - any Mac OS X system
+- `windows` - Windows `Msys2` or `Cygwin` environment.
 
 == a
 
-TODO:
+Prorab defines `a` variable which indicates one of two verbosity levels.
+
+.values
+- empty - high verbosity level
+- `@` - low verbosity level
+
+The value of `a` is affected by `verbose` input variable or by its shorthand version `v`. See `verbose` variable description for more info.
+
+The `a` variable is to be used as a prefix for each recipe line which is supposed to have configurable verbosity level.
+
+== verbose
+
+Input variable which sets the verbosity level.
+
+.values
+- `true` - high verbosity level. This value results in `a` variable being set to empty value.
+- `false` - low verbosity level. This value results in `a` variable being set to `@`.
+- empty - set verbosity level according to `v` variable value. See below for more info about `v` variable.
+
+.example
+[source,sh]
+....
+$ make verbose=true
+....
+
+== v
+
+Shorthand version of `verbose` input variable.
+
+.values
+- empty, `0`, `false` - same as `verbose` being set to `false`.
+- any other value - same as `verbose` being set to `true`.
+
+Note that priority of `v` variable is less than `verbose` variable. For example if `v=1` and `verbose=false` the resulting `a` will be set to `@`, i.e. low verbosity level.
+
+.example
+[source,sh]
+....
+$ make v=t
+....
+
+== autojobs
+
+Input variable which controls the parallel execution. It allows setting number of parallel jobs to the number of physical CPU cores present on the system.
+
+.values
+- `true` - set number of parallel `make` jobs to number of CPU cores present on the system.
+- `false` - do not change number of parallel jobs. It can be 1 by default or the value specified by user via `make`'s `-j` command line argument.
+- empty - set parallel jobs in accordance with value of `aj` variable. See below for more info about `aj` variable.
+
+.example
+[source,sh]
+....
+$ make autojobs=true
+....
+
+== aj
+
+Shorthand for `autojobs` input variable.
+
+.values
+- empty, `0`, `flase` - same as `autojobs` being set to `false`.
+- any other value - same as `autojobs` being set to `true.
+
+Note that priority of `aj` variable is less than `autojobs` variable. For example if `aj=1` and `autojobs=false` the number of parallel jobs will not be touched.
 
 == .RECIPEPREFIX
 
