@@ -177,7 +177,9 @@ $(eval $(call prorab-include-subdirs, Makefile))
 
 Clear all variables which have `this_` prefix.
 
-Some variables, instead of clearing, are set to their default values. These variables are:
+Some variables, instead of clearing, are set to their default values.
+
+.variables set to default values:
 - `this_dot_cxx`
 - `this_dot_hxx`
 - `this_cc`
