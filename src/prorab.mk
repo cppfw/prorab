@@ -670,8 +670,8 @@ $(.RECIPEPREFIX)$(a)echo '$2' > $$@
         $(foreach var,$(this_cxx_hdrs),\
                 $(eval prorab_private_numobjspacers := $(call prorab-max,$(call prorab-count-stepups,$(var)),$(prorab_private_numobjspacers))) \
             )
-        $(eval prorab_private_objspacer := )
-        $(foreach var,$(prorab_private_numobjspacers), $(eval prorab_private_objspacer := $(prorab_private_objspacer)_spacer/))
+        $(eval prorab_this_obj_spacer := )
+        $(foreach var,$(prorab_private_numobjspacers), $(eval prorab_this_obj_spacer := $(prorab_this_obj_spacer)_spacer/))
 
         $(eval prorab_this_obj_dir := $(d)$(prorab_private_out_dir)obj_$(this_name)/)
 
@@ -685,16 +685,16 @@ $(.RECIPEPREFIX)$(a)echo '$2' > $$@
         # save list of objects to text file and only after that add $(d) prefix to those object files
         $(call prorab-private-args-file-rules, $(prorab_objs_file),$(prorab_this_cxx_objs) $(prorab_this_c_objs) $(prorab_this_as_objs))
 
-        $(eval prorab_this_cxx_objs := $(addprefix $(prorab_this_obj_dir)$(prorab_private_objspacer),$(prorab_this_cxx_objs)))
-        $(eval prorab_this_c_objs := $(addprefix $(prorab_this_obj_dir)$(prorab_private_objspacer),$(prorab_this_c_objs)))
-        $(eval prorab_this_as_objs := $(addprefix $(prorab_this_obj_dir)$(prorab_private_objspacer),$(prorab_this_as_objs)))
+        $(eval prorab_this_cxx_objs := $(addprefix $(prorab_this_obj_dir)$(prorab_this_obj_spacer),$(prorab_this_cxx_objs)))
+        $(eval prorab_this_c_objs := $(addprefix $(prorab_this_obj_dir)$(prorab_this_obj_spacer),$(prorab_this_c_objs)))
+        $(eval prorab_this_as_objs := $(addprefix $(prorab_this_obj_dir)$(prorab_this_obj_spacer),$(prorab_this_as_objs)))
         $(eval prorab_this_objs := $(prorab_this_cxx_objs) $(prorab_this_c_objs) $(prorab_this_as_objs))
 
         # prepare list of header object files (for testing headers compilation)
         $(eval prorab_this_hxx_srcs := $(addsuffix .cpp_,$(filter %$(this_dot_hxx),$(this_hdrs)) $(this_cxx_hdrs) ))
         $(eval prorab_this_h_srcs := $(addsuffix .c_,$(filter %.h,$(this_hdrs)) $(this_c_hdrs) ))
-        $(eval prorab_this_hxx_srcs := $(addprefix $(prorab_this_obj_dir)$(prorab_private_objspacer),$(prorab_this_hxx_srcs)))
-        $(eval prorab_this_h_srcs := $(addprefix $(prorab_this_obj_dir)$(prorab_private_objspacer),$(prorab_this_h_srcs)))
+        $(eval prorab_this_hxx_srcs := $(addprefix $(prorab_this_obj_dir)$(prorab_this_obj_spacer),$(prorab_this_hxx_srcs)))
+        $(eval prorab_this_h_srcs := $(addprefix $(prorab_this_obj_dir)$(prorab_this_obj_spacer),$(prorab_this_h_srcs)))
 
         $(eval prorab_this_hxx_objs := $(addsuffix .o,$(prorab_this_hxx_srcs)))
         $(eval prorab_this_h_objs := $(addsuffix .o,$(prorab_this_h_srcs)))
@@ -723,14 +723,14 @@ $(.RECIPEPREFIX)$(a)echo '$2' > $$@
             )
 
         # gerenarte dummy source files for each header (for testing headers compilation)
-        $(prorab_this_hxx_srcs): $(prorab_this_obj_dir)$(prorab_private_objspacer)%.cpp_ : $(d)%
+        $(prorab_this_hxx_srcs): $(prorab_this_obj_dir)$(prorab_this_obj_spacer)%.cpp_ : $(d)%
 $(.RECIPEPREFIX)@test -t 1 && printf "\e[1;90mgenerate\e[0m $$(patsubst $(prorab_root_dir)%,%,$$@)\n" || printf "generate $$(patsubst $(prorab_root_dir)%,%,$$@)\n"
 $(.RECIPEPREFIX)$(a)mkdir -p $$(dir $$@)
 $(.RECIPEPREFIX)$(a)echo '#include "$$<"' > $$@
 $(.RECIPEPREFIX)$(a)echo '#include "$$<"' >> $$@
 $(.RECIPEPREFIX)$(a)echo 'int main(int c, const char** v){(void)c;(void)v;return 0;}' >> $$@
 
-        $(prorab_this_h_srcs): $(prorab_this_obj_dir)$(prorab_private_objspacer)%.c_ : $(d)%
+        $(prorab_this_h_srcs): $(prorab_this_obj_dir)$(prorab_this_obj_spacer)%.c_ : $(d)%
 $(.RECIPEPREFIX)@test -t 1 && printf "\e[1;90mgenerate\e[0m $$(patsubst $(prorab_root_dir)%,%,$$@)\n" || printf "generate $$(patsubst $(prorab_root_dir)%,%,$$@)\n"
 $(.RECIPEPREFIX)$(a)mkdir -p $$(dir $$@)
 $(.RECIPEPREFIX)$(a)echo '#include "$$<"' > $$@
@@ -738,7 +738,7 @@ $(.RECIPEPREFIX)$(a)echo '#include "$$<"' >> $$@
 $(.RECIPEPREFIX)$(a)echo 'int main(int c, const char** v){(void)c;(void)v;return 0;}' >> $$@
 
         # compile .cpp static pattern rule
-        $(prorab_this_cxx_objs): $(prorab_this_obj_dir)$(prorab_private_objspacer)%.o: $(d)% $(prorab_cxxflags_file)
+        $(prorab_this_cxx_objs): $(prorab_this_obj_dir)$(prorab_this_obj_spacer)%.o: $(d)% $(prorab_cxxflags_file)
 $(.RECIPEPREFIX)@test -t 1 && printf "\e[1;34mcompile\e[0m $$(patsubst $(prorab_root_dir)%,%,$$<)\n" || printf "compile $$(patsubst $(prorab_root_dir)%,%,$$<)\n"
 $(.RECIPEPREFIX)$(a)mkdir -p $$(dir $$@)
 $(.RECIPEPREFIX)$(a)$(this_cxx) --language c++ -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -MP -o "$$@" $(prorab_cxxflags) $$<
@@ -752,7 +752,7 @@ $(.RECIPEPREFIX)$(a)$(this_cxx) --language c++ -c -MF "$$(patsubst %.o,%.d,$$@)"
 $(.RECIPEPREFIX)$(a)$(prorab_private_d_file_sed_command)
 
         # compile .c static pattern rule
-        $(prorab_this_c_objs): $(prorab_this_obj_dir)$(prorab_private_objspacer)%.o: $(d)% $(prorab_cflags_file)
+        $(prorab_this_c_objs): $(prorab_this_obj_dir)$(prorab_this_obj_spacer)%.o: $(d)% $(prorab_cflags_file)
 $(.RECIPEPREFIX)@test -t 1 && printf "\e[0;35mcompile\e[0m $$(patsubst $(prorab_root_dir)%,%,$$<)\n" || printf "compile $$(patsubst $(prorab_root_dir)%,%,$$<)\n"
 $(.RECIPEPREFIX)$(a)mkdir -p $$(dir $$@)
 $(.RECIPEPREFIX)$(a)$(this_cc) --language c -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -MP -o "$$@" $(prorab_cflags) $$<
@@ -766,7 +766,7 @@ $(.RECIPEPREFIX)$(a)$(this_cc) --language c -c -MF "$$(patsubst %.o,%.d,$$@)" -M
 $(.RECIPEPREFIX)$(a)$(prorab_private_d_file_sed_command)
 
         # compile .S static pattern rule
-        $(prorab_this_as_objs): $(prorab_this_obj_dir)$(prorab_private_objspacer)%.o: $(d)% $(prorab_asflags_file)
+        $(prorab_this_as_objs): $(prorab_this_obj_dir)$(prorab_this_obj_spacer)%.o: $(d)% $(prorab_asflags_file)
 $(.RECIPEPREFIX)@test -t 1 && printf "\e[0;35mcompile\e[0m $$(patsubst $(prorab_root_dir)%,%,$$<)\n" || printf "compile $$(patsubst $(prorab_root_dir)%,%,$$<)\n"
 $(.RECIPEPREFIX)$(a)mkdir -p $$(dir $$@)
 $(.RECIPEPREFIX)$(a)$(this_as) $(if $(filter true,$(this_as_supports_deps_gen)),-MD "$$(patsubst %.o,%.d,$$@)") -o "$$@" $(prorab_asflags) $$<
