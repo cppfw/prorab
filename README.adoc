@@ -8,10 +8,10 @@ Non-recursive **GNU make**-based build system.
 
 Provides rules for C/C++ library/application. Allows hierarchical makefile inclusion.
 
-== Installation and tutorials
+== installation and documentation
 
 See **link:wiki/HomePage.adoc[WiKi]**
 
-== Questions
+== questions
 
 In case of questions about **prorab** usage, please submit those as link:https://github.com/igagis/prorab/issues[Issue].
