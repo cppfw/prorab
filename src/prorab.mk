@@ -446,6 +446,12 @@ $(.RECIPEPREFIX)$(a)rm -f $(prorab_this_symbolic_name)
 
     endef
 
+    # prepare sed command to substitute local path in generated .d files to $(d)
+    prorab_private_d_for_sed = $(subst .,\.,$(subst /,\/,$(patsubst ./%,%,$(d))))
+    prorab_private_d_file_sed_command = $(if $(prorab_private_d_for_sed), \
+            sed -E -i -e "s/(^| )$(prorab_private_d_for_sed)([^ ]*)/\1\$$$$\(d\)\2/g" $$(patsubst %.o,%.d,$$@) , \
+            sed -E -i -e "s/(^| )([^ /\][^ ]*)/\1\$$$$\(d\)\2/g" $$(patsubst %.o,%.d,$$@) )
+
     define prorab-private-lib-install-headers-rule
 
         # need empty line here to avoid merging with adjacent macro instantiations
@@ -502,15 +508,18 @@ $(.RECIPEPREFIX)$(a)echo 'int main(int c, const char** v){(void)c;(void)v;return
         $(prorab_this_hxx_test_objs): $(d)%.o: $(d)%
 $(.RECIPEPREFIX)@test -t 1 && printf "\e[1;34mcompile\e[0m $$(patsubst $(prorab_root_dir)%,%,$$<)\n" || printf "compile $$(patsubst $(prorab_root_dir)%,%,$$<)\n"
 $(.RECIPEPREFIX)$(a)mkdir -p $$(dir $$@)
-$(.RECIPEPREFIX)$(a)$(this_cxx) --language c++ $(filter -std=c++%,$(this_cxxflags)) -c -o "$$@" $$<
+$(.RECIPEPREFIX)$(a)$(this_cxx) --language c++ -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -MP $(filter -std=c++%,$(this_cxxflags)) -o "$$@" $$<
+$(.RECIPEPREFIX)$(a)$(prorab_private_d_file_sed_command)
 
         # compile .h.test_c static pattern rule
         $(prorab_this_h_test_objs): $(d)%.o: $(d)%
 $(.RECIPEPREFIX)@test -t 1 && printf "\e[0;35mcompile\e[0m $$(patsubst $(prorab_root_dir)%,%,$$<)\n" || printf "compile $$(patsubst $(prorab_root_dir)%,%,$$<)\n"
 $(.RECIPEPREFIX)$(a)mkdir -p $$(dir $$@)
-$(.RECIPEPREFIX)$(a)$(this_cc) --language c -c -o "$$@" $$<
+$(.RECIPEPREFIX)$(a)$(this_cc) --language c -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -MP -o "$$@" $$<
+$(.RECIPEPREFIX)$(a)$(prorab_private_d_file_sed_command)
 
-        .PHONY: $(prorab_this_hxx_test_objs) $(prorab_this_h_test_objs)
+        # include rules for header dependencies
+        include $(wildcard $(addsuffix *.d,$(dir $(prorab_this_hxx_test_objs) $(prorab_this_h_test_objs))))
 
         # NOTE: testing headers is disabled for windows due to problems with absolute paths in windows starting with drive letter, like C:/
         $(if $(filter $(this_no_install),true),
@@ -718,12 +727,6 @@ $(.RECIPEPREFIX)$(a)echo '$2' > $$@
         $(call prorab-private-args-file-rules, $(prorab_cxxflags_file),$(this_cxx) $(prorab_cxxflags))
         $(call prorab-private-args-file-rules, $(prorab_cflags_file),$(this_cc) $(prorab_cflags))
         $(call prorab-private-args-file-rules, $(prorab_asflags_file),$(this_as) $(prorab_asflags))
-
-        $(eval prorab_private_d_for_sed := $(subst .,\.,$(subst /,\/,$(patsubst ./%,%,$(d)))))
-        $(if $(prorab_private_d_for_sed),
-                $(eval prorab_private_d_file_sed_command := sed -E -i -e "s/(^| )$(prorab_private_d_for_sed)([^ ]*)/\1\$$$$$$$$\(d\)\2/g" $$$$(patsubst %.o,%.d,$$$$@) ),
-                $(eval prorab_private_d_file_sed_command := sed -E -i -e "s/(^| )([^ /\][^ ]*)/\1\$$$$$$$$\(d\)\2/g" $$$$(patsubst %.o,%.d,$$$$@) )
-            )
 
         # gerenarte dummy source files for each header (for testing headers compilation)
         $(prorab_this_hxx_srcs): $(prorab_this_obj_dir)$(prorab_this_obj_spacer)%.hdr_cpp : $(d)%
