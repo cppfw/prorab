@@ -1,3 +1,9 @@
+prorab (1.15.14) unstable; urgency=medium
+
+  * do not test headers if nothing has changed
+
+ -- Ivan Gagis <igagis@gmail.com>  Wed, 19 Aug 2020 17:44:53 +0300
+
 prorab (1.15.13) unstable; urgency=medium
 
   * prorab-include-subdirs introduced
