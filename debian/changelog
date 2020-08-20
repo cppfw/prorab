@@ -1,3 +1,9 @@
+prorab (1.15.15) unstable; urgency=medium
+
+  * remove  substitution in .d files, since  is now absolute path
+
+ -- Ivan Gagis <igagis@gmail.com>  Thu, 20 Aug 2020 16:36:57 +0300
+
 prorab (1.15.14) unstable; urgency=medium
 
   * do not test headers if nothing has changed
