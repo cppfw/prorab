@@ -10,7 +10,7 @@ license=('MIT')
 groups=()
 
 # Need 'diffutils' package for 'cmp' program
-depends=('make' 'diffutils' 'sed')
+depends=('make' 'diffutils')
 
 makedepends=('myci' 'coreutils')
 checkdepends=('myci')
