@@ -386,6 +386,8 @@ Generate library build targets.
 # library specific input variables
 this_soname := <so-name>
 this_headers_dir := <headers-dir>
+this_headers_install_dir := <headers-install-dir>
+this_install_hdrs := <headers-to-install>
 this_static_lib_only := <static-lib-only>
 this_ar := <archiver>
 
@@ -419,7 +421,9 @@ $(eval $(prorab-build-lib))
 
 .arguments
 - `this_soname` - so name for dynamic library. **Mandatory**
-- `this_headers_dir` - root directory of the header files which are to be installed with the library. Relative to `$(d)`. The directory is searched recursively for C (`.h`) and C++ header files (`$(this_dot_hxx)`). The `install` target will install these header files to `$(DESTDIR)$(PREFIX)/include` preserving directory structure. Also, the `test` target will test these headers for compilation, same as headers from `this_hdrs`, but with no compilation flags, except `-std=...` filtered from `$(this_cflags)`/`$(this_cxxflags)`.
+- `this_headers_dir` - root directory of the header files which are to be installed with the library. Relative to `$(d)`.
+- `this_headers_install_dir` - header files installation destination directory. Relative to `$(DESTDIR)$(PREFIX)/include`. Can be empty, then header files are installed straight to `$(DESTDIR)$(PREFIX)/include`.
+- `this_install_headers` - list of header files to install. Relative to `$(d)`. If empty, then the `this_headers_dir` directory is searched recursively for C (`.h`) and C++ header files (`$(this_dot_hxx)`). The `install` target will install these header files to `$(DESTDIR)$(PREFIX)/include/$(this_headers_install_dir)` preserving directory structure under `this_headers_dir` directory. Also, the `test` target will test these headers for compilation, same as headers from `this_hdrs`, but with no compilation flags, except `-std=...` filtered from `$(this_cflags)`/`$(this_cxxflags)`.
 - `this_static_lib_only` - disables building of shared library. If `true` only static library is built. Otherwise both, shared and static libraries are built. Defaults to empty.
 - `this_ar` - the archiver program to use. Defaults to `$(AR)`.
 - `this_name` - name of the library. It will be used to generate the output binary filename. **Mandatory**.
