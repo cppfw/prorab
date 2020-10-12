@@ -1,3 +1,9 @@
+prorab (1.15.17) unstable; urgency=medium
+
+  * this_install_c_hdrs and this_install_cxx_hdrs
+
+ -- Ivan Gagis <igagis@gmail.com>  Mon, 12 Oct 2020 21:59:36 +0300
+
 prorab (1.15.16) unstable; urgency=medium
 
   * this_install_hdrs and this_headers_install_dir
