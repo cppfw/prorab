@@ -454,7 +454,12 @@ $(.RECIPEPREFIX)$(a)rm -f $(prorab_this_symbolic_name)
         #       It is ok to use 'abspath' here because $(d) is absolute path anyway.
         $(eval prorab_private_headers_dir := $(abspath $(d)$(this_headers_dir))/)
 
-        $(eval prorab_private_headers := $(patsubst $(prorab_private_headers_dir)%,%,$(call prorab-private-rwildcard,$(prorab_private_headers_dir),*.h *$(this_dot_hxx))))
+        $(eval prorab_private_headers := $(patsubst $(prorab_private_headers_dir)%,%, \
+                $(if $(this_install_hdrs), \
+                        $(abspath $(this_install_hdrs)), \
+                        $(call prorab-private-rwildcard,$(prorab_private_headers_dir),*.h *$(this_dot_hxx)) \
+                    ) \
+            ))
 
         ######################################################
         # Test that headers being installed can be compiled. #
@@ -522,6 +527,9 @@ $(.RECIPEPREFIX)$(a)$(this_cc) --language c -c -MF "$$(patsubst %.o,%.d,$$@)" -M
                     )
             )
 
+        # make sure install dir ens with /
+        $(eval prorab_private_install_dir := $(if $(this_headers_install_dir),$(patsubst %/,%,$(this_headers_install_dir))/))
+
         ##############################
         # Generate 'install' targets #
         ##############################
@@ -530,8 +538,8 @@ $(.RECIPEPREFIX)$(a)$(this_cc) --language c -c -MF "$$(patsubst %.o,%.d,$$@)" -M
                 ,
                 install::
 $(.RECIPEPREFIX)$(a)for i in $(prorab_private_headers); do \
-                    install -d $(DESTDIR)$(PREFIX)/include/$$$$(dirname $$$$i) && \
-                    install -m 644 $(prorab_private_headers_dir)$$$$i $(DESTDIR)$(PREFIX)/include/$$$$i; \
+                    install -d $(DESTDIR)$(PREFIX)/include/$(prorab_private_install_dir)$$$$(dirname $$$$i) && \
+                    install -m 644 $(prorab_private_headers_dir)$$$$i $(DESTDIR)$(PREFIX)/include/$(prorab_private_install_dir)$$$$i; \
                 done
             )
 
@@ -539,8 +547,8 @@ $(.RECIPEPREFIX)$(a)for i in $(prorab_private_headers); do \
                 ,
                 uninstall::
 $(.RECIPEPREFIX)$(a)for i in $(prorab_private_headers); do \
-                    path=$$$$(echo $$$$i | cut -d "/" -f1) && \
-                    rm -rf $(DESTDIR)$(PREFIX)/include/$$$$path; \
+                    path=$$$$(echo $(prorab_private_install_dir)$$$$i | cut -d "/" -f1) && \
+                    [ ! -z "$$$$path" ] && rm -rf $(DESTDIR)$(PREFIX)/include/$$$$path; \
                 done
             )
 

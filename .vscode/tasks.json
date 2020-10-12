@@ -16,6 +16,12 @@
             "problemMatcher": []
         },
         {
+            "label": "test_install_headers_dir",
+            "type": "shell",
+            "command": "make -C tests/install_headers_dir test --no-print-directory",
+            "problemMatcher": []
+        },
+        {
             "label": "test_app",
             "type": "shell",
             "command": "make -C tests/app test --no-print-directory",
