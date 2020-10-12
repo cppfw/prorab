@@ -455,11 +455,14 @@ $(.RECIPEPREFIX)$(a)rm -f $(prorab_this_symbolic_name)
         $(eval prorab_private_headers_dir := $(abspath $(d)$(this_headers_dir))/)
 
         $(eval prorab_private_headers := $(patsubst $(prorab_private_headers_dir)%,%, \
-                $(if $(this_install_hdrs), \
+                $(if $(this_install_hdrs)$(this_install_c_hdrs)$(this_install_cxx_hdrs), \
                         $(abspath $(this_install_hdrs)), \
                         $(call prorab-private-rwildcard,$(prorab_private_headers_dir),*.h *$(this_dot_hxx)) \
                     ) \
             ))
+
+        $(eval prorab_private_c_hdrs := $(patsubst $(prorab_private_headers_dir)%,%,$(abspath $(this_install_c_hdrs))))
+        $(eval prorab_private_cxx_hdrs := $(patsubst $(prorab_private_headers_dir)%,%,$(abspath $(this_install_cxx_hdrs))))
 
         ######################################################
         # Test that headers being installed can be compiled. #
@@ -471,7 +474,7 @@ $(.RECIPEPREFIX)$(a)rm -f $(prorab_this_symbolic_name)
 
         # calculate max number of steps up in source paths and prepare obj directory spacer
         $(eval prorab_private_numobjspacers := )
-        $(foreach var,$(prorab_private_headers),\
+        $(foreach var,$(prorab_private_headers)$(prorab_private_c_hdrs)$(prorab_private_cxx_hdrs),\
                 $(eval prorab_private_numobjspacers := $(call prorab-max,$(call prorab-count-stepups,$(var)),$(prorab_private_numobjspacers))) \
             )
         $(eval prorab_private_objspacer := )
@@ -480,8 +483,9 @@ $(.RECIPEPREFIX)$(a)rm -f $(prorab_this_symbolic_name)
         $(eval prorab_this_obj_dir := $(d)$(prorab_private_out_dir)obj_$(this_name)/)
 
         # prepare list of header object files (for testing headers compilation)
-        $(eval prorab_this_hxx_test_srcs := $(addsuffix .test_cpp,$(filter %$(this_dot_hxx),$(prorab_private_headers))))
-        $(eval prorab_this_h_test_srcs := $(addsuffix .test_c,$(filter %.h,$(prorab_private_headers))))
+        $(eval prorab_this_hxx_test_srcs := $(addsuffix .test_cpp,$(filter %$(this_dot_hxx),$(prorab_private_headers))$(prorab_private_cxx_hdrs)))
+        $(eval prorab_this_h_test_srcs := $(addsuffix .test_c,$(filter %.h,$(prorab_private_headers))$(prorab_private_c_hdrs)))
+        
         $(eval prorab_this_hxx_test_srcs := $(addprefix $(prorab_this_obj_dir)$(prorab_private_objspacer),$(prorab_this_hxx_test_srcs)))
         $(eval prorab_this_h_test_srcs := $(addprefix $(prorab_this_obj_dir)$(prorab_private_objspacer),$(prorab_this_h_test_srcs)))
 
@@ -537,7 +541,7 @@ $(.RECIPEPREFIX)$(a)$(this_cc) --language c -c -MF "$$(patsubst %.o,%.d,$$@)" -M
         $(if $(filter $(this_no_install),true),
                 ,
                 install::
-$(.RECIPEPREFIX)$(a)for i in $(prorab_private_headers); do \
+$(.RECIPEPREFIX)$(a)for i in $(prorab_private_headers) $(prorab_private_c_hdrs) $(prorab_private_cxx_hdrs); do \
                     install -d $(DESTDIR)$(PREFIX)/include/$(prorab_private_install_dir)$$$$(dirname $$$$i) && \
                     install -m 644 $(prorab_private_headers_dir)$$$$i $(DESTDIR)$(PREFIX)/include/$(prorab_private_install_dir)$$$$i; \
                 done
@@ -546,7 +550,7 @@ $(.RECIPEPREFIX)$(a)for i in $(prorab_private_headers); do \
         $(if $(filter $(this_no_install),true),
                 ,
                 uninstall::
-$(.RECIPEPREFIX)$(a)for i in $(prorab_private_headers); do \
+$(.RECIPEPREFIX)$(a)for i in $(prorab_private_headers) $(this_install_c_hdrs) $(prorab_private_cxx_hdrs); do \
                     path=$$$$(echo $(prorab_private_install_dir)$$$$i | cut -d "/" -f1) && \
                     [ ! -z "$$$$path" ] && rm -rf $(DESTDIR)$(PREFIX)/include/$$$$path; \
                 done
