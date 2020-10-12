@@ -1,3 +1,9 @@
+prorab (1.15.16) unstable; urgency=medium
+
+  * this_install_hdrs and this_headers_install_dir
+
+ -- Ivan Gagis <igagis@gmail.com>  Mon, 12 Oct 2020 18:48:42 +0300
+
 prorab (1.15.15) unstable; urgency=medium
 
   * remove  substitution in .d files, since  is now absolute path
