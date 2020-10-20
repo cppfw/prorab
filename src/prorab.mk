@@ -456,13 +456,13 @@ $(.RECIPEPREFIX)$(a)rm -f $(prorab_this_symbolic_name)
 
         $(eval prorab_private_headers := $(patsubst $(prorab_private_headers_dir)%,%, \
                 $(if $(this_install_hdrs)$(this_install_c_hdrs)$(this_install_cxx_hdrs), \
-                        $(abspath $(this_install_hdrs)), \
+                        $(abspath $(addprefix $(d),$(this_install_hdrs))), \
                         $(call prorab-private-rwildcard,$(prorab_private_headers_dir),*.h *$(this_dot_hxx)) \
                     ) \
             ))
 
-        $(eval prorab_private_c_hdrs := $(patsubst $(prorab_private_headers_dir)%,%,$(abspath $(this_install_c_hdrs))))
-        $(eval prorab_private_cxx_hdrs := $(patsubst $(prorab_private_headers_dir)%,%,$(abspath $(this_install_cxx_hdrs))))
+        $(eval prorab_private_c_hdrs := $(patsubst $(prorab_private_headers_dir)%,%,$(abspath $(addprefix $(d),$(this_install_c_hdrs)))))
+        $(eval prorab_private_cxx_hdrs := $(patsubst $(prorab_private_headers_dir)%,%,$(abspath $(addprefix $(d),$(this_install_cxx_hdrs)))))
 
         ######################################################
         # Test that headers being installed can be compiled. #

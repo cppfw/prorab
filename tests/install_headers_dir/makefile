@@ -9,16 +9,16 @@ $(.RECIPEPREFIX)@$(this_running) $(this_test)
 $(.RECIPEPREFIX)+$(a)$(MAKE) -C $(d)src clean || $(this_err) "initial 'make clean' failed"
 $(.RECIPEPREFIX)+$(a)$(MAKE) -C $(d)src || $(this_err) "'make' failed"
 ifeq ($(os), macosx)
-$(.RECIPEPREFIX)$(a)if [ ! -f $(d)src/libtests.dylib ]; then $(this_err) "src/libtests.dylib file not found"; fi
-$(.RECIPEPREFIX)$(a)if [ ! -f $(d)src/libtests.0.dylib ]; then $(this_err) "src/libtests.0.dylib file not found"; fi
+$(.RECIPEPREFIX)$(a)if [ ! -f $(d)src/lib/libtests.dylib ]; then $(this_err) "src/lib/libtests.dylib file not found"; fi
+$(.RECIPEPREFIX)$(a)if [ ! -f $(d)src/lib/libtests.0.dylib ]; then $(this_err) "src/lib/libtests.0.dylib file not found"; fi
 else ifeq ($(os), windows)
-$(.RECIPEPREFIX)$(a)if [ ! -f $(d)src/libtests.dll ]; then $(this_err) "src/libtests.dll file not found"; fi
-$(.RECIPEPREFIX)$(a)if [ ! -f $(d)src/libtests.dll.a ]; then $(this_err) "src/libtests.dll.a file not found"; fi
+$(.RECIPEPREFIX)$(a)if [ ! -f $(d)src/lib/libtests.dll ]; then $(this_err) "src/lib/libtests.dll file not found"; fi
+$(.RECIPEPREFIX)$(a)if [ ! -f $(d)src/lib/libtests.dll.a ]; then $(this_err) "src/lib/libtests.dll.a file not found"; fi
 else
-$(.RECIPEPREFIX)$(a)if [ ! -f $(d)src/libtests.so ]; then $(this_err) "src/libtests.so file not found"; fi
-$(.RECIPEPREFIX)$(a)if [ ! -f $(d)src/libtests.so.0 ]; then $(this_err) "src/libtests.so.0 file not found"; fi
+$(.RECIPEPREFIX)$(a)if [ ! -f $(d)src/lib/libtests.so ]; then $(this_err) "src/lib/libtests.so file not found"; fi
+$(.RECIPEPREFIX)$(a)if [ ! -f $(d)src/lib/libtests.so.0 ]; then $(this_err) "src/lib/libtests.so.0 file not found"; fi
 endif
-$(.RECIPEPREFIX)$(a)if [ ! -f $(d)src/libtests.a ]; then $(this_err) "src/libtests.a file not found"; fi
+$(.RECIPEPREFIX)$(a)if [ ! -f $(d)src/lib/libtests.a ]; then $(this_err) "src/lib/libtests.a file not found"; fi
 
 $(.RECIPEPREFIX)$(a)rm -rf $(d)tmp
 $(.RECIPEPREFIX)+$(a)$(MAKE) -C $(d)src install DESTDIR=../tmp PREFIX=/usr || $(this_err) "'make install' failed"
@@ -67,11 +67,11 @@ $(.RECIPEPREFIX)$(a)rm -rf $(d)tmp
 $(.RECIPEPREFIX)+$(a)$(MAKE) -C $(d)src test || $(this_err) "final 'make test' failed"
 
 $(.RECIPEPREFIX)+$(a)$(MAKE) -C $(d)src clean || $(this_err) "final 'make clean' failed"
-$(.RECIPEPREFIX)$(a)if [ -f $(d)src/libtests.a ]; then $(this_err) "src/libtests.a file remained after clean"; fi
-$(.RECIPEPREFIX)$(a)if [ -f $(d)src/libtests.so ]; then $(this_err) "src/libtests.so file remained after clean"; fi
-$(.RECIPEPREFIX)$(a)if [ -f $(d)src/libtests.so.0 ]; then $(this_err) "src/libtests.so.0 file remained after clean"; fi
-$(.RECIPEPREFIX)$(a)if [ -f $(d)src/libtests.dll ]; then $(this_err) "src/libtests.dll file remained after clean"; fi
-$(.RECIPEPREFIX)$(a)if [ -f $(d)src/libtests.dll.a ]; then $(this_err) "src/libtests.dll.a file remained after clean"; fi
+$(.RECIPEPREFIX)$(a)if [ -f $(d)src/lib/libtests.a ]; then $(this_err) "src/lib/libtests.a file remained after clean"; fi
+$(.RECIPEPREFIX)$(a)if [ -f $(d)src/lib/libtests.so ]; then $(this_err) "src/lib/libtests.so file remained after clean"; fi
+$(.RECIPEPREFIX)$(a)if [ -f $(d)src/lib/libtests.so.0 ]; then $(this_err) "src/lib/libtests.so.0 file remained after clean"; fi
+$(.RECIPEPREFIX)$(a)if [ -f $(d)src/lib/libtests.dll ]; then $(this_err) "src/lib/libtests.dll file remained after clean"; fi
+$(.RECIPEPREFIX)$(a)if [ -f $(d)src/lib/libtests.dll.a ]; then $(this_err) "src/lib/libtests.dll.a file remained after clean"; fi
 $(.RECIPEPREFIX)$(a)if [ -d $(d)src/obj_tests ]; then $(this_err) "src/obj_tests directory remained after clean"; fi
 $(.RECIPEPREFIX)@$(this_pass)
 endef
