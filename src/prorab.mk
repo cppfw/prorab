@@ -531,7 +531,7 @@ $(.RECIPEPREFIX)$(a)$(this_cc) --language c -c -MF "$$(patsubst %.o,%.d,$$@)" -M
                     )
             )
 
-        # make sure install dir ens with /
+        # make sure install dir ends with /
         $(eval prorab_private_install_dir := $(if $(this_headers_install_dir),$(patsubst %/,%,$(this_headers_install_dir))/))
 
         ##############################
