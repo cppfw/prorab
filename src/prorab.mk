@@ -251,23 +251,39 @@ ifneq ($(prorab_is_included),true)
 
     ifeq ($(config),)
         override config := $(c)
-    else
-        override c := $(config)
     endif
 	ifeq ($(config),)
-        override config := rel
-        override c := $(config)
+        override config := default
 	endif
+
+    # shorthand alias for config variable
+    override c := $(config)
+
+    define prorab-private-config
+        this_out_dir := out/$(c)/
+
+        $(eval prorab_private_config_file := $(config_dir)$(c).mk)
+        $(if $(wildcard $(prorab_private_config_file)),,$(error no $(c).mk config file found in $(config_dir) directory))
+        include $(prorab_private_config_file)
+    endef
 
     define prorab-config
         $(if $1,,$(error no 'config dir' argument is given to prorab-config macro))
-
-        this_out_dir := out/$(c)/
         $(eval config_dir := $(abspath $(d)$(filter-out ,$1))/) # filter-out is needed to trim possible leading and trailing spaces
+        $(call prorab-private-config, $(config))
+    endef
 
-        $(eval prorab_private_config_file := $(config_dir)$(c).mk)
-        $(if $(wildcard $(prorab_private_config_file)),,$(error no $(c).mk config file found in $(filter-out ,$1) directory))
-        include $(prorab_private_config_file)
+    define prorab-config-default
+        $(if $1,,$(error no default config name argument is given to prorab-config-default macro))
+
+        $(if $(config),, $(error 'config' variable is empty))
+        $(if $(filter-out default,$(config)), \
+                $(error 'config=$(config)' variable is not set to 'default', unable to apply default config using prorab-config-default macro) \
+            )
+
+        $(eval override config := $(filter-out ,$1))
+        $(eval override c := $(config))
+        $(call prorab-private-config, $(config))
     endef
 
     ################################
