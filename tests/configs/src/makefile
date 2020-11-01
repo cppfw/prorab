@@ -2,8 +2,11 @@ include $(d)../../../src/prorab.mk
 
 $(eval $(call prorab-config,../config))
 
-define this_rules :=
-    all:
+define this_rules
+    all: gen_out
+
+    .PHONY:
+    gen_out:
 $(.RECIPEPREFIX)$(a)mkdir -p $(d)$(this_out_dir)
 $(.RECIPEPREFIX)$(a)echo "hello prorab" > $(d)$(this_out_dir)out.txt
     clean::
