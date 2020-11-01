@@ -9,8 +9,8 @@ define this_rules
 .PHONY: test
 test::
 $(.RECIPEPREFIX)@$(this_running) $(this_test)
-$(.RECIPEPREFIX)+$(prorab_echo)$(MAKE) -C $(d)src clean || $(this_err) "initial 'make clean' failed"
-$(.RECIPEPREFIX)+$(prorab_echo)$(MAKE) -C $(d)src || $(this_err) "'make' failed"
+$(.RECIPEPREFIX)+$(a)$(MAKE) -C $(d)src clean || $(this_err) "initial 'make clean' failed"
+$(.RECIPEPREFIX)+$(a)$(MAKE) -C $(d)src || $(this_err) "'make' failed"
 $(.RECIPEPREFIX)@$(this_pass)
 endef
 $(eval $(this_rules))
