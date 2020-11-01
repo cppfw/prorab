@@ -276,7 +276,6 @@ ifneq ($(prorab_is_included),true)
     define prorab-config-default
         $(if $1,,$(error no default config name argument is given to prorab-config-default macro))
 
-        $(if $(config),, $(error 'config' variable is empty))
         $(if $(filter-out default,$(config)), \
                 $(error 'config=$(config)' variable is not set to 'default', unable to apply default config using prorab-config-default macro) \
             )
