@@ -342,6 +342,40 @@ this_cxxflags += -g
 $(eval $(prorab-build-app))
 ....
 
+Usage from command line:
+....
+$ make config=release
+....
+or
+....
+$ make c=release
+....
+
+== prorab-config-default
+
+Use specified configuration as the default configuration.
+
+If none of the `config` or `c` variables are defined upon `prorab.mk` inclusion then both of those are set to value `default`. That means that `default.mk` configuration file is to be used by `prorab-config` macro. The `prorab-config-default` macro allows "redirecting" the default configuration to the specified configuration from within the `default.mk` configuration file.
+
+.syntax
+[source,makefile]
+....
+$(eval $(call prorab-config-default, <configuration-name>))
+....
+
+.arguments
+- `configuration-name` - the configuration name to use as default configuration.
+
+.example
+[source,makefile]
+....
+##############
+### default.mk
+
+# make the 'release' configuration to be used by default
+$(eval $(call prorab-config-default, release))
+....
+
 == prorab-build-app
 
 Generate application build targets.
