@@ -281,6 +281,67 @@ include prorab.mk
 this_hdrs := $(call prorab-hdr-dir, src/include)
 ....
 
+== prorab-config
+
+Apply configuration from the given directory. The argument to the macro is the path to the directory which contains configuration files. The configuration file to take is specified by the `config` variable, or its shorthand alias `c`. The `config` variable has priority over `c`. If none of the `config` or `c` variables are set upon the `prorab.mk` inclusion the `config` variable is set to value `default`. Upon `prorab.mk` inclusion the `config` and `c` variable contents are synchronized, so that both variables have equal contents.
+
+- First, the the macro sets the `config_dir` variable to an absolute path to the configurations directory.
+- Then the macro sets the `this_out_dir` variable to `out/$(c)/` value.
+- Then the macro includes the file `$(config).mk` from the configurations directory.
+
+.syntax
+[source,makefile]
+....
+$(eval $(call prorab-config, <directory>))
+....
+
+.arguments
+- `directory` - directory which contains configuration files. Relative to `$(d)`.
+
+.example
+[source,makefile]
+....
+###
+### let our config files be in ../config directory relatively to our makefile directory
+###
+
+
+##########################
+### ../config/base/base.mk 
+
+# base settings for all configs
+this_cxxflags += -Wall
+this_cxxflags += -Werror
+
+
+########################
+### ../config/release.mk
+
+# include common config for all other configurations
+include $(config_dir)base/base.mk
+
+# release configuration specific settings
+this_cxxflags += -O3
+
+
+############
+### makefile
+
+include prorab.mk
+
+# include the configuration file
+$(eval $(call prorab-config, ../config))
+
+this_name := example_app
+
+this_srcs := main.cpp
+
+# our application specific settings
+this_cxxflags += -g
+
+$(eval $(prorab-build-app))
+....
+
 == prorab-build-app
 
 Generate application build targets.
