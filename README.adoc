@@ -3,7 +3,7 @@
 = {name}
 
 |====
-| link:https://github.com/igagis/{name}/releases[image:https://img.shields.io/github/tag/cppfw/{name}.svg[releases]] | link:https://github.com/cppfw/{name}/actions[image:https://github.com/cppfw/{name}/workflows/ci/badge.svg[ci status]]
+| link:https://github.com/cppfw/{name}/releases[image:https://img.shields.io/github/tag/cppfw/{name}.svg[releases]] | link:https://github.com/cppfw/{name}/actions[image:https://github.com/cppfw/{name}/workflows/ci/badge.svg[ci status]]
 |====
 
 Non-recursive **GNU make**-based build system.
@@ -16,4 +16,4 @@ See **link:wiki/HomePage.adoc[WiKi]**
 
 == questions
 
-In case of questions about **prorab** usage, please submit those as link:https://github.com/igagis/prorab/issues[Issue].
+In case of questions about **prorab** usage, please submit those as link:https://github.com/cppfw/prorab/issues[Issue].

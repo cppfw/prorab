@@ -5,7 +5,7 @@ pkgrel=1
 epoch=
 pkgdesc="non-recursive GNU make-based build system"
 arch=('any')
-url="http://github.com/igagis/prorab"
+url="http://github.com/cppfw/prorab"
 license=('MIT')
 groups=()
 
