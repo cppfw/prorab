@@ -82,7 +82,7 @@ jobs:
       uses: actions/checkout@main
     - name: add cppfw pacman msys repo
       uses: myci-actions/add-pacman-repo@master
-      with: {name: cppfw_msys, url: 'https://dl.bintray.com/cppfw/msys2/msys'}
+      with: {name: cppfw_msys, url: 'https://dl.bintray.com/cppfw/msys2/msys', shell: 'msys2 {0}'}
     - name: install ci tools
       run: pacman -Sy --noconfirm myci
     - name: prepare pacman package
