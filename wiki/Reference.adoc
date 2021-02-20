@@ -288,6 +288,7 @@ Apply configuration from the given directory. The argument to the macro is the p
 - First, the the macro sets the `config_dir` variable to an absolute path to the configurations directory.
 - Then the macro sets the `this_out_dir` variable to `out/$(c)/` value.
 - Then the macro includes the file `$(config).mk` from the configurations directory.
+- The macro also defines `clean-all` target which cleans all configurations by removing the whole `out` directory.
 
 .syntax
 [source,makefile]
