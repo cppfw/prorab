@@ -262,6 +262,9 @@ ifneq ($(prorab_is_included),true)
     define prorab-private-config
         this_out_dir := out/$(c)/
 
+        clean-all:: echo-clean-all
+$(.RECIPEPREFIX)$(a)rm -rf $(d)out
+
         $(eval prorab_private_config_file := $(config_dir)$(c).mk)
         $(if $(wildcard $(prorab_private_config_file)),,$(error no $(c).mk config file found in $(config_dir) directory))
         include $(prorab_private_config_file)
@@ -372,7 +375,7 @@ ifneq ($(prorab_is_included),true)
     # Delete target file in case its recepie has failed
     .DELETE_ON_ERROR:
 
-    .PHONY: clean all test install uninstall distclean phony re echo-cleaning
+    .PHONY: all clean distclean clean-all test install uninstall phony re echo-cleaning
 
     # the very first default target
     all:
@@ -381,12 +384,15 @@ ifneq ($(prorab_is_included),true)
     phony:
 
     # distclean target which does same as clean to make some older versions of debhelper happy
-    distclean: clean
+    distclean:: clean
 
     define prorab-private-rules
 
         echo-clean:
 $(.RECIPEPREFIX)@test -t 1 && printf "\e[0;32mclean\e[0m\n" || printf "clean\n"
+
+        echo-clean-all:
+$(.RECIPEPREFIX)@test -t 1 && printf "\e[0;32mclean all configurations\e[0m\n" || printf "clean\n"
 
         clean:: echo-clean
 
