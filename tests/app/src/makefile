@@ -1,5 +1,13 @@
 include $(d)../../../src/prorab.mk
 
+# test that changing this_cc will also change this_ld in case this_ld is not explicitply overriden as well
+this_cc := asdf
+ifneq ($(this_ld),$(this_cc))
+    $(error this_ld is not same as this_cc)
+endif
+
+$(eval $(prorab-clear-this-vars))
+
 this_name := tests
 
 this_srcs += test.cpp

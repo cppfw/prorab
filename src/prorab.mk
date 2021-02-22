@@ -109,7 +109,7 @@ ifneq ($(prorab_is_included),true)
         $(eval this_as := $(AS))
         $(eval this_as_supports_deps_gen := true)
         # NOTE: the deferred assignment to allow changing just C compiler, and linker will change automatically if not explicitly set
-        $(eval this_ld = $(this_cc))
+        $(eval this_ld = $$(this_cc))
 
         # set default values for flags
         $(eval this_cppflags := $(CPPFLAGS))
