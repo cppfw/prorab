@@ -113,7 +113,7 @@ Valid values for `verbose` are `true` or `false` or not set.
 The `v` is a shorthand alias for `verbose`. If `v` is not set or set to `0` or `false` then it is equivalent to `verbose=false`. Otherwise, if `v` is set to any other value it is same as `verbose=true`.
 Set `verbose` variable has higher priority than set `v` variable.
 
-Prorab uses value of `Q` variable to prefix all recipe lines. The `Q` variable is set by prorab to `@` or to empty value depending on verbosity.
+Prorab uses value of `a` variable to prefix all recipe lines. The `a` variable is set by prorab to `@` or to empty value depending on verbosity.
 
 ## Defining several builds in one makefile
 
