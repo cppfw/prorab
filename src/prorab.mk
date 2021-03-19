@@ -178,7 +178,7 @@ ifneq ($(prorab_is_included),true)
     prorab_dir := $(dir $(lastword $(MAKEFILE_LIST)))
 
     # initialize standard vars for "install" and "uninstall" targets
-    ifeq ($(PREFIX),) #PREFIX is environment variable, but if it is not set, then set default value
+    ifeq ($(PREFIX),) # PREFIX is environment variable, but if it is not set, then set default value
         PREFIX := /usr/local
     endif
 
