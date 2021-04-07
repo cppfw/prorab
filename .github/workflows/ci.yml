@@ -56,7 +56,7 @@ jobs:
     runs-on: macos-latest
     steps:
     - name: git clone
-      uses: actions/checkout@main
+      uses: actions/checkout@v2
     - name: add cppfw tap
       run: |
         brew tap cppfw/tap
@@ -86,10 +86,10 @@ jobs:
           msys2-devel
           make
     - name: git clone
-      uses: actions/checkout@main
+      uses: actions/checkout@v2
     - name: add cppfw pacman msys repo
       uses: myci-actions/add-pacman-repo@master
-      with: {name: cppfw_msys, url: 'https://dl.bintray.com/cppfw/msys2/msys', shell: 'msys2 {0}'}
+      with: {name: cppfw_msys, url: 'https://cppfw.jfrog.io/artifactory/msys2/msys', shell: 'msys2 {0}'}
     - name: install ci tools
       run: pacman -Sy --noconfirm myci
     - name: prepare pacman package
