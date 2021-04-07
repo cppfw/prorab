@@ -28,9 +28,10 @@ jobs:
       - name: add cppfw deb repo
         uses: myci-actions/add-deb-repo@master
         with:
-          repo: deb http://dl.bintray.com/cppfw/${{ matrix.os }} ${{ matrix.codename }} main
+          repo: deb https://cppfw.jfrog.io/artifactory/${{ matrix.os }} ${{ matrix.codename }} main
           repo-name: cppfw
-          keys: 379CE192D401AB61
+          key-server: https://cppfw.jfrog.io/artifactory/api/gpg/key/public
+          keys: 0D76C39F3F352BAA9A42442AF57F79447F525F7D
       - name: install ci tools
         run: |
           # configure timezone to avoid 'tzdata' package to require user interaction during installation (needed for ubuntu:focal)
