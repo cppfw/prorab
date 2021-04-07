@@ -2,8 +2,8 @@ name: ci
 on: [push, pull_request]
 env:
   PACKAGE_NAME: ${{ github.event.repository.name }}
-  MYCI_BINTRAY_USERNAME: igagis
-  MYCI_BINTRAY_API_KEY: ${{ secrets.MYCI_BINTRAY_API_KEY }}
+  MYCI_JFROG_USERNAME: ivan.gagis@gmail.com
+  MYCI_JFROG_PASSWORD: ${{ secrets.MYCI_JFROG_PASSWORD }}
   MYCI_GIT_USERNAME: igagis
   MYCI_GIT_PASSWORD: ${{ secrets.MYCI_GIT_ACCESS_TOKEN }}
 jobs:
@@ -48,7 +48,7 @@ jobs:
       - name: build
         run: dpkg-buildpackage --unsigned-source --unsigned-changes
       - name: deploy deb packages
-        run: myci-deploy-debian-bintray.sh --owner cppfw --repo ${{ matrix.os }} --distro ${{ matrix.codename }} --component main --package $PACKAGE_NAME ../${PACKAGE_NAME}*_${PACKAGE_VERSION}_*.deb
+        run: myci-deploy-debian-jfrog.sh --domain cppfw --repo ${{ matrix.os }} --distro ${{ matrix.codename }} --component main ../${PACKAGE_NAME}*_${PACKAGE_VERSION}_*.deb
         if: matrix.package_type == 'deb' && startsWith(github.ref, 'refs/tags/')
 ##### macosx #####
   macosx:
@@ -98,5 +98,5 @@ jobs:
         cd msys2
         makepkg --syncdeps --noconfirm --skipinteg
     - name: deploy
-      run: myci-deploy-pacman-bintray.sh --owner cppfw --repo msys2 --path msys --database cppfw_msys msys2/$PACKAGE_NAME-*-any.pkg.*
+      run: myci-deploy-pacman-jfrog.sh --domain cppfw --repo msys2 --path msys --database cppfw_msys msys2/$PACKAGE_NAME-*-any.pkg.*
       if: startsWith(github.ref, 'refs/tags/')
