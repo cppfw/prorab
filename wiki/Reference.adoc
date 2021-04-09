@@ -28,6 +28,10 @@ Prorab defines the `os` variable which indicates the host system on which the `m
 - `macosx` - any Mac OS X system
 - `windows` - Windows `Msys2` or `Cygwin` environment.
 
+== prorab_nproc
+
+Prorab defines the `prorab_nproc` variable which indicates number of physical CPUs on the system (number of physical threads).
+
 == a
 
 Prorab defines `a` variable which indicates one of two verbosity levels.
