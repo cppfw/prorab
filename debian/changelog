@@ -1,3 +1,10 @@
+prorab (1.17.0) UNRELEASED; urgency=medium
+
+  * add prorab_nproc
+  * remove deprecated variables
+
+ -- Ivan Gagis <igagis@gmail.com>  Sat, 10 Apr 2021 02:16:40 +0300
+
 prorab (1.16.3) unstable; urgency=medium
 
   * deploy to jfrog
