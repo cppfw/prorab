@@ -30,10 +30,10 @@ $(.RECIPEPREFIX)$(a)if [ ! -f $(d)tmp_src/build_dynamic/test.c.o ]; then $(this_
 $(.RECIPEPREFIX)$(a)if [ -f $(d)tmp_src/build_dynamic/test.cpp.o ]; then $(this_err) "build_dynamic/test.cpp.o file unexpectedly present"; fi
 
 # check that dynamic lib and app binary do not contain 'increment' function
-$(.RECIPEPREFIX)$(a)nm $(d)tmp_src/build_dynamic/libtests$(soext)$(this_a) > $(d)tmp_src/symbols.txt
+$(.RECIPEPREFIX)$(a)nm $(d)tmp_src/build_dynamic/libtests$(dot_so)$(this_a) > $(d)tmp_src/symbols.txt
 $(.RECIPEPREFIX)$(a)[ ! -z "$$$$(cat $(d)tmp_src/symbols.txt | grep decrement)" ] || $(this_err) "build_dynamic/libtests.so does not contain 'decrement' function"
 $(.RECIPEPREFIX)$(a)[ -z "$$$$(cat $(d)tmp_src/symbols.txt | grep increment)" ] || $(this_err) "build_dynamic/libtests.so contains 'increment' function"
-$(.RECIPEPREFIX)$(a)nm $(d)tmp_src/build_app/tests$(exeext) > $(d)tmp_src/symbols.txt
+$(.RECIPEPREFIX)$(a)nm $(d)tmp_src/build_app/tests$(dot_exe) > $(d)tmp_src/symbols.txt
 $(.RECIPEPREFIX)$(a)[ ! -z "$$$$(cat $(d)tmp_src/symbols.txt | grep decrement)" ] || $(this_err) "build_app/tests does not contain 'decrement' function"
 $(.RECIPEPREFIX)$(a)[ -z "$$$$(cat $(d)tmp_src/symbols.txt | grep increment)" ] || $(this_err) "build_app/tests contains 'increment' function"
 

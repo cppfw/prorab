@@ -15,9 +15,8 @@ this_cxxflags += -I$(d)../app $(this_include_path)
 
 this_cflags += -I$(d)../app
 
-
 $(eval $(prorab-build-app))
 
-$(prorab_this_name): $(abspath $(d)../lib/libtests$(soext))
+$(prorab_this_name): $(abspath $(d)../lib/libtests$(dot_so))
 
 $(eval $(call prorab-try-include, ../lib/Makefile))

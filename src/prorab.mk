@@ -94,13 +94,8 @@ ifneq ($(prorab_is_included),true)
         # clear all vars
         $(foreach var,$(filter this_%,$(.VARIABLES)),$(eval $(var) := ))
 
-        # TODO: these are deprecated, remove.
-        $(eval this_cxxext := .cpp)
-        $(eval this_hxxext := .hpp)
-
-        # TODO: assign := .cpp and .hpp when this_cxxext and this_hxxext are removed.
-        $(eval this_dot_cxx = $$(this_cxxext))
-        $(eval this_dot_hxx = $$(this_hxxext))
+        $(eval this_dot_cxx := .cpp)
+        $(eval this_dot_hxx := .hpp)
 
         # set default values for compilers
         $(eval this_cc := $(CC))
@@ -170,10 +165,6 @@ ifneq ($(prorab_is_included),true)
         a :=
     endif
 
-    # TODO: deprecated, remove.
-    prorab_echo := $(a)
-    Q := $(a)
-
     # directory of prorab.mk
     prorab_dir := $(dir $(lastword $(MAKEFILE_LIST)))
 
@@ -201,7 +192,7 @@ ifneq ($(prorab_is_included),true)
 
     os := $(prorab_os)
 
-    # set library extension
+    # set library suffix
     ifeq ($(os), windows)
         dot_so := .dll
     else ifeq ($(os), macosx)
@@ -210,18 +201,17 @@ ifneq ($(prorab_is_included),true)
         dot_so := .so
     endif
 
-    # TODO: prorab_lib_extension and soext are deprecated, remove.
-    prorab_lib_extension := $(dot_so)
-    soext := $(prorab_lib_extension)
-
     ifeq ($(os), windows)
         dot_exe := .exe
     else
         dot_exe :=
     endif
 
-    # TODO: exeext is deprecated, remove.
-    exeext := $(dot_exe)
+    ifeq ($(os),macosx)
+        prorab_nproc := $(shell sysctl -n hw.ncpu)
+    else
+        prorab_nproc := $(shell nproc)
+    endif
 
     # 'autojobs' valid values are only 'true' or 'false'
     ifeq ($(autojobs),true)
@@ -239,11 +229,7 @@ ifneq ($(prorab_is_included),true)
     endif
 
     ifeq ($(aj),true)
-        ifeq ($(os),macosx)
-            MAKEFLAGS += -j$(shell sysctl -n hw.ncpu)
-        else
-            MAKEFLAGS += -j$(shell nproc)
-        endif
+        MAKEFLAGS += -j$(prorab_nproc) 
     endif
 
     #########################################
