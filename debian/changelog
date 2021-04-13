@@ -1,3 +1,9 @@
+prorab (1.17.1) unstable; urgency=medium
+
+  * define prorab_space, correct names of prorab_blank and prorab_tab
+
+ -- Ivan Gagis <igagis@gmail.com>  Tue, 13 Apr 2021 22:49:34 +0300
+
 prorab (1.17.0) unstable; urgency=medium
 
   * add prorab_nproc
