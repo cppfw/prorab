@@ -1,6 +1,6 @@
 # The MIT License (MIT)
 #
-# Copyright (c) 2020 Ivan Gagis <igagis@gmail.com>
+# Copyright (c) 2021 Ivan Gagis <igagis@gmail.com>
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -132,15 +132,19 @@ ifneq ($(prorab_is_included),true)
     # defining alias for 'd'
     prorab_this_dir = $(d)
 
+    # defiane space character
+    prorab_space :=
+    prorab_space +=
+
     # define a blank variable
-    prorab-blank :=
+    prorab_blank :=
 
     # define tab character
-    prorab-tab := $(prorab-blank)	$(prorab-blank)
+    prorab_tab := $(prorab_blank)	$(prorab_blank)
 
     # set recepie prefix to tab if it is not set (tab is default recepie prefix)
     ifeq ($(.RECIPEPREFIX),)
-        .RECIPEPREFIX := $(prorab-tab)
+        .RECIPEPREFIX := $(prorab_tab)
     endif
 
     # 'verbose' valid values are only 'true' or 'false'
