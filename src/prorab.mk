@@ -132,15 +132,14 @@ ifneq ($(prorab_is_included),true)
     # defining alias for 'd'
     prorab_this_dir = $(d)
 
-    # defiane space character
-    prorab_space :=
-    prorab_space +=
-
     # define a blank variable
     prorab_blank :=
 
     # define tab character
     prorab_tab := $(prorab_blank)	$(prorab_blank)
+
+    # defiane space character
+    prorab_space := $(prorab_blank) $(prorab_blank)
 
     # set recepie prefix to tab if it is not set (tab is default recepie prefix)
     ifeq ($(.RECIPEPREFIX),)
