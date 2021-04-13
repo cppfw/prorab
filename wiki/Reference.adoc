@@ -32,6 +32,18 @@ Prorab defines the `os` variable which indicates the host system on which the `m
 
 Prorab defines the `prorab_nproc` variable which indicates number of physical CPUs on the system (number of physical threads).
 
+== prorab_blank
+
+Prorab defines blank variable which has empty value. This kind of variables are sometimes needed, for example for defining tab character.
+
+== prorab_tab
+
+Prorab defines a variable holding tab character.
+
+== prorab_space
+
+Prorab defines a variable holding space character.
+
 == a
 
 Prorab defines `a` variable which indicates one of two verbosity levels.
