@@ -1,4 +1,4 @@
-include $(d)../../../../src/prorab.mk
+include $(d)../../../../src/prorab2.mk
 
 this_name := nopapp
 

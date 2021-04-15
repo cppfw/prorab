@@ -1,4 +1,4 @@
-include $(d)prorab.mk
+include $(d)prorab2.mk
 
 #NOTE: verbatim define := does not work in make 3.81
 define this_rules

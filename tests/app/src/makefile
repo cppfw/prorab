@@ -1,4 +1,4 @@
-include $(d)../../../src/prorab.mk
+include $(d)../../../src/prorab2.mk
 
 # test that changing this_cc will also change this_ld in case this_ld is not explicitply overriden as well
 this_cc := asdf

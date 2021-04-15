@@ -1,4 +1,4 @@
-include $(d)../../../../src/prorab.mk
+include $(d)../../../../src/prorab2.mk
 
 test_var_b := test_value_b
 

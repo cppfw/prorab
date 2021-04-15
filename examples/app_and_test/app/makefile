@@ -1,5 +1,5 @@
 #Main prorab include, should go first in every makefile
-include prorab.mk
+include prorab2.mk
 
 #Input variable defining the name of the application.
 #It will be used to name the final executable.
