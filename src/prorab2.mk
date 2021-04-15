@@ -784,8 +784,24 @@ $(.RECIPEPREFIX)$(a)echo '#include "$$<"' > $$@
 $(.RECIPEPREFIX)$(a)echo '#include "$$<"' >> $$@
 $(.RECIPEPREFIX)$(a)echo 'int main(int c, const char** v){(void)c;(void)v;return 0;}' >> $$@
 
+        # We will be invoking compiler from the $(d) directory, supplying input source file by relative path.
+        # In that case, the generated dependency make-rules will haverelative paths as well.
+        # Using sed we will make them absolute.
+
+        # Depending on operating system, the file system root can be different.
+        # E.g. on unix-like systems it is just '/'. While on windows it is, e.g. 'C:/'.
+        # For the time of sed replacement we will unify the file system roots to /. And then restore it back.
+
+        # Replace the filesystem root of the $(d) path with /.
+        # At the same time, we escape $(d) path to be used inside of the sed's regex.
         $(eval prorab_private_d_for_sed := $(subst .,\.,$(subst /,\/,$(patsubst $(prorab_fs_root)%,/%,$(d)))))
+
+        # Prepare escaped file system root for sed.
         $(eval prorab_private_fs_root_for_sed := $(subst /,\/,$(prorab_fs_root)))
+
+        # Define the sed command to be used to correct the paths of generated *.d files.
+        # The sed command will substitute all file system roots with /, then append $(d) to each relative path,
+        # and then substitute the leadint / by real file system root.
         $(eval prorab_private_d_file_sed_command := \
                 sed -E -i -e \
                 "s/(^| )$(prorab_private_fs_root_for_sed)([^ ]*)/\1\/\2/g;s/(^| )([^ /\][^ ]*)/\1$(prorab_private_d_for_sed)\2/g;s/(^| )\/([^ ]*)/\1$(prorab_private_fs_root_for_sed)\2/g" \
