@@ -12,6 +12,9 @@ this_hdrs := $(call prorab-hdr-dir,.)
 
 this_cxxflags += -fPIC
 
+this_cxxflags += -fmacro-prefix-map=$(d)=
+this_cflags += -fmacro-prefix-map=$(d)=
+
 this_ldlibs += -lstdc++
 
 $(eval $(prorab-build-lib))

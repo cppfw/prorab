@@ -756,9 +756,8 @@ $(.RECIPEPREFIX)$(a)echo '$2' > $$@
         all: $(prorab_this_hxx_objs) $(prorab_this_h_objs)
 
         # combine all compilation flags
-        $(eval prorab_cppflags := $(this_cppflags) -fmacro-prefix-map=$(d)=)
-        $(eval prorab_cxxflags := $(prorab_cppflags) $(this_cxxflags))
-        $(eval prorab_cflags := $(prorab_cppflags) $(this_cflags))
+        $(eval prorab_cxxflags := $(this_cppflags) $(this_cxxflags))
+        $(eval prorab_cflags := $(this_cppflags) $(this_cflags))
         $(eval prorab_asflags := $(this_asflags))
 
         $(eval prorab_cxxflags_file := $(prorab_this_obj_dir)cxx_args.txt)
