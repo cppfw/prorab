@@ -128,13 +128,6 @@ ifneq ($(prorab_is_included),true)
 
     d := $(dir $(prorab_this_makefile))
 
-    # root of the file system
-    prorab_fs_root := $(word 1,$(subst /,/ ,$(d)))
-
-    # TODO: deprecated, remove
-    # defining alias for 'd'
-    prorab_this_dir = $(d)
-
     # define a blank variable
     prorab_blank :=
 
