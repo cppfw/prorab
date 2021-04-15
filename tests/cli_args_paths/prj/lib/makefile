@@ -10,4 +10,6 @@ this_srcs := $(call prorab-src-dir,.)
 
 this_hdrs := $(call prorab-hdr-dir,.)
 
+this_cxxflags += -fPIC
+
 $(eval $(prorab-build-lib))
