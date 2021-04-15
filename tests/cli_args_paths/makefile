@@ -13,6 +13,9 @@ $(.RECIPEPREFIX)@$(this_running) $(this_test)
 $(.RECIPEPREFIX)+$(a)$(MAKE) -C $(d)prj clean || $(this_err) "initial 'make clean' failed"
 $(.RECIPEPREFIX)+$(a)$(MAKE) -C $(d)prj || $(this_err) "initial 'make' failed"
 
+ifeq ($(os),windows)
+$(.RECIPEPREFIX)$(a)cp $(d)lib/out/*.dll $(d)app/out
+endif
 $(.RECIPEPREFIX)$(a)(cd $(d)prj/app && LD_LIBRARY_PATH=../lib/out DYLD_LIBRARY_PATH=$$LD_LIBRARY_PATH out/app) > $(d)out.log
 
 $(.RECIPEPREFIX)+$(a)$(MAKE) -C $(d)prj clean || $(this_err) "final 'make clean' failed"
