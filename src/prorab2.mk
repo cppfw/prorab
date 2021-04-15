@@ -784,64 +784,35 @@ $(.RECIPEPREFIX)$(a)echo '#include "$$<"' > $$@
 $(.RECIPEPREFIX)$(a)echo '#include "$$<"' >> $$@
 $(.RECIPEPREFIX)$(a)echo 'int main(int c, const char** v){(void)c;(void)v;return 0;}' >> $$@
 
-        # We will be invoking compiler from the $(d) directory, supplying input source file by relative path.
-        # In that case, the generated dependency make-rules will haverelative paths as well.
-        # Using sed we will make them absolute.
-
-        # Depending on operating system, the file system root can be different.
-        # E.g. on unix-like systems it is just '/'. While on windows it is, e.g. 'C:/'.
-        # For the time of sed replacement we will unify the file system roots to /. And then restore it back.
-
-        # Replace the filesystem root of the $(d) path with /.
-        # At the same time, we escape $(d) path to be used inside of the sed's regex.
-        $(eval prorab_private_d_for_sed := $(subst .,\.,$(subst /,\/,$(patsubst $(prorab_fs_root)%,/%,$(d)))))
-
-        # Prepare escaped file system root for sed.
-        $(eval prorab_private_fs_root_for_sed := $(subst /,\/,$(prorab_fs_root)))
-
-        # Define the sed command to be used to correct the paths of generated *.d files.
-        # The sed command will substitute all file system roots with /, then append $(d) to each relative path,
-        # and then substitute the leadint / by real file system root.
-        $(eval prorab_private_d_file_sed_command := \
-                sed -E -i -e \
-                "s/(^| )$(prorab_private_fs_root_for_sed)([^ ]*)/\1\/\2/g;s/(^| )([^ /\][^ ]*)/\1$(prorab_private_d_for_sed)\2/g;s/(^| )\/([^ ]*)/\1$(prorab_private_fs_root_for_sed)\2/g" \
-                $$$$(patsubst %.o,%.d,$$$$@)
-            )
-
         # compile .cpp static pattern rule
         $(prorab_this_cxx_objs): $(prorab_this_obj_dir)$(prorab_this_obj_spacer)%.o: $(d)% $(prorab_cxxflags_file)
 $(.RECIPEPREFIX)@test -t 1 && printf "\e[1;34mcompile\e[0m $$(patsubst $(prorab_root_dir)%,%,$$<)\n" || printf "compile $$(patsubst $(prorab_root_dir)%,%,$$<)\n"
 $(.RECIPEPREFIX)$(a)mkdir -p $$(dir $$@)
-$(.RECIPEPREFIX)$(a)(cd $(d) && $(this_cxx) --language c++ -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -MP -o "$$@" $(prorab_cxxflags) $$(patsubst $(d)%,%,$$<))
-$(.RECIPEPREFIX)$(a)$(prorab_private_d_file_sed_command)
+$(.RECIPEPREFIX)$(a)(cd $(d) && $(this_cxx) --language c++ -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -MP -o "$$@" $(prorab_cxxflags) $$<)
 
         # compile .hpp.hdr_cpp static pattern rule
         $(prorab_this_hxx_objs): $(d)%.o: $(d)% $(prorab_cxxflags_file)
 $(.RECIPEPREFIX)@test -t 1 && printf "\e[1;34mcompile\e[0m $$(patsubst $(prorab_root_dir)%,%,$$<)\n" || printf "compile $$(patsubst $(prorab_root_dir)%,%,$$<)\n"
 $(.RECIPEPREFIX)$(a)mkdir -p $$(dir $$@)
 $(.RECIPEPREFIX)$(a)(cd $(d) && $(this_cxx) --language c++ -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -MP -o "$$@" $(prorab_cxxflags) $$<)
-$(.RECIPEPREFIX)$(a)$(prorab_private_d_file_sed_command)
 
         # compile .c static pattern rule
         $(prorab_this_c_objs): $(prorab_this_obj_dir)$(prorab_this_obj_spacer)%.o: $(d)% $(prorab_cflags_file)
 $(.RECIPEPREFIX)@test -t 1 && printf "\e[0;35mcompile\e[0m $$(patsubst $(prorab_root_dir)%,%,$$<)\n" || printf "compile $$(patsubst $(prorab_root_dir)%,%,$$<)\n"
 $(.RECIPEPREFIX)$(a)mkdir -p $$(dir $$@)
-$(.RECIPEPREFIX)$(a)(cd $(d) && $(this_cc) --language c -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -MP -o "$$@" $(prorab_cflags) $$(patsubst $(d)%,%,$$<))
-$(.RECIPEPREFIX)$(a)$(prorab_private_d_file_sed_command)
+$(.RECIPEPREFIX)$(a)(cd $(d) && $(this_cc) --language c -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -MP -o "$$@" $(prorab_cflags) $$<)
 
         # compile .h.hdr_c static pattern rule
         $(prorab_this_h_objs): $(d)%.o: $(d)% $(prorab_cflags_file)
 $(.RECIPEPREFIX)@test -t 1 && printf "\e[0;35mcompile\e[0m $$(patsubst $(prorab_root_dir)%,%,$$<)\n" || printf "compile $$(patsubst $(prorab_root_dir)%,%,$$<)\n"
 $(.RECIPEPREFIX)$(a)mkdir -p $$(dir $$@)
 $(.RECIPEPREFIX)$(a)(cd $(d) && $(this_cc) --language c -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -MP -o "$$@" $(prorab_cflags) $$<)
-$(.RECIPEPREFIX)$(a)$(prorab_private_d_file_sed_command)
 
         # compile .S static pattern rule
         $(prorab_this_as_objs): $(prorab_this_obj_dir)$(prorab_this_obj_spacer)%.o: $(d)% $(prorab_asflags_file)
 $(.RECIPEPREFIX)@test -t 1 && printf "\e[0;35mcompile\e[0m $$(patsubst $(prorab_root_dir)%,%,$$<)\n" || printf "compile $$(patsubst $(prorab_root_dir)%,%,$$<)\n"
 $(.RECIPEPREFIX)$(a)mkdir -p $$(dir $$@)
-$(.RECIPEPREFIX)$(a)(cd $(d) && $(this_as) $(if $(filter true,$(this_as_supports_deps_gen)),-MD "$$(patsubst %.o,%.d,$$@)") -o "$$@" $(prorab_asflags) $$(patsubst $(d)%,%,$$<))
-$(.RECIPEPREFIX)$(a)$(prorab_private_d_file_sed_command)
+$(.RECIPEPREFIX)$(a)(cd $(d) && $(this_as) $(if $(filter true,$(this_as_supports_deps_gen)),-MD "$$(patsubst %.o,%.d,$$@)") -o "$$@" $(prorab_asflags) $$<)
 
         # include rules for header dependencies
         include $(wildcard $(addsuffix *.d,$(dir $(prorab_this_objs))))
