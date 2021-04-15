@@ -1,5 +1,5 @@
 # Prorab include. Should go first in every makefile.
-include prorab2.mk
+include prorab.mk
 
 
 # here we can write some tests for our application.
@@ -22,7 +22,7 @@ $(eval $(this_rules))
 # Note that we need to escape the $ twice, first for $(eval), second for when the recipe is parsed.
 # This results in $$$$.
 
-# Note the use of $(d) variable. This variable is defined by 'prorab2.mk' and
+# Note the use of $(d) variable. This variable is defined by 'prorab.mk' and
 # holds the directory where this makefile is located.
 
 # Note also that 'test' target depends on the application executable (nopapp), it has it as recipe prerequisite.

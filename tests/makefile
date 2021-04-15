@@ -1,4 +1,4 @@
-include $(prorab_this_dir)../src/prorab2.mk
+include $(prorab_this_dir)../src/prorab.mk
 
 
 $(eval $(prorab-build-subdirs))

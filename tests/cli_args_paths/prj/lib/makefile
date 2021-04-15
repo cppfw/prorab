@@ -1,4 +1,4 @@
-include $(d)../../../../src/prorab2.mk
+include $(d)../../../../src/prorab.mk
 
 this_out_dir := out
 
