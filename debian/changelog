@@ -1,3 +1,10 @@
+prorab (1.17.4) unstable; urgency=medium
+
+  * revert the local paths in this_cxxflags change as it did not work
+    out
+
+ -- Ivan Gagis <igagis@gmail.com>  Fri, 16 Apr 2021 02:18:04 +0300
+
 prorab (1.17.3) unstable; urgency=medium
 
   * allow local path in this_cxxflags etc.
