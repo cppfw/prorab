@@ -1,3 +1,9 @@
+prorab (1.17.5) unstable; urgency=medium
+
+  * add this_cflags_test and this_cxxflags_test
+
+ -- Ivan Gagis <igagis@gmail.com>  Sun, 18 Apr 2021 21:39:51 +0300
+
 prorab (1.17.4) unstable; urgency=medium
 
   * revert the local paths in this_cxxflags change as it did not work
