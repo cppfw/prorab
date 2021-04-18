@@ -14,8 +14,6 @@ this_cxx_hdrs += ../no_install_headers/test_no_install.hpp
 this_cxxflags += -Werror
 this_cxxflags += -std=c++14
 
-this_cxxflags_test += -std=c++14
-
 $(eval $(prorab-build-lib))
 
 
