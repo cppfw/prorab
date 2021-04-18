@@ -1,3 +1,9 @@
+prorab (1.17.6) unstable; urgency=medium
+
+  * correct default values of this_cxxflags_test and this_cflags_test
+
+ -- Ivan Gagis <igagis@gmail.com>  Sun, 18 Apr 2021 22:02:34 +0300
+
 prorab (1.17.5) unstable; urgency=medium
 
   * add this_cflags_test and this_cxxflags_test
