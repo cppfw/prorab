@@ -555,9 +555,9 @@ $(eval $(prorab-build-lib))
 - `this_ld` - linker to use. Defaults to `$(this_cc)`.
 - `this_dot_cxx` - {cpp} source files suffix. Used to filter {cpp} source files from `$(this_srcs)`. Defaults to `.cpp`.
 - `this_cflags` - C compiler flags. Defaults to `$(CFLAGS)`.
-- `this_cflags_test` - C compiler flags for testing public header files. See `test::` target in _generated targets_. Defaults to `$(filter -std=c%,$(this_cxxflags))`, deferred assignment.
+- `this_cflags_test` - C compiler flags for testing public header files. See `test::` target in _generated targets_. Defaults to `$(filter -std=%,$(this_cxxflags))`, deferred assignment.
 - `this_cxxflags` - {cpp} compiler flags. Defaults to `$(CXXFLAGS)`.
-- `this_cxxflags_test` - {cpp} compiler flags for testing public header files. See `test::` target in _generated targets_. Defaults to `$(filter -std=c++%,$(this_cxxflags))`, deferred assignment.
+- `this_cxxflags_test` - {cpp} compiler flags for testing public header files. See `test::` target in _generated targets_. Defaults to `$(filter -std=%,$(this_cxxflags))`, deferred assignment.
 - `this_asflags` - assembler flags. Defaults to `$(ASFLAGS)`.
 - `this_as_supports_deps_gen` - enable dependency files generation for assembler. Defaults to `true`.
 - `this_ldflags` - linker flags. Defaults to `$(LDFLAGS)`.

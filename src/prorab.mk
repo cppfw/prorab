@@ -110,10 +110,10 @@ ifneq ($(prorab_is_included),true)
         $(eval this_cppflags := $(CPPFLAGS))
         $(eval this_cflags := $(CFLAGS))
         # NOTE: deferred assignment
-        $(eval this_cflags_test = $(filter -std=c%,$(this_cflags)))
+        $(eval this_cflags_test = $(filter -std=%,$(this_cflags)))
         $(eval this_cxxflags := $(CXXFLAGS))
         # NOTE: deferred assignment
-        $(eval this_cxxflags_test = $(filter -std=c++%,$(this_cxxflags)))
+        $(eval this_cxxflags_test = $(filter -std=%,$(this_cxxflags)))
         $(eval this_asflags := $(ASFLAGS))
         $(eval this_ldflags := $(LDFLAGS))
         $(eval this_ldlibs := $(LDLIBS))
