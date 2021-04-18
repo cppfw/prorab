@@ -541,13 +541,13 @@ $(.RECIPEPREFIX)$(a)echo 'int main(int c, const char** v){(void)c;(void)v;return
         $(prorab_this_hxx_test_objs): $(d)%.o: $(d)%
 $(.RECIPEPREFIX)@test -t 1 && printf "\e[1;34mcompile\e[0m $$(patsubst $(prorab_root_dir)%,%,$$<)\n" || printf "compile $$(patsubst $(prorab_root_dir)%,%,$$<)\n"
 $(.RECIPEPREFIX)$(a)mkdir -p $$(dir $$@)
-$(.RECIPEPREFIX)$(a)$(this_cxx) --language c++ -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -MP $(filter -std=c++%,$(this_cxxflags)) -o "$$@" $$<
+$(.RECIPEPREFIX)$(a)$(this_cxx) --language c++ -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -MP $(this_cxxflags_test) -o "$$@" $$<
 
         # compile .h.test_c static pattern rule
         $(prorab_this_h_test_objs): $(d)%.o: $(d)%
 $(.RECIPEPREFIX)@test -t 1 && printf "\e[0;35mcompile\e[0m $$(patsubst $(prorab_root_dir)%,%,$$<)\n" || printf "compile $$(patsubst $(prorab_root_dir)%,%,$$<)\n"
 $(.RECIPEPREFIX)$(a)mkdir -p $$(dir $$@)
-$(.RECIPEPREFIX)$(a)$(this_cc) --language c -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -MP -o "$$@" $$<
+$(.RECIPEPREFIX)$(a)$(this_cc) --language c -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -MP $(this_cflags_test) -o "$$@" $$<
 
         # include rules for header dependencies
         include $(wildcard $(addsuffix *.d,$(dir $(prorab_this_hxx_test_objs) $(prorab_this_h_test_objs))))
