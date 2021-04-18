@@ -439,7 +439,7 @@ $(.RECIPEPREFIX)$(a)rm -f $(DESTDIR)$(PREFIX)/bin/$(notdir $(prorab_this_name)) 
 
         $(if $(filter macosx,$(os)), \
                 $(eval prorab_this_name := $(abspath $(d)$(prorab_private_out_dir)lib$(this_name).$(this_soname)$(dot_so))) \
-                $(eval prorab_private_ldflags := -dynamiclib -Wl,-install_name,$(notdir $(prorab_this_name)),-headerpad_max_install_names,-undefined,dynamic_lookup,-compatibility_version,1.0,-current_version,1.0) \
+                $(eval prorab_private_ldflags := -dynamiclib -Wl,-install_name,@rpath/$(notdir $(prorab_this_name)),-headerpad_max_install_names,-undefined,dynamic_lookup,-compatibility_version,1.0,-current_version,1.0) \
             ,\
                 $(eval prorab_this_name := $(prorab_this_symbolic_name).$(this_soname)) \
                 $(eval prorab_private_ldflags := -shared -Wl,-soname,$(notdir $(prorab_this_name))) \
