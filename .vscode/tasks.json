@@ -4,58 +4,67 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "test",
+            "label": "test_",
             "type": "shell",
             "command": "make test",
-            "problemMatcher": []
+            "problemMatcher": [],
+            "group": "build"
         },
         {
             "label": "test_cli_args_paths",
             "type": "shell",
             "command": "make -C tests/cli_args_paths test --no-print-directory",
-            "problemMatcher": []
+            "problemMatcher": [],
+            "group": "build"
 		},
 		{
             "label": "test_depend",
             "type": "shell",
             "command": "make -C tests/depend test --no-print-directory",
-            "problemMatcher": []
+            "problemMatcher": [],
+            "group": "build"
 		},
         {
             "label": "test_lib",
             "type": "shell",
             "command": "make -C tests/lib test --no-print-directory",
-            "problemMatcher": []
+            "problemMatcher": [],
+            "group": "build"
 		},
 		{
             "label": "test_configs",
             "type": "shell",
             "command": "make -C tests/configs test --no-print-directory",
-            "problemMatcher": []
+            "problemMatcher": [],
+            "group": "build"
         },
         {
             "label": "test_install_headers_dir",
             "type": "shell",
             "command": "make -C tests/install_headers_dir test --no-print-directory",
-            "problemMatcher": []
+            "problemMatcher": [],
+            "group": "build"
         },
         {
             "label": "test_app",
             "type": "shell",
             "command": "make -C tests/app test --no-print-directory",
-            "problemMatcher": []
+            "problemMatcher": [],
+            "group": "build"
 		},
         {
             "label": "test_path_args_equivalence",
             "type": "shell",
             "command": "make -C tests/path_args_equivalence test --no-print-directory",
-            "problemMatcher": []
+            "problemMatcher": [],
+            "group": "build"
 		},
         {
             "label": "test_lib_depends_on_lib",
             "type": "shell",
             "command": "make -C tests/lib_depends_on_lib test --no-print-directory",
-            "problemMatcher": []
+            "problemMatcher": [],
+            "group": "build"
         }
     ]
 }
