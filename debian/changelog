@@ -1,3 +1,9 @@
+prorab (1.17.8) unstable; urgency=medium
+
+  * add prorab-depend macro
+
+ -- Ivan Gagis <igagis@gmail.com>  Thu, 22 Apr 2021 14:39:45 +0300
+
 prorab (1.17.7) unstable; urgency=medium
 
   * macosx: use @rpath for install_name
