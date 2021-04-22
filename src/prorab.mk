@@ -231,7 +231,7 @@ ifneq ($(prorab_is_included),true)
     endif
 
     ifeq ($(aj),true)
-        MAKEFLAGS += -j$(prorab_nproc) 
+        MAKEFLAGS += -j$(prorab_nproc)
     endif
 
     #########################################
@@ -279,8 +279,7 @@ $(.RECIPEPREFIX)$(a)rm -rf $(d)out
     ###############################
     # add target dependency macro #
 
-
-    define prorab-depend =
+    define prorab-depend
 
         $1: $(foreach p,$(strip $2),$(if $(filter /%,$(p)),$(p),$(abspath $(d)$(p))))
 
@@ -526,7 +525,7 @@ $(.RECIPEPREFIX)$(a)rm -f $(prorab_this_symbolic_name)
         # prepare list of header object files (for testing headers compilation)
         $(eval prorab_this_hxx_test_srcs := $(addsuffix .test_cpp,$(filter %$(this_dot_hxx),$(prorab_private_headers))$(prorab_private_cxx_hdrs)))
         $(eval prorab_this_h_test_srcs := $(addsuffix .test_c,$(filter %.h,$(prorab_private_headers))$(prorab_private_c_hdrs)))
-        
+
         $(eval prorab_this_hxx_test_srcs := $(addprefix $(prorab_this_obj_dir)$(prorab_private_objspacer),$(prorab_this_hxx_test_srcs)))
         $(eval prorab_this_h_test_srcs := $(addprefix $(prorab_this_obj_dir)$(prorab_private_objspacer),$(prorab_this_h_test_srcs)))
 

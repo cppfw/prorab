@@ -1,7 +1,5 @@
 include $(d)../../src/prorab.mk
 
-$(info pr-dep = $(call prorab-depend, hello, /world/number_one))
-
 ifneq ($(strip $(call prorab-depend, hello, /world/number_one)),hello: /world/number_one)
     $(error prorab-depend test 1 failed)
 endif
