@@ -15,6 +15,12 @@
             "command": "make -C tests/cli_args_paths test --no-print-directory",
             "problemMatcher": []
 		},
+		{
+            "label": "test_depend",
+            "type": "shell",
+            "command": "make -C tests/depend test --no-print-directory",
+            "problemMatcher": []
+		},
         {
             "label": "test_lib",
             "type": "shell",

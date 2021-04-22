@@ -14,6 +14,6 @@ this_no_install := true
 
 $(eval $(prorab-build-lib))
 
-$(prorab_this_name): $(abspath $(d)../lib1/build/liblib1$(dot_so))
+$(eval $(call prorab-depend, $(prorab_this_name), ../lib1/build/liblib1$(dot_so)))
 
 $(eval $(call prorab-include, ../lib1/makefile))

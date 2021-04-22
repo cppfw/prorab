@@ -77,8 +77,7 @@ ifneq ($(prorab_is_included),true)
     prorab-private-rwildcard = $(foreach dd,$(wildcard $(patsubst %.,%,$1)*),$(call prorab-private-rwildcard,$(dd)/,$2) $(filter $(subst *,%,$2),$(dd)))
 
     # function for recursive wildcard
-    # NOTE: filter-out of empty strings from input path is needed when path is supplied with preceding or trailing spaces, to prevent searching from root directory also.
-    prorab-rwildcard = $(patsubst $(d)%,%,$(call prorab-private-rwildcard, $(d)$(filter-out ,$1),$2))
+    prorab-rwildcard = $(patsubst $(d)%,%,$(call prorab-private-rwildcard, $(d)$(strip $1),$2))
 
     # function to find all source files from specified directory recursively
     prorab-src-dir = $(call prorab-rwildcard,$1,*$(this_dot_cxx) *.c *.S)
@@ -261,7 +260,7 @@ $(.RECIPEPREFIX)$(a)rm -rf $(d)out
 
     define prorab-config
         $(if $1,,$(error no 'config dir' argument is given to prorab-config macro))
-        $(eval config_dir := $(abspath $(d)$(filter-out ,$1))/) # filter-out is needed to trim possible leading and trailing spaces
+        $(eval config_dir := $(abspath $(d)$(strip $1))/)
         $(call prorab-private-config, $(config))
     endef
 
@@ -272,9 +271,19 @@ $(.RECIPEPREFIX)$(a)rm -rf $(d)out
                 $(error 'config=$(config)' variable is not set to 'default', unable to apply default config using prorab-config-default macro) \
             )
 
-        $(eval override config := $(filter-out ,$1))
+        $(eval override config := $(strip $1))
         $(eval override c := $(config))
         $(call prorab-private-config, $(config))
+    endef
+
+    ###############################
+    # add target dependency macro #
+
+
+    define prorab-depend =
+
+        $1: $(foreach p,$(strip $2),$(if $(filter /%,$(p)),$(p),$(abspath $(d)$(p))))
+
     endef
 
     ################################
@@ -287,8 +296,7 @@ $(.RECIPEPREFIX)$(a)rm -rf $(d)out
 
         # need empty line here to avoid merging with adjacent macro instantiations
 
-        # NOTE: filter-out is needed to trim spaces from input parameter $1
-        $(eval prorab_private_path_to_makefile := $(d)$(filter-out ,$1))
+        $(eval prorab_private_path_to_makefile := $(d)$(strip $1))
 
         # if makefile is already included do nothing
         $(if $(filter $(abspath $(prorab_private_path_to_makefile)),$(prorab_included_makefiles)), \
@@ -305,8 +313,7 @@ $(.RECIPEPREFIX)$(a)rm -rf $(d)out
 
         # need empty line here to avoid merging with adjacent macro instantiations
 
-        # NOTE: filter-out is needed to trim spaces from input parameter $1
-        $(eval prorab_private_path_to_makefile := $(d)$(filter-out ,$1))
+        $(eval prorab_private_path_to_makefile := $(d)$(strip $1))
 
         # if makefile is already included do nothing
         $(if $(filter $(abspath $(prorab_private_path_to_makefile)),$(prorab_included_makefiles)), \
@@ -345,7 +352,7 @@ $(.RECIPEPREFIX)$(a)rm -rf $(d)out
 
         # need empty line here to avoid merging with adjacent macro instantiations
 
-        $(eval prorab_private_makefilename := $(if $(filter-out ,$1),$1,makefile))
+        $(eval prorab_private_makefilename := $(if $(strip $1),$1,makefile))
 
         $(foreach path,$(wildcard $(d)*/$(prorab_private_makefilename)), \
                 $$(eval $$(call prorab-include,$(patsubst $(d)%,%,$(path)))) \
