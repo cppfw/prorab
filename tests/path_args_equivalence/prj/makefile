@@ -5,4 +5,4 @@
 include $(d)../../../src/prorab.mk
 
 # NOTE: whitespaces around 'Makefile' is to test that those do not harm!
-$(eval $(call prorab-build-subdirs,  Makefile ))
+$(eval $(call prorab-include-subdirs,  Makefile ))

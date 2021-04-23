@@ -42,12 +42,12 @@ Right after inclusion of `prorab.mk` there will be following variables defined:
 
 As said before, **prorab** allows 'cascading' of makefiles. Say, you have two subdirectories in your project: `app` and `test`. And both those directories contain some subproject which can be built independently. So, in both those directories there are project makefiles.
 
-Now, if we want to have a makefile in project root directory which builds both of those subprojects, we can use `prorab-build-subdirs` macro and then the root makefile would look like this:
+Now, if we want to have a makefile in project root directory which builds both of those subprojects, we can use `prorab-include-subdirs` macro and then the root makefile would look like this:
 
 ```
 include prorab.mk
 
-$(eval $(prorab-build-subdirs))
+$(eval $(prorab-include-subdirs))
 ```
 
 And that's it. This will invoke the same target on every subdirectory which has file named `makefile`. Note, that parallel build is still supported since it is a non-recursive technique.
@@ -57,7 +57,7 @@ In case the makefiles in project have different name than `makefile` then it is 
 ```
 include prorab.mk
 
-$(eval $(call prorab-build-subdirs, my_Makefile))
+$(eval $(call prorab-include-subdirs, my_Makefile))
 ```
 
 

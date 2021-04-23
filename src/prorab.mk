@@ -365,7 +365,12 @@ $(.RECIPEPREFIX)$(a)rm -rf $(d)out
     endef
 
     # TODO: deprecated, remove
-    prorab-build-subdirs = $(prorab-include-subdirs)
+    define prorab-build-subdirs
+
+        $(info DEPRECATED: prorab-build-subdirs, use prorab-include-subdirs instead. )
+        $(prorab-include-subdirs)
+        
+    endef
 
     ################
     # common rules #

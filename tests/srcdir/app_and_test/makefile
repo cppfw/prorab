@@ -1,3 +1,3 @@
 include $(d)../../../src/prorab.mk
 
-$(eval $(call prorab-build-subdirs,GNUmakefile))
+$(eval $(call prorab-include-subdirs,GNUmakefile))
