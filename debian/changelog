@@ -1,3 +1,9 @@
+prorab (1.17.11) unstable; urgency=medium
+
+  * strip prorab-depend arguments
+
+ -- Ivan Gagis <igagis@gmail.com>  Fri, 23 Apr 2021 16:07:20 +0300
+
 prorab (1.17.10) unstable; urgency=medium
 
   * always apply abspath in prorab-depend
