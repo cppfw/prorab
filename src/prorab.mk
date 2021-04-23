@@ -284,7 +284,7 @@ $(.RECIPEPREFIX)$(a)rm -rf $(d)out
         $(if $1,,$(error prorab-depend: first argument is empty))
         $(if $2,,$(error prorab-depend: second argument is empty))
 
-        $1: $(foreach p,$(strip $2),$(if $(filter /%,$(p)),$(p),$(abspath $(d)$(p))))
+        $1: $(foreach p,$(strip $2),$(abspath $(if $(filter /%,$(p)),$(p),$(d)$(p))))
 
     endef
 
