@@ -139,6 +139,26 @@ Prorab sets the `dot_exe` variable to the executable files suffix which is nativ
 - empty - for Linux and Mac OS X
 - `.exe` - for Windows
 
+== prorab-depend
+
+Add file dependencies to the specified target. Automatically checks if dependency is specified as absolute path or local, and in case of local it makes it absolute.
+
+.syntax
+[source,makefile]
+....
+$(eval $(call prorab-depend, <target>, <space-separated-dependencies>))
+....
+
+.arguments
+- `target` - the target to add dependencies to.
+- `space-separated-dependencies` - list of space-separated file dependencies. Relative to `$(d)` or absolute path.
+
+Essentially, it just adds a recipe-less rule:
+[source,makefile]
+....
+<target>: <absolute-path-dependencies>
+....
+
 == prorab-inlcude
 
 Include another makefile adjusting the `d` variable for the included file. Include the given makefile only once. In case the given makefile has already been included before then nothing is done. In case specified makefile does not exist the evaluation fails.
