@@ -78,7 +78,7 @@ After invoking some **prorab** macro there might be some output variables define
 
 ## Including other makefiles
 
-In order to include some other makefile one can use `prorab-include` macro. This macro will check if the makefile was already included or not and only include it if necessary and the `makefile` being included is present.
+In order to include some other makefile one can use `prorab-include` macro. This macro will check if the makefile was already included or not and only include it if necessary, it will also adjust the value of `d` variable for the included `makefile`.
 
 Example:
 
