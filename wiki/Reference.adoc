@@ -159,9 +159,9 @@ Essentially, it just adds a recipe-less rule:
 <target>: <absolute-path-dependencies>
 ....
 
-== prorab-inlcude
+== prorab-include
 
-Include another makefile adjusting the `d` variable for the included file. Include the given makefile only once. In case the given makefile has already been included before then nothing is done. In case specified makefile does not exist the evaluation fails.
+Include another `makefile` adjusting the `d` variable for the included file. Include the given `makefile` only once. In case the given `makefile` has already been included before then nothing is done. In case specified `makefile` does not exist the evaluation fails.
 
 .syntax
 [source,makefile]
@@ -170,7 +170,7 @@ $(eval $(call prorab-include, <makefile>))
 ....
 
 .arguments
-- `makefile` - path to the makefile to include. Relative to `$(d)`.
+- `makefile` - path to the `makefile` to include. Relative to `$(d)`.
 
 .example
 [source,makefile]
@@ -182,11 +182,11 @@ $(eval $(call prorab-include, ../some_dir/makefile))
 
 == prorab-try-include
 
-Same as `prorab-include` but does not fail in case the specified makefile does not exist.
+Same as `prorab-include` but does not fail in case the specified `makefile` does not exist.
 
 == prorab-include-subdirs
 
-Include makefiles from all subdirectories of `$(d)`. Subdirectories which do not have a makefile are ignored.
+Include `makefile`s from all subdirectories of `$(d)`. Subdirectories which do not have a `makefile` are ignored.
 
 .syntax
 [source,makefile]
