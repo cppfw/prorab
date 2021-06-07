@@ -1,3 +1,58 @@
+prorab (1.17.11) unstable; urgency=medium
+
+  * strip prorab-depend arguments
+
+ -- Ivan Gagis <igagis@gmail.com>  Fri, 23 Apr 2021 16:07:20 +0300
+
+prorab (1.17.10) unstable; urgency=medium
+
+  * always apply abspath in prorab-depend
+
+ -- Ivan Gagis <igagis@gmail.com>  Fri, 23 Apr 2021 15:54:23 +0300
+
+prorab (1.17.9) unstable; urgency=medium
+
+  * add argument checks to prorab-depend
+
+ -- Ivan Gagis <igagis@gmail.com>  Fri, 23 Apr 2021 15:47:00 +0300
+
+prorab (1.17.8) unstable; urgency=medium
+
+  * add prorab-depend macro
+
+ -- Ivan Gagis <igagis@gmail.com>  Thu, 22 Apr 2021 14:39:45 +0300
+
+prorab (1.17.7) unstable; urgency=medium
+
+  * macosx: use @rpath for install_name
+
+ -- Ivan Gagis <igagis@gmail.com>  Sun, 18 Apr 2021 23:47:53 +0300
+
+prorab (1.17.6) unstable; urgency=medium
+
+  * correct default values of this_cxxflags_test and this_cflags_test
+
+ -- Ivan Gagis <igagis@gmail.com>  Sun, 18 Apr 2021 22:02:34 +0300
+
+prorab (1.17.5) unstable; urgency=medium
+
+  * add this_cflags_test and this_cxxflags_test
+
+ -- Ivan Gagis <igagis@gmail.com>  Sun, 18 Apr 2021 21:39:51 +0300
+
+prorab (1.17.4) unstable; urgency=medium
+
+  * revert the local paths in this_cxxflags change as it did not work
+    out
+
+ -- Ivan Gagis <igagis@gmail.com>  Fri, 16 Apr 2021 02:18:04 +0300
+
+prorab (1.17.3) unstable; urgency=medium
+
+  * allow local path in this_cxxflags etc.
+
+ -- Ivan Gagis <igagis@gmail.com>  Fri, 16 Apr 2021 00:56:28 +0300
+
 prorab (1.17.2) unstable; urgency=medium
 
   * improve prorab_space

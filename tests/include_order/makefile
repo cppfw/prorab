@@ -3,7 +3,7 @@ include $(d)../../src/prorab.mk
 include $(d)../common.mk
 
 # TEST DESCRIPTION:
-# Test that prorab-build-subdirs mixed with prorab-try-include prodice the correct order of makefiles inclusion.
+# Test that prorab-include-subdirs mixed with prorab-try-include prodice the correct order of makefiles inclusion.
 
 define this_rules
 .PHONY: test

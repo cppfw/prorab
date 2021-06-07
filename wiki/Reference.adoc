@@ -139,9 +139,29 @@ Prorab sets the `dot_exe` variable to the executable files suffix which is nativ
 - empty - for Linux and Mac OS X
 - `.exe` - for Windows
 
-== prorab-inlcude
+== prorab-depend
 
-Include another makefile adjusting the `d` variable for the included file. Include the given makefile only once. In case the given makefile has already been included before then nothing is done. In case specified makefile does not exist the evaluation fails.
+Add file dependencies to the specified target. Automatically checks if dependency is specified as absolute path or local, and in case of local it makes it absolute.
+
+.syntax
+[source,makefile]
+....
+$(eval $(call prorab-depend, <target>, <space-separated-dependencies>))
+....
+
+.arguments
+- `target` - the target to add dependencies to.
+- `space-separated-dependencies` - list of space-separated file dependencies. Relative to `$(d)` or absolute path.
+
+Essentially, it just adds a recipe-less rule:
+[source,makefile]
+....
+<target>: <absolute-path-dependencies>
+....
+
+== prorab-include
+
+Include another `makefile` adjusting the `d` variable for the included file. Include the given `makefile` only once. In case the given `makefile` has already been included before then nothing is done. In case specified `makefile` does not exist the evaluation fails.
 
 .syntax
 [source,makefile]
@@ -150,7 +170,7 @@ $(eval $(call prorab-include, <makefile>))
 ....
 
 .arguments
-- `makefile` - path to the makefile to include. Relative to `$(d)`.
+- `makefile` - path to the `makefile` to include. Relative to `$(d)`.
 
 .example
 [source,makefile]
@@ -162,11 +182,11 @@ $(eval $(call prorab-include, ../some_dir/makefile))
 
 == prorab-try-include
 
-Same as `prorab-include` but does not fail in case the specified makefile does not exist.
+Same as `prorab-include` but does not fail in case the specified `makefile` does not exist.
 
 == prorab-include-subdirs
 
-Include makefiles from all subdirectories of `$(d)`. Subdirectories which do not have a makefile are ignored.
+Include `makefile`s from all subdirectories of `$(d)`. Subdirectories which do not have a `makefile` are ignored.
 
 .syntax
 [source,makefile]
@@ -429,17 +449,17 @@ $(eval $(prorab-build-app))
 
 .arguments
 - `this_name` - name of the application. It will be used to generate the output binary filename. **Mandatory**.
-- `this_srcs` - list of sources, ok to use `+=` right a way. Relative to `$(d)`. Files with suffix `$(this_dot_cxx)` will be compiled by C++ compiler, files with suffix `.c` will be compiled with C compiler, files with suffix `.S` will be compiled with assembler.
+- `this_srcs` - list of sources, ok to use `+=` right a way. Relative to `$(d)`. Files with suffix `$(this_dot_cxx)` will be compiled by {cpp} compiler, files with suffix `.c` will be compiled with C compiler, files with suffix `.S` will be compiled with assembler.
 - `this_c_srcs` - list of source files to be compiled by C compiler. Rleative to `$(d)`.
-- `this_cxx_srcs` - list of source files to be compiled by C++ compiler. Relative to `$(d)`.
+- `this_cxx_srcs` - list of source files to be compiled by {cpp} compiler. Relative to `$(d)`.
 - `this_as_srcs` - list of sources files to be compiled by assembler. Relative to `$(d)`.
 - `this_cc` - C compiler to use. Defaults to `$(CC)`.
-- `this_cxx` - C++ compiler to use. Defaults to `$(CXX)`.
+- `this_cxx` - {cpp} compiler to use. Defaults to `$(CXX)`.
 - `this_as` - assembler to use. Defaults to `$(AS)`.
 - `this_ld` - linker to use. Defaults to `$(this_cc)`.
-- `this_dot_cxx` - C++ source files suffix. Used to filter C++ source files from `$(this_srcs)`. Defaults to `.cpp`.
+- `this_dot_cxx` - {cpp} source files suffix. Used to filter {cpp} source files from `$(this_srcs)`. Defaults to `.cpp`.
 - `this_cflags` - C compiler flags. Defaults to `$(CFLAGS)`.
-- `this_cxxflags` - C++ compiler flags. Defaults to `$(CXXFLAGS)`.
+- `this_cxxflags` - {cpp} compiler flags. Defaults to `$(CXXFLAGS)`.
 - `this_asflags` - assembler flags. Defaults to `$(ASFLAGS)`.
 - `this_as_supports_deps_gen` - enable dependency files generation for assembler. Defaults to `true`.
 - `this_ldflags` - linker flags. Defaults to `$(LDFLAGS)`.
@@ -447,14 +467,14 @@ $(eval $(prorab-build-app))
 - `this_cppflags` - preprocessor flags. Defaults to `$(CPPFLAGS)`.
 - `this_out_dir` - output directory. This is where all the build artefacts are to be stored. Relative to `$(d)`. Defaults to `./`.
 - `this_no_install` - disable `install` targets. Can be `true` or `false`. Defaults to `false`.
-- `this_hdrs` - list of header files to check compilation for (see explanation below). The files with suffix `$(this_dot_hxx)` will be compiled with C++ compiler, files with suffix `.h` will be compiled with C compiler. Rleative to `$(d)`.
+- `this_hdrs` - list of header files to check compilation for (see explanation below). The files with suffix `$(this_dot_hxx)` will be compiled with {cpp} compiler, files with suffix `.h` will be compiled with C compiler. Rleative to `$(d)`.
 - `this_c_hdrs` - list of C header files to check compilation for (see explanation below). Rleative to `$(d)`.
-- `this_cxx_hdrs` - list of C++ header files to check compilation for (see explanation below). Rleative to `$(d)`.
-- `this_dot_hxx` - C++ header files suffix. Used to filter C++ header files from `$(this_hdrs)`. Defaults to `.hpp`.
+- `this_cxx_hdrs` - list of {cpp} header files to check compilation for (see explanation below). Rleative to `$(d)`.
+- `this_dot_hxx` - {cpp} header files suffix. Used to filter {cpp} header files from `$(this_hdrs)`. Defaults to `.hpp`.
 
 Note: `this_ldlibs` and `this_ldflags` are separated because sometimes order of linker flags, object files and libraries matters. So, linker flags go first, then go object files and then go linker libraries.
 
-The `this_hdrs`, `this_cxx_hdrs` and `this_c_hdrs` specify the header files to check for compilation. For each header file a trivial C/C++ source file will be generated which includes the header file twice. Then those generated C++ files are compiled. This checks that the header file does not miss include guard and itself includes all the needed dependency header files. Compilation is done with the same compiler flags as the normal source files.
+The `this_hdrs`, `this_cxx_hdrs` and `this_c_hdrs` specify the header files to check for compilation. For each header file a trivial C/{cpp} source file will be generated which includes the header file twice. Then those generated {cpp} files are compiled. This checks that the header file does not miss include guard and itself includes all the needed dependency header files. Compilation is done with the same compiler flags as the normal source files.
 
 .output variables
 - `prorab_this_name` - resulting name of the binary file (for example on Windows it will have .exe suffix appended). Absolute path.
@@ -517,7 +537,9 @@ this_as := <assembler-compiler>
 this_ld := <linker>
 this_dot_cxx := <cplusplus-file-suffix>
 this_cflags :=/+= <c-compiler-flags>
+this_cflags_test :=/+= <c-compiler-flags-for-testing-public-headers>
 this_cxxflags :=/+= <cplusplus-compiler-flags>
+this_cxxflags_test :=/+= <cplusplus-compiler-flags-for-testing-public-headers>
 this_asflags :=/+= <assembler-flags>
 this_as_supports_deps_gen := <enable-assembler-deps-gen>
 this_ldflags :=/+= <linker-flags>
@@ -537,23 +559,25 @@ $(eval $(prorab-build-lib))
 - `this_soname` - so name for dynamic library. **Mandatory**
 - `this_headers_dir` - root directory of the header files which are to be installed with the library. Relative to `$(d)`.
 - `this_headers_install_dir` - header files installation destination directory. Relative to `$(DESTDIR)$(PREFIX)/include`. Can be empty, then header files are installed straight to `$(DESTDIR)$(PREFIX)/include`.
-- `this_install_hdrs` - list of header files to install. Relative to `$(d)`. If `this_install_hdrs`, `this_install_c_hdrs` and `this_install_cxx_hdrs` are empty, then the `this_headers_dir` directory is searched recursively for C (`.h`) and C++ header files (`$(this_dot_hxx)`). The `install` target will install these header files to `$(DESTDIR)$(PREFIX)/include/$(this_headers_install_dir)` preserving directory structure under `this_headers_dir` directory. Also, the `test` target will test these header files for compilation, same as headers from `this_hdrs`, but with no compilation flags, except `-std=...` filtered from `$(this_cflags)`/`$(this_cxxflags)`.
+- `this_install_hdrs` - list of header files to install. Relative to `$(d)`. If `this_install_hdrs`, `this_install_c_hdrs` and `this_install_cxx_hdrs` are empty, then the `this_headers_dir` directory is searched recursively for C (`.h`) and {cpp} header files (`$(this_dot_hxx)`). The `install` target will install these header files to `$(DESTDIR)$(PREFIX)/include/$(this_headers_install_dir)` preserving directory structure under `this_headers_dir` directory. Also, the `test` target will test these header files for compilation, same as headers from `this_hdrs`, but with no compilation flags, except `-std=...` filtered from `$(this_cflags)`/`$(this_cxxflags)`.
 - `this_install_c_hdrs` - list of `c`-only header files to install. See `this_install_hdrs` for details. Relative to `$(d)`. The `test` target will test these header files for compilation.
 - `this_install_cxx_hdrs` - list of `c++`-only header files to install. See `this_install_hdrs` for details. Relative to `$(d)`. The `test` target will test these header files for compilation.
 - `this_static_lib_only` - disables building of shared library. If `true` only static library is built. Otherwise both, shared and static libraries are built. Defaults to empty.
 - `this_ar` - the archiver program to use. Defaults to `$(AR)`.
 - `this_name` - name of the library. It will be used to generate the output binary filename. **Mandatory**.
-- `this_srcs` - list of sources, ok to use `+=` right a way. Relative to `$(d)`. Files with suffix `$(this_dot_cxx)` will be compiled by C++ compiler, files with suffix `.c` will be compiled with C compiler, files with suffix `.S` will be compiled with assembler.
+- `this_srcs` - list of sources, ok to use `+=` right a way. Relative to `$(d)`. Files with suffix `$(this_dot_cxx)` will be compiled by {cpp} compiler, files with suffix `.c` will be compiled with C compiler, files with suffix `.S` will be compiled with assembler.
 - `this_c_srcs` - list of source files to be compiled by C compiler. Rleative to `$(d)`.
-- `this_cxx_srcs` - list of source files to be compiled by C++ compiler. Relative to `$(d)`.
+- `this_cxx_srcs` - list of source files to be compiled by {cpp} compiler. Relative to `$(d)`.
 - `this_as_srcs` - list of sources files to be compiled by assembler. Relative to `$(d)`.
 - `this_cc` - C compiler to use. Defaults to `$(CC)`.
-- `this_cxx` - C++ compiler to use. Defaults to `$(CXX)`.
+- `this_cxx` - {cpp} compiler to use. Defaults to `$(CXX)`.
 - `this_as` - assembler to use. Defaults to `$(AS)`.
 - `this_ld` - linker to use. Defaults to `$(this_cc)`.
-- `this_dot_cxx` - C++ source files suffix. Used to filter C++ source files from `$(this_srcs)`. Defaults to `.cpp`.
+- `this_dot_cxx` - {cpp} source files suffix. Used to filter {cpp} source files from `$(this_srcs)`. Defaults to `.cpp`.
 - `this_cflags` - C compiler flags. Defaults to `$(CFLAGS)`.
-- `this_cxxflags` - C++ compiler flags. Defaults to `$(CXXFLAGS)`.
+- `this_cflags_test` - C compiler flags for testing public header files. See `test::` target in _generated targets_. Defaults to `$(filter -std=%,$(this_cxxflags))`, deferred assignment.
+- `this_cxxflags` - {cpp} compiler flags. Defaults to `$(CXXFLAGS)`.
+- `this_cxxflags_test` - {cpp} compiler flags for testing public header files. See `test::` target in _generated targets_. Defaults to `$(filter -std=%,$(this_cxxflags))`, deferred assignment.
 - `this_asflags` - assembler flags. Defaults to `$(ASFLAGS)`.
 - `this_as_supports_deps_gen` - enable dependency files generation for assembler. Defaults to `true`.
 - `this_ldflags` - linker flags. Defaults to `$(LDFLAGS)`.
@@ -561,14 +585,14 @@ $(eval $(prorab-build-lib))
 - `this_cppflags` - preprocessor flags. Defaults to `$(CPPFLAGS)`.
 - `this_out_dir` - output directory. This is where all the build artefacts are to be stored. Relative to `$(d)`. Defaults to `./`.
 - `this_no_install` - disable `install` targets. Can be `true` or `false`. Defaults to `false`.
-- `this_hdrs` - list of header files to check compilation for (see explanation below). The files with suffix `$(this_dot_hxx)` will be compiled with C++ compiler, files with suffix `.h` will be compiled with C compiler. Rleative to `$(d)`.
+- `this_hdrs` - list of header files to check compilation for (see explanation below). The files with suffix `$(this_dot_hxx)` will be compiled with {cpp} compiler, files with suffix `.h` will be compiled with C compiler. Rleative to `$(d)`.
 - `this_c_hdrs` - list of C header files to check compilation for (see explanation below). Rleative to `$(d)`.
-- `this_cxx_hdrs` - list of C++ header files to check compilation for (see explanation below). Rleative to `$(d)`.
-- `this_dot_hxx` - C++ header files suffix. Used to filter C++ header files from `$(this_hdrs)`. Defaults to `.hpp`.
+- `this_cxx_hdrs` - list of {cpp} header files to check compilation for (see explanation below). Rleative to `$(d)`.
+- `this_dot_hxx` - {cpp} header files suffix. Used to filter {cpp} header files from `$(this_hdrs)`. Defaults to `.hpp`.
 
 Note: `this_ldlibs` and `this_ldflags` are separated because sometimes order of linker flags, object files and libraries matters. So, linker flags go first, then go object files and then go linker libraries.
 
-The `this_hdrs`, `this_cxx_hdrs` and `this_c_hdrs` specify the header files to check for compilation. For each header file a trivial C/C++ source file will be generated which includes the header file twice. Then those generated C++ files are compiled. This checks that the header file does not miss include guard and itself includes all the needed dependency header files. Compilation is done with the same compiler flags as the normal source files.
+The `this_hdrs`, `this_cxx_hdrs` and `this_c_hdrs` specify the header files to check for compilation. For each header file a trivial C/{cpp} source file will be generated which includes the header file twice. Then those generated {cpp} files are compiled. This checks that the header file does not miss include guard and itself includes all the needed dependency header files. Compilation is done with the same compiler flags as the normal source files.
 
 .output variables
 - `prorab_this_name` - resulting name of the binary file. Absolute path.

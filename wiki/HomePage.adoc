@@ -4,7 +4,7 @@
 == Installation
 :package_name: prorab
 
-. Setup your OS-preferred package system repo following link:https://github.com/cppfw/wiki/blob/master/EnableRepo.adoc[this manual]
+. Setup your OS-preferred package system repo following link:https://github.com/cppfw/wiki/blob/master/enable_repo/enable_repo.adoc[this manual]
 . Install package
 +
 - **deb** (Linux): `{package_name}`

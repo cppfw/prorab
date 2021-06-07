@@ -77,8 +77,7 @@ ifneq ($(prorab_is_included),true)
     prorab-private-rwildcard = $(foreach dd,$(wildcard $(patsubst %.,%,$1)*),$(call prorab-private-rwildcard,$(dd)/,$2) $(filter $(subst *,%,$2),$(dd)))
 
     # function for recursive wildcard
-    # NOTE: filter-out of empty strings from input path is needed when path is supplied with preceding or trailing spaces, to prevent searching from root directory also.
-    prorab-rwildcard = $(patsubst $(d)%,%,$(call prorab-private-rwildcard, $(d)$(filter-out ,$1),$2))
+    prorab-rwildcard = $(patsubst $(d)%,%,$(call prorab-private-rwildcard, $(d)$(strip $1),$2))
 
     # function to find all source files from specified directory recursively
     prorab-src-dir = $(call prorab-rwildcard,$1,*$(this_dot_cxx) *.c *.S)
@@ -109,7 +108,11 @@ ifneq ($(prorab_is_included),true)
         # set default values for flags
         $(eval this_cppflags := $(CPPFLAGS))
         $(eval this_cflags := $(CFLAGS))
+        # NOTE: deferred assignment
+        $(eval this_cflags_test = $$(filter -std=%,$$(this_cflags)))
         $(eval this_cxxflags := $(CXXFLAGS))
+        # NOTE: deferred assignment
+        $(eval this_cxxflags_test = $$(filter -std=%,$$(this_cxxflags)))
         $(eval this_asflags := $(ASFLAGS))
         $(eval this_ldflags := $(LDFLAGS))
         $(eval this_ldlibs := $(LDLIBS))
@@ -228,7 +231,7 @@ ifneq ($(prorab_is_included),true)
     endif
 
     ifeq ($(aj),true)
-        MAKEFLAGS += -j$(prorab_nproc) 
+        MAKEFLAGS += -j$(prorab_nproc)
     endif
 
     #########################################
@@ -257,7 +260,7 @@ $(.RECIPEPREFIX)$(a)rm -rf $(d)out
 
     define prorab-config
         $(if $1,,$(error no 'config dir' argument is given to prorab-config macro))
-        $(eval config_dir := $(abspath $(d)$(filter-out ,$1))/) # filter-out is needed to trim possible leading and trailing spaces
+        $(eval config_dir := $(abspath $(d)$(strip $1))/)
         $(call prorab-private-config, $(config))
     endef
 
@@ -268,9 +271,21 @@ $(.RECIPEPREFIX)$(a)rm -rf $(d)out
                 $(error 'config=$(config)' variable is not set to 'default', unable to apply default config using prorab-config-default macro) \
             )
 
-        $(eval override config := $(filter-out ,$1))
+        $(eval override config := $(strip $1))
         $(eval override c := $(config))
         $(call prorab-private-config, $(config))
+    endef
+
+    ###############################
+    # add target dependency macro #
+
+    define prorab-depend
+
+        $(if $(strip $1),,$(error prorab-depend: first argument is empty))
+        $(if $(strip $2),,$(error prorab-depend: second argument is empty))
+
+        $1: $(foreach p,$(strip $2),$(abspath $(if $(filter /%,$(p)),$(p),$(d)$(p))))
+
     endef
 
     ################################
@@ -283,8 +298,7 @@ $(.RECIPEPREFIX)$(a)rm -rf $(d)out
 
         # need empty line here to avoid merging with adjacent macro instantiations
 
-        # NOTE: filter-out is needed to trim spaces from input parameter $1
-        $(eval prorab_private_path_to_makefile := $(d)$(filter-out ,$1))
+        $(eval prorab_private_path_to_makefile := $(d)$(strip $1))
 
         # if makefile is already included do nothing
         $(if $(filter $(abspath $(prorab_private_path_to_makefile)),$(prorab_included_makefiles)), \
@@ -301,8 +315,7 @@ $(.RECIPEPREFIX)$(a)rm -rf $(d)out
 
         # need empty line here to avoid merging with adjacent macro instantiations
 
-        # NOTE: filter-out is needed to trim spaces from input parameter $1
-        $(eval prorab_private_path_to_makefile := $(d)$(filter-out ,$1))
+        $(eval prorab_private_path_to_makefile := $(d)$(strip $1))
 
         # if makefile is already included do nothing
         $(if $(filter $(abspath $(prorab_private_path_to_makefile)),$(prorab_included_makefiles)), \
@@ -341,7 +354,7 @@ $(.RECIPEPREFIX)$(a)rm -rf $(d)out
 
         # need empty line here to avoid merging with adjacent macro instantiations
 
-        $(eval prorab_private_makefilename := $(if $(filter-out ,$1),$1,makefile))
+        $(eval prorab_private_makefilename := $(if $(strip $1),$1,makefile))
 
         $(foreach path,$(wildcard $(d)*/$(prorab_private_makefilename)), \
                 $$(eval $$(call prorab-include,$(patsubst $(d)%,%,$(path)))) \
@@ -352,7 +365,12 @@ $(.RECIPEPREFIX)$(a)rm -rf $(d)out
     endef
 
     # TODO: deprecated, remove
-    prorab-build-subdirs = $(prorab-include-subdirs)
+    define prorab-build-subdirs
+
+        $(info DEPRECATED: prorab-build-subdirs, use prorab-include-subdirs instead. )
+        $(prorab-include-subdirs)
+        
+    endef
 
     ################
     # common rules #
@@ -435,7 +453,7 @@ $(.RECIPEPREFIX)$(a)rm -f $(DESTDIR)$(PREFIX)/bin/$(notdir $(prorab_this_name)) 
 
         $(if $(filter macosx,$(os)), \
                 $(eval prorab_this_name := $(abspath $(d)$(prorab_private_out_dir)lib$(this_name).$(this_soname)$(dot_so))) \
-                $(eval prorab_private_ldflags := -dynamiclib -Wl,-install_name,$(prorab_this_name),-headerpad_max_install_names,-undefined,dynamic_lookup,-compatibility_version,1.0,-current_version,1.0) \
+                $(eval prorab_private_ldflags := -dynamiclib -Wl,-install_name,@rpath/$(notdir $(prorab_this_name)),-headerpad_max_install_names,-undefined,dynamic_lookup,-compatibility_version,1.0,-current_version,1.0) \
             ,\
                 $(eval prorab_this_name := $(prorab_this_symbolic_name).$(this_soname)) \
                 $(eval prorab_private_ldflags := -shared -Wl,-soname,$(notdir $(prorab_this_name))) \
@@ -515,7 +533,7 @@ $(.RECIPEPREFIX)$(a)rm -f $(prorab_this_symbolic_name)
         # prepare list of header object files (for testing headers compilation)
         $(eval prorab_this_hxx_test_srcs := $(addsuffix .test_cpp,$(filter %$(this_dot_hxx),$(prorab_private_headers))$(prorab_private_cxx_hdrs)))
         $(eval prorab_this_h_test_srcs := $(addsuffix .test_c,$(filter %.h,$(prorab_private_headers))$(prorab_private_c_hdrs)))
-        
+
         $(eval prorab_this_hxx_test_srcs := $(addprefix $(prorab_this_obj_dir)$(prorab_private_objspacer),$(prorab_this_hxx_test_srcs)))
         $(eval prorab_this_h_test_srcs := $(addprefix $(prorab_this_obj_dir)$(prorab_private_objspacer),$(prorab_this_h_test_srcs)))
 
@@ -541,13 +559,13 @@ $(.RECIPEPREFIX)$(a)echo 'int main(int c, const char** v){(void)c;(void)v;return
         $(prorab_this_hxx_test_objs): $(d)%.o: $(d)%
 $(.RECIPEPREFIX)@test -t 1 && printf "\e[1;34mcompile\e[0m $$(patsubst $(prorab_root_dir)%,%,$$<)\n" || printf "compile $$(patsubst $(prorab_root_dir)%,%,$$<)\n"
 $(.RECIPEPREFIX)$(a)mkdir -p $$(dir $$@)
-$(.RECIPEPREFIX)$(a)(cd $(d) && $(this_cxx) --language c++ -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -MP $(filter -std=c++%,$(this_cxxflags)) -o "$$@" $$<)
+$(.RECIPEPREFIX)$(a)(cd $(d) && $(this_cxx) --language c++ -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -MP $(this_cxxflags_test) -o "$$@" $$<)
 
         # compile .h.test_c static pattern rule
         $(prorab_this_h_test_objs): $(d)%.o: $(d)%
 $(.RECIPEPREFIX)@test -t 1 && printf "\e[0;35mcompile\e[0m $$(patsubst $(prorab_root_dir)%,%,$$<)\n" || printf "compile $$(patsubst $(prorab_root_dir)%,%,$$<)\n"
 $(.RECIPEPREFIX)$(a)mkdir -p $$(dir $$@)
-$(.RECIPEPREFIX)$(a)(cd $(d) && $(this_cc) --language c -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -MP -o "$$@" $$<)
+$(.RECIPEPREFIX)$(a)(cd $(d) && $(this_cc) --language c -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -MP $(this_cflags_test) -o "$$@" $$<)
 
         # include rules for header dependencies
         include $(wildcard $(addsuffix *.d,$(dir $(prorab_this_hxx_test_objs) $(prorab_this_h_test_objs))))
