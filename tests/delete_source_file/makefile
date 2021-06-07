@@ -1,6 +1,5 @@
 include $(d)../../src/prorab.mk
 
-
 include $(d)../common.mk
 
 ifeq ($(os),windows)
@@ -10,7 +9,6 @@ else
 endif
 
 define this_rules
-.PHONY: test
 test::
 $(.RECIPEPREFIX)@$(this_running) $(this_test)
 $(.RECIPEPREFIX)$(a)rm -rf $(d)tmp_src
