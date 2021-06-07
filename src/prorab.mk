@@ -781,7 +781,7 @@ $(.RECIPEPREFIX)$(a)echo '$2' > $$@
         $(call prorab-private-args-file-rules, $(prorab_cflags_file),$(this_cc) $(prorab_cflags))
         $(call prorab-private-args-file-rules, $(prorab_asflags_file),$(this_as) $(prorab_asflags))
 
-        # gerenarte dummy source files for each header (for testing headers compilation)
+        # gerenarte dummy source files for each C++ header (for testing headers compilation)
         $(prorab_this_hxx_srcs): $(prorab_this_obj_dir)$(prorab_this_obj_spacer)%.hdr_cpp : $(d)%
 $(.RECIPEPREFIX)@test -t 1 && printf "\e[1;90mgenerate\e[0m $$(patsubst $(prorab_root_dir)%,%,$$@)\n" || printf "generate $$(patsubst $(prorab_root_dir)%,%,$$@)\n"
 $(.RECIPEPREFIX)$(a)mkdir -p $$(dir $$@)
@@ -789,6 +789,7 @@ $(.RECIPEPREFIX)$(a)echo '#include "$$<"' > $$@
 $(.RECIPEPREFIX)$(a)echo '#include "$$<"' >> $$@
 $(.RECIPEPREFIX)$(a)echo 'int main(int c, const char** v){(void)c;(void)v;return 0;}' >> $$@
 
+        # gerenarte dummy source files for each C header (for testing headers compilation)
         $(prorab_this_h_srcs): $(prorab_this_obj_dir)$(prorab_this_obj_spacer)%.hdr_c : $(d)%
 $(.RECIPEPREFIX)@test -t 1 && printf "\e[1;90mgenerate\e[0m $$(patsubst $(prorab_root_dir)%,%,$$@)\n" || printf "generate $$(patsubst $(prorab_root_dir)%,%,$$@)\n"
 $(.RECIPEPREFIX)$(a)mkdir -p $$(dir $$@)
