@@ -401,8 +401,8 @@ $(.RECIPEPREFIX)@test -t 1 && printf "\e[0;32mclean all configurations\e[0m\n" |
 
         # target for rebuilding all
         re:
-$(.RECIPEPREFIX)$(a)$(MAKE) clean
-$(.RECIPEPREFIX)$(a)$(MAKE)
+$(.RECIPEPREFIX)+$(a)$(MAKE) clean
+$(.RECIPEPREFIX)+$(a)$(MAKE)
 
     endef
     $(eval $(prorab-private-rules))
