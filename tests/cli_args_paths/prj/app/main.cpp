@@ -2,6 +2,8 @@
 
 #include "main.hpp"
 
+#include "hdr_dir/header_in_dir.hpp"
+
 int main(int argc, const char** argv){
 
 	std::cout << "Hello stuff!" << '\n';
