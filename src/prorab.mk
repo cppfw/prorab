@@ -209,13 +209,6 @@ ifneq ($(prorab_is_included),true)
 
     os := $(prorab_os)
 
-    # check that mingw32-make is executed in Windows
-    ifeq ($(os),windows)
-        ifneq ($(notdir $(MAKE)),mingw32-make.exe)
-            $(error "non-MinGW version of make used in MinGW environment. Please use mingw32-make command.")
-        endif
-    endif
-
     # set library suffix
     ifeq ($(prorab_msys),true)
         dot_so := .dll
@@ -566,7 +559,7 @@ $(.RECIPEPREFIX)$(a)rm -f $(prorab_this_symbolic_name)
         $(prorab_this_hxx_test_srcs): $(prorab_this_obj_dir)$(prorab_private_objspacer)%.test_cpp : $(prorab_private_headers_dir)%
 $(.RECIPEPREFIX)@test -t 1 && printf "\e[1;90mgenerate\e[0m $$(patsubst $(prorab_root_dir)%,%,$$@)\n" || printf "generate $$(patsubst $(prorab_root_dir)%,%,$$@)\n"
 $(.RECIPEPREFIX)$(a)mkdir -p $$(dir $$@)
-$(.RECIPEPREFIX)$(a)echo '#include "$$<"' > $$@
+$(.RECIPEPREFIX)$(a)echo '#include "$(if $(filter windows,$(os),$$(shell cygpath -m $$<),$$<)"' > $$@
 $(.RECIPEPREFIX)$(a)echo '#include "$$<"' >> $$@
 $(.RECIPEPREFIX)$(a)echo 'int main(int c, const char** v){(void)c;(void)v;return 0;}' >> $$@
 
