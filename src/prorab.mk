@@ -202,7 +202,7 @@ ifneq ($(prorab_is_included),true)
 
     # check that mingw32-make is executed in Windows
     ifeq ($(os),windows)
-        ifneq ($(os),mingw32-make.exe)
+        ifneq ($(notdir $(MAKE)),mingw32-make.exe)
             $(error "non-MinGW version of make used in MinGW environment. Please use mingw32-make command.")
         endif
     endif
