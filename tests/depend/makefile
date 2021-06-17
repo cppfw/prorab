@@ -1,7 +1,7 @@
 include $(d)../../src/prorab.mk
 
 ifneq ($(strip $(call prorab-depend, hello, /world/number_one)),hello: $(prorab_fs_root)world/number_one)
-    $(error prorab-depend test 1 failed)
+    $(error prorab-depend test 1 failed: $(strip $(call prorab-depend, hello, /world/number_one)))
 endif
 
 ifneq ($(strip $(call prorab-depend, hello, /world/number_one /world/number_two)),hello: $(prorab_fs_root)world/number_one /world/number_two)
