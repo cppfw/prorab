@@ -179,6 +179,12 @@ ifneq ($(prorab_is_included),true)
         PREFIX := /usr/local
     endif
 
+    # actual install prefix
+    prorab_prefix := $(DESTDIR)$(PREFIX)
+    ifeq ($(filter %/,$(prorab_prefix)),) # make sure the prefix ends with /
+        prorab_prefix := $(prorab_prefix)/
+    endif
+
     # Detect operating system
     prorab_private_os := $(shell uname)
     prorab_private_os := $(patsubst MINGW%,Windows,$(prorab_private_os))
@@ -442,14 +448,14 @@ $(.RECIPEPREFIX)+$(a)$(MAKE)
                 ,
                 install:: $(prorab_this_name)
 $(.RECIPEPREFIX)$(a) \
-                    install -d $(DESTDIR)$(PREFIX)/bin/ && \
-                    install $(prorab_this_name) $(DESTDIR)$(PREFIX)/bin/ \
+                    install -d $(prorab_prefix)bin/ && \
+                    install $(prorab_this_name) $(prorab_prefix)bin/ \
             )
 
         $(if $(filter $(this_no_install),true),
                 ,
                 uninstall::
-$(.RECIPEPREFIX)$(a)rm -f $(DESTDIR)$(PREFIX)/bin/$(notdir $(prorab_this_name)) \
+$(.RECIPEPREFIX)$(a)rm -f $(prorab_prefix)bin/$(notdir $(prorab_this_name)) \
             )
 
         # need empty line here to avoid merging with adjacent macro instantiations
@@ -481,23 +487,23 @@ $(.RECIPEPREFIX)$(a)(cd $$(dir $$<) && ln -f -s $$(notdir $$<) $$(notdir $$@))
 
         $(if $(filter $(this_no_install),true),
                 ,
-                install:: $(DESTDIR)$(PREFIX)/lib/$(notdir $(prorab_this_name))
-$(.RECIPEPREFIX)$(a)install -d $(DESTDIR)$(PREFIX)/lib/ && \
-                        (cd $(DESTDIR)$(PREFIX)/lib/ && ln -f -s $(notdir $(prorab_this_name)) $(notdir $(prorab_this_symbolic_name)))
+                install:: $(prorab_prefix)lib/$(notdir $(prorab_this_name))
+$(.RECIPEPREFIX)$(a)install -d $(prorab_prefix)lib/ && \
+                        (cd $(prorab_prefix)lib/ && ln -f -s $(notdir $(prorab_this_name)) $(notdir $(prorab_this_symbolic_name)))
             )
 
         $(if $(filter $(this_no_install),true),
                 ,
-                $(DESTDIR)$(PREFIX)/lib/$(notdir $(prorab_this_name)): $(prorab_this_name)
+                $(prorab_prefix)lib/$(notdir $(prorab_this_name)): $(prorab_this_name)
 $(.RECIPEPREFIX)$(a) \
-                        install -d $(DESTDIR)$(PREFIX)/lib/ && \
-                        install $(prorab_this_name) $(DESTDIR)$(PREFIX)/lib/
+                        install -d $(prorab_prefix)lib/ && \
+                        install $(prorab_this_name) $(prorab_prefix)lib/
             )
 
         $(if $(filter $(this_no_install),true),
                 ,
                 uninstall::
-$(.RECIPEPREFIX)$(a)rm -f $(DESTDIR)$(PREFIX)/lib/$(notdir $(prorab_this_symbolic_name))
+$(.RECIPEPREFIX)$(a)rm -f $(prorab_prefix)lib/$(notdir $(prorab_this_symbolic_name))
             )
 
         clean::
@@ -604,8 +610,8 @@ $(.RECIPEPREFIX)$(a)(cd $(d) && $(this_cc) --language c -c -MF "$$(patsubst %.o,
                 ,
                 install::
 $(.RECIPEPREFIX)$(a)for i in $(prorab_private_headers) $(prorab_private_c_hdrs) $(prorab_private_cxx_hdrs); do \
-                    install -d $(DESTDIR)$(PREFIX)/include/$(prorab_private_install_dir)$$$$(dirname $$$$i) && \
-                    install -m 644 $(prorab_private_headers_dir)$$$$i $(DESTDIR)$(PREFIX)/include/$(prorab_private_install_dir)$$$$i; \
+                    install -d $(prorab_prefix)include/$(prorab_private_install_dir)$$$$(dirname $$$$i) && \
+                    install -m 644 $(prorab_private_headers_dir)$$$$i $(prorab_prefix)include/$(prorab_private_install_dir)$$$$i; \
                 done
             )
 
@@ -614,7 +620,7 @@ $(.RECIPEPREFIX)$(a)for i in $(prorab_private_headers) $(prorab_private_c_hdrs) 
                 uninstall::
 $(.RECIPEPREFIX)$(a)for i in $(prorab_private_headers) $(this_install_c_hdrs) $(prorab_private_cxx_hdrs); do \
                     path=$$$$(echo $(prorab_private_install_dir)$$$$i | cut -d "/" -f1) && \
-                    [ ! -z "$$$$path" ] && rm -rf $(DESTDIR)$(PREFIX)/include/$$$$path; \
+                    [ ! -z "$$$$path" ] && rm -rf $(prorab_prefix)include/$$$$path; \
                 done
             )
 
@@ -639,14 +645,14 @@ $(.RECIPEPREFIX)$(a)for i in $(prorab_private_headers) $(this_install_c_hdrs) $(
         # in Cygwin and Msys2 the .dll files go to /usr/bin and .a and .dll.a files go to /usr/lib
         $(if $(filter $(this_no_install),true),
                 ,
-                install:: $(if $(filter windows,$(os)), $(prorab_this_name), $(DESTDIR)$(PREFIX)/lib/$(notdir $(prorab_this_name)))
+                install:: $(if $(filter windows,$(os)), $(prorab_this_name), $(prorab_prefix)lib/$(notdir $(prorab_this_name)))
 $(if $(filter windows,$(os)),$(.RECIPEPREFIX)$(a) \
-                    install -d $(DESTDIR)$(PREFIX)/bin/ && \
-                    install $(prorab_this_name) $(DESTDIR)$(PREFIX)/bin/ && \
-                    install -d $(DESTDIR)$(PREFIX)/lib/ && \
-                    install $(prorab_this_name).a $(DESTDIR)$(PREFIX)/lib/ )
+                    install -d $(prorab_prefix)bin/ && \
+                    install $(prorab_this_name) $(prorab_prefix)bin/ && \
+                    install -d $(prorab_prefix)lib/ && \
+                    install $(prorab_this_name).a $(prorab_prefix)lib/ )
 $(if $(filter macosx,$(os)),$(.RECIPEPREFIX)$(a) \
-                    install_name_tool -id "$(PREFIX)/lib/$(notdir $(prorab_this_name))" $(DESTDIR)$(PREFIX)/lib/$(notdir $(prorab_this_name)) )
+                    install_name_tool -id "$(PREFIX)/lib/$(notdir $(prorab_this_name))" $(prorab_prefix)lib/$(notdir $(prorab_this_name)) )
             )
 
         $(if $(filter $(this_no_install),true),
@@ -654,10 +660,10 @@ $(if $(filter macosx,$(os)),$(.RECIPEPREFIX)$(a) \
                 uninstall::
 $(if $(filter windows,$(os)),
 $(.RECIPEPREFIX)$(a) \
-                    rm -f $(DESTDIR)$(PREFIX)/lib/$(notdir $(prorab_this_name).a) && \
-                    rm -f $(DESTDIR)$(PREFIX)/bin/$(notdir $(prorab_this_name)) \
+                    rm -f $(prorab_prefix)lib/$(notdir $(prorab_this_name).a) && \
+                    rm -f $(prorab_prefix)bin/$(notdir $(prorab_this_name)) \
                     ,
-$(.RECIPEPREFIX)$(a)rm -f $(DESTDIR)$(PREFIX)/lib/$(notdir $(prorab_this_name)) \
+$(.RECIPEPREFIX)$(a)rm -f $(prorab_prefix)lib/$(notdir $(prorab_this_name)) \
                 )
             )
 
@@ -682,14 +688,14 @@ $(.RECIPEPREFIX)$(a)rm -f $(prorab_this_static_lib)
                 ,
                 install:: $(prorab_this_static_lib)
 $(.RECIPEPREFIX)$(a) \
-                    install -d $(DESTDIR)$(PREFIX)/lib/ && \
-                    install -m 644 $(prorab_this_static_lib) $(DESTDIR)$(PREFIX)/lib/ \
+                    install -d $(prorab_prefix)lib/ && \
+                    install -m 644 $(prorab_this_static_lib) $(prorab_prefix)lib/ \
             )
 
         $(if $(filter $(this_no_install),true),
                 ,
                 uninstall::
-$(.RECIPEPREFIX)$(a)rm -f $(DESTDIR)$(PREFIX)/lib/$(notdir $(prorab_this_static_lib)) \
+$(.RECIPEPREFIX)$(a)rm -f $(prorab_prefix)lib/$(notdir $(prorab_this_static_lib)) \
             )
 
         # static library rule
