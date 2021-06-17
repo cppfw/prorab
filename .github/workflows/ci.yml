@@ -124,7 +124,7 @@ jobs:
         install: >-
           msys2-devel
           mingw-w64-${{ matrix.arch }}-toolchain
-          mingw-w64-${{ matrix.arch }}-make
+          make
     - name: git clone
       uses: actions/checkout@v2
     - name: add cppfw pacman msys repo
