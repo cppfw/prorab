@@ -182,8 +182,10 @@ ifneq ($(prorab_is_included),true)
     # Detect operating system
     prorab_private_os := $(shell uname)
     prorab_private_os := $(patsubst MINGW%,Windows,$(prorab_private_os))
-    prorab_private_os := $(patsubst MSYS%,Windows,$(prorab_private_os))
-    prorab_private_os := $(patsubst CYGWIN%,Windows,$(prorab_private_os))
+
+    # MSYS and CYGWIN emulate Linux
+    prorab_private_os := $(patsubst MSYS%,Linux,$(prorab_private_os))
+    prorab_private_os := $(patsubst CYGWIN%,Linux,$(prorab_private_os))
 
     ifeq ($(prorab_private_os), Windows)
         prorab_os := windows
@@ -197,6 +199,13 @@ ifneq ($(prorab_is_included),true)
     endif
 
     os := $(prorab_os)
+
+    # check that mingw32-make is executed in Windows
+    ifeq ($(os),windows)
+        ifneq ($(os),mingw32-make.exe)
+            $(error "non-MinGW version of make used in MinGW environmen. Please use mingw32-make command.")
+        endif
+    endif
 
     # set library suffix
     ifeq ($(os), windows)
