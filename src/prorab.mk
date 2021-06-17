@@ -217,15 +217,15 @@ ifneq ($(prorab_is_included),true)
     endif
 
     # set library suffix
-    ifeq ($(os), windows)
+    ifeq ($(prorab_msys),true)
         dot_so := .dll
-    else ifeq ($(os), macosx)
+    else ifeq ($(os),macosx)
         dot_so := .dylib
     else
         dot_so := .so
     endif
 
-    ifeq ($(os), windows)
+    ifeq ($(os),windows)
         dot_exe := .exe
     else
         dot_exe :=
