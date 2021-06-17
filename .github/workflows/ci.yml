@@ -120,7 +120,7 @@ jobs:
       uses: msys2/setup-msys2@v2
       with:
         update: true
-        msystem: MSYS
+        msystem: ${{ matrix.repo }}
         install: >-
           msys2-devel
           mingw-w64-${{ matrix.arch }}-toolchain
@@ -133,5 +133,4 @@ jobs:
     - name: install ci tools
       run: pacman -Sy --noconfirm myci
     - name: test
-      env: {MSYSTEM: '${{ matrix.repo }}'}
       run: mingw32-make test
