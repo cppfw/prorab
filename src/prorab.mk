@@ -189,12 +189,15 @@ ifneq ($(prorab_is_included),true)
     prorab_private_os := $(shell uname)
     prorab_private_os := $(patsubst MINGW%,Windows,$(prorab_private_os))
 
-    # MSYS and CYGWIN emulate Linux
-    prorab_private_os := $(patsubst MSYS%,Linux,$(prorab_private_os))
-    prorab_private_os := $(patsubst CYGWIN%,Linux,$(prorab_private_os))
+    prorab_private_os := $(patsubst MSYS%,Msys,$(prorab_private_os))
+    prorab_private_os := $(patsubst CYGWIN%,Msys,$(prorab_private_os))
 
     ifeq ($(prorab_private_os), Windows)
         prorab_os := windows
+        prorab_msys := true
+    else ifeq ($(prorab_private_os), Msys)
+        prorab_os := linux # MSYS and CYGWIN emulate Linux
+        prorab_msys := true
     else ifeq ($(prorab_private_os), Darwin)
         prorab_os := macosx
     else ifeq ($(prorab_private_os), Linux)
@@ -590,13 +593,9 @@ $(.RECIPEPREFIX)$(a)(cd $(d) && $(this_cc) --language c -c -MF "$$(patsubst %.o,
         # include rules for header dependencies
         include $(wildcard $(addsuffix *.d,$(dir $(prorab_this_hxx_test_objs) $(prorab_this_h_test_objs))))
 
-        # NOTE: testing headers is disabled for windows due to problems with absolute paths in windows starting with drive letter, like C:/
-        $(if $(filter $(this_no_install),true),
-                ,
-                $(if $(filter windows,$(os)),
-                        ,
-                        test:: $(prorab_this_hxx_test_objs) $(prorab_this_h_test_objs)
-                    )
+        $(if $(filter $(this_no_install),true), \
+                , \
+                test:: $(prorab_this_hxx_test_objs) $(prorab_this_h_test_objs) \
             )
 
         # make sure install dir ends with /
@@ -634,7 +633,7 @@ $(.RECIPEPREFIX)$(a)for i in $(prorab_private_headers) $(this_install_c_hdrs) $(
 
         $(if $(this_name),,$(error this_name is not defined))
 
-        $(if $(filter windows,$(os)), \
+        $(if $(filter true,$(prorab_msys)), \
                 $(eval prorab_this_name := $(abspath $(d)$(prorab_private_out_dir)lib$(this_name)$(dot_so))) \
                 $(eval prorab_private_ldflags := -shared -s -Wl,--out-implib=$(abspath $(d)$(prorab_private_out_dir)lib$(this_name)$(dot_so).a)) \
                 $(eval prorab_this_symbolic_name := $(prorab_this_name)) \
@@ -645,8 +644,8 @@ $(.RECIPEPREFIX)$(a)for i in $(prorab_private_headers) $(this_install_c_hdrs) $(
         # in Cygwin and Msys2 the .dll files go to /usr/bin and .a and .dll.a files go to /usr/lib
         $(if $(filter $(this_no_install),true),
                 ,
-                install:: $(if $(filter windows,$(os)), $(prorab_this_name), $(prorab_prefix)lib/$(notdir $(prorab_this_name)))
-$(if $(filter windows,$(os)),$(.RECIPEPREFIX)$(a) \
+                install:: $(if $(filter true,$(prorab_msys)), $(prorab_this_name), $(prorab_prefix)lib/$(notdir $(prorab_this_name)))
+$(if $(filter true,$(prorab_msys)),$(.RECIPEPREFIX)$(a) \
                     install -d $(prorab_prefix)bin/ && \
                     install $(prorab_this_name) $(prorab_prefix)bin/ && \
                     install -d $(prorab_prefix)lib/ && \
@@ -658,7 +657,7 @@ $(if $(filter macosx,$(os)),$(.RECIPEPREFIX)$(a) \
         $(if $(filter $(this_no_install),true),
                 ,
                 uninstall::
-$(if $(filter windows,$(os)),
+$(if $(filter true,$(prorab_msys)),
 $(.RECIPEPREFIX)$(a) \
                     rm -f $(prorab_prefix)lib/$(notdir $(prorab_this_name).a) && \
                     rm -f $(prorab_prefix)bin/$(notdir $(prorab_this_name)) \
@@ -878,7 +877,7 @@ $(.RECIPEPREFIX)$(a)mkdir -p $(d)$(prorab_private_out_dir)
 $(.RECIPEPREFIX)$(a)(cd $(d) && $(this_ld) $(prorab_ldflags) $$(filter %.o,$$^) $(prorab_ldlibs) -o "$$@")
 
         clean::
-$(.RECIPEPREFIX)$(if $(filter windows,$(os)), \
+$(.RECIPEPREFIX)$(if $(filter true,$(prorab_msys)), \
                     $(a)rm -f $(prorab_this_name).a \
                 )
 $(.RECIPEPREFIX)$(a)rm -f $(prorab_this_name)
