@@ -2,7 +2,9 @@ Source: prorab
 Section: misc
 Priority: extra
 Maintainer: Ivan Gagis <igagis@gmail.com>
-Build-Depends: debhelper (>= 9), make, myci
+Build-Depends: debhelper (>= 9), make,
+        dos2unix,
+        myci
 Standards-Version: 3.9.2
 
 Package: prorab
