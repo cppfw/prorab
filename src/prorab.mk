@@ -291,6 +291,13 @@ $(.RECIPEPREFIX)$(a)rm -rf $(d)out
         $(call prorab-private-config, $(config))
     endef
 
+    # helper function for making include path
+    ifeq ($(os),windows)
+        prorab-private-make-include-path = $(shell cygpath -m $1)
+    else
+        prorab-private-make-include-path = $1
+    endif
+
     ###############################
     # add target dependency macro #
 
@@ -559,16 +566,16 @@ $(.RECIPEPREFIX)$(a)rm -f $(prorab_this_symbolic_name)
         $(prorab_this_hxx_test_srcs): $(prorab_this_obj_dir)$(prorab_private_objspacer)%.test_cpp : $(prorab_private_headers_dir)%
 $(.RECIPEPREFIX)@test -t 1 && printf "\e[1;90mgenerate\e[0m $$(patsubst $(prorab_root_dir)%,%,$$@)\n" || printf "generate $$(patsubst $(prorab_root_dir)%,%,$$@)\n"
 $(.RECIPEPREFIX)$(a)mkdir -p $$(dir $$@)
-$(.RECIPEPREFIX)$(a)echo '#include "$(if $(filter windows,$(os)),$$(shell cygpath -m $$<),$$<)"' > $$@
-$(.RECIPEPREFIX)$(a)echo '#include "$$<"' >> $$@
+$(.RECIPEPREFIX)$(a)echo '#include "$$(call prorab-private-make-include-path,$$<)"' > $$@
+$(.RECIPEPREFIX)$(a)echo '#include "$$(call prorab-private-make-include-path,$$<)"' >> $$@
 $(.RECIPEPREFIX)$(a)echo 'int main(int c, const char** v){(void)c;(void)v;return 0;}' >> $$@
 
         # gerenarte dummy source files for each C header (for testing headers compilation)
         $(prorab_this_h_test_srcs): $(prorab_this_obj_dir)$(prorab_private_objspacer)%.test_c : $(prorab_private_headers_dir)%
 $(.RECIPEPREFIX)@test -t 1 && printf "\e[1;90mgenerate\e[0m $$(patsubst $(prorab_root_dir)%,%,$$@)\n" || printf "generate $$(patsubst $(prorab_root_dir)%,%,$$@)\n"
 $(.RECIPEPREFIX)$(a)mkdir -p $$(dir $$@)
-$(.RECIPEPREFIX)$(a)echo '#include "$$<"' > $$@
-$(.RECIPEPREFIX)$(a)echo '#include "$$<"' >> $$@
+$(.RECIPEPREFIX)$(a)echo '#include "$$(call prorab-private-make-include-path,$$<)"' > $$@
+$(.RECIPEPREFIX)$(a)echo '#include "$$(call prorab-private-make-include-path,$$<)"' >> $$@
 $(.RECIPEPREFIX)$(a)echo 'int main(int c, const char** v){(void)c;(void)v;return 0;}' >> $$@
 
         # compile .hpp.test_cpp static pattern rule
@@ -796,16 +803,16 @@ $(.RECIPEPREFIX)$(a)echo '$2' > $$@
         $(prorab_this_hxx_srcs): $(prorab_this_obj_dir)$(prorab_this_obj_spacer)%.hdr_cpp : $(d)%
 $(.RECIPEPREFIX)@test -t 1 && printf "\e[1;90mgenerate\e[0m $$(patsubst $(prorab_root_dir)%,%,$$@)\n" || printf "generate $$(patsubst $(prorab_root_dir)%,%,$$@)\n"
 $(.RECIPEPREFIX)$(a)mkdir -p $$(dir $$@)
-$(.RECIPEPREFIX)$(a)echo '#include "$(if $(filter windows,$(os)),$$(shell cygpath -m $$<),$$<)"' > $$@
-$(.RECIPEPREFIX)$(a)echo '#include "$$<"' >> $$@
+$(.RECIPEPREFIX)$(a)echo '#include "$$(call prorab-private-make-include-path,$$<)"' > $$@
+$(.RECIPEPREFIX)$(a)echo '#include "$$(call prorab-private-make-include-path,$$<)"' >> $$@
 $(.RECIPEPREFIX)$(a)echo 'int main(int c, const char** v){(void)c;(void)v;return 0;}' >> $$@
 
         # gerenarte dummy source files for each C header (for testing headers compilation)
         $(prorab_this_h_srcs): $(prorab_this_obj_dir)$(prorab_this_obj_spacer)%.hdr_c : $(d)%
 $(.RECIPEPREFIX)@test -t 1 && printf "\e[1;90mgenerate\e[0m $$(patsubst $(prorab_root_dir)%,%,$$@)\n" || printf "generate $$(patsubst $(prorab_root_dir)%,%,$$@)\n"
 $(.RECIPEPREFIX)$(a)mkdir -p $$(dir $$@)
-$(.RECIPEPREFIX)$(a)echo '#include "$$<"' > $$@
-$(.RECIPEPREFIX)$(a)echo '#include "$$<"' >> $$@
+$(.RECIPEPREFIX)$(a)echo '#include "$$(call prorab-private-make-include-path,$$<)"' > $$@
+$(.RECIPEPREFIX)$(a)echo '#include "$$(call prorab-private-make-include-path,$$<)"' >> $$@
 $(.RECIPEPREFIX)$(a)echo 'int main(int c, const char** v){(void)c;(void)v;return 0;}' >> $$@
 
         # compile .cpp static pattern rule
