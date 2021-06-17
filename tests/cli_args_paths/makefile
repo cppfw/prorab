@@ -10,8 +10,8 @@ define this_rules
 test::
 $(.RECIPEPREFIX)@$(this_running) $(this_test)
 
-$(.RECIPEPREFIX)+$(a)$(MAKE) -C $(d)prj clean || $(this_err) "initial 'make clean' failed"
-$(.RECIPEPREFIX)+$(a)$(MAKE) -C $(d)prj || $(this_err) "initial 'make' failed"
+$(.RECIPEPREFIX)+$(a)$(MAKE) --directory=$(d)prj clean || $(this_err) "initial 'make clean' failed"
+$(.RECIPEPREFIX)+$(a)$(MAKE) --directory=$(d)prj || $(this_err) "initial 'make' failed"
 
 ifeq ($(os),windows)
 $(.RECIPEPREFIX)$(a)cp $(d)prj/lib/out/*.dll $(d)prj/app/out
@@ -19,9 +19,9 @@ endif
 $(.RECIPEPREFIX)$(a)(cd $(d)prj/app && LD_LIBRARY_PATH=../lib/out DYLD_LIBRARY_PATH=$$LD_LIBRARY_PATH out/app) > $(d)out.log
 $(.RECIPEPREFIX)$(a)cmp $(d)out.log $(d)out.log.cmp || (echo "out.log = "; cat $(d)out.log; echo "out.log.cmp = "; cat $(d)out.log.cmp; $(this_err) "output log is not as expected");
 
-$(.RECIPEPREFIX)+$(a)$(MAKE) -C $(d)prj || $(this_err) "initial 'make' failed"
+$(.RECIPEPREFIX)+$(a)$(MAKE) --directory=$(d)prj || $(this_err) "second 'make' failed"
 
-$(.RECIPEPREFIX)+$(a)$(MAKE) -C $(d)prj clean || $(this_err) "final 'make clean' failed"
+$(.RECIPEPREFIX)+$(a)$(MAKE) --directory=$(d)prj clean || $(this_err) "final 'make clean' failed"
 
 $(.RECIPEPREFIX)@$(this_pass)
 endef
