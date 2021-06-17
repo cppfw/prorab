@@ -559,7 +559,7 @@ $(.RECIPEPREFIX)$(a)rm -f $(prorab_this_symbolic_name)
         $(prorab_this_hxx_test_srcs): $(prorab_this_obj_dir)$(prorab_private_objspacer)%.test_cpp : $(prorab_private_headers_dir)%
 $(.RECIPEPREFIX)@test -t 1 && printf "\e[1;90mgenerate\e[0m $$(patsubst $(prorab_root_dir)%,%,$$@)\n" || printf "generate $$(patsubst $(prorab_root_dir)%,%,$$@)\n"
 $(.RECIPEPREFIX)$(a)mkdir -p $$(dir $$@)
-$(.RECIPEPREFIX)$(a)echo '#include "$(if $(filter windows,$(os),$$(shell cygpath -m $$<),$$<)"' > $$@
+$(.RECIPEPREFIX)$(a)echo '#include "$(if $(filter windows,$(os)),$$(shell cygpath -m $$<),$$<)"' > $$@
 $(.RECIPEPREFIX)$(a)echo '#include "$$<"' >> $$@
 $(.RECIPEPREFIX)$(a)echo 'int main(int c, const char** v){(void)c;(void)v;return 0;}' >> $$@
 
