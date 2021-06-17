@@ -133,4 +133,5 @@ jobs:
     - name: install ci tools
       run: pacman -Sy --noconfirm myci
     - name: test
+      env: {MSYSTEM: '${{ matrix.repo }}'}
       run: mingw32-make test
