@@ -124,6 +124,10 @@ ifneq ($(prorab_is_included),true)
     #############
     # variables #
 
+    # this variable holds filesystem root directory
+    # (on Linux and MSYS it is /, on Windows/MinGW it is X:/, where X is the drive letter)
+    prorab_fs_root := $(abspath /)
+
     prorab_root_makefile := $(abspath $(word $(call prorab-num,$(call prorab-dec,$(MAKEFILE_LIST))),$(MAKEFILE_LIST)))
     prorab_root_dir := $(dir $(prorab_root_makefile))
 
