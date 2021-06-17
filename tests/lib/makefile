@@ -12,7 +12,7 @@ $(.RECIPEPREFIX)+$(a)$(MAKE) -C $(d)src || $(this_err) "'make' failed"
 ifeq ($(os), macosx)
 $(.RECIPEPREFIX)$(a)if [ ! -f $(d)src/libtests.dylib ]; then $(this_err) "src/libtests.dylib file not found"; fi
 $(.RECIPEPREFIX)$(a)if [ ! -f $(d)src/libtests.0.dylib ]; then $(this_err) "src/libtests.0.dylib file not found"; fi
-else ifeq ($(os), windows)
+else ifeq ($(prorab_msys),true)
 $(.RECIPEPREFIX)$(a)if [ ! -f $(d)src/libtests.dll ]; then $(this_err) "src/libtests.dll file not found"; fi
 $(.RECIPEPREFIX)$(a)if [ ! -f $(d)src/libtests.dll.a ]; then $(this_err) "src/libtests.dll.a file not found"; fi
 else
@@ -22,7 +22,7 @@ endif
 $(.RECIPEPREFIX)$(a)if [ ! -f $(d)src/libtests.a ]; then $(this_err) "src/libtests.a file not found"; fi
 
 $(.RECIPEPREFIX)$(a)rm -rf $(d)tmp
-$(.RECIPEPREFIX)+$(a)$(MAKE) -C $(d)src install DESTDIR=../tmp PREFIX=/usr || $(this_err) "'make install' failed"
+$(.RECIPEPREFIX)+$(a)MSYS2_ARG_CONV_EXCL=* $(MAKE) -C $(d)src install DESTDIR=../tmp PREFIX=/usr || $(this_err) "'make install' failed"
 $(.RECIPEPREFIX)$(a)if [ ! -f $(d)tmp/usr/include/test.h ]; then $(this_err) "tmp/usr/include/test.h file not found"; fi
 $(.RECIPEPREFIX)$(a)if [ ! -f $(d)tmp/usr/include/test.hpp ]; then $(this_err) "tmp/usr/include/test.hpp file not found"; fi
 $(.RECIPEPREFIX)$(a)if [ ! -f $(d)tmp/usr/include/test/test.h ]; then $(this_err) "tmp/usr/include/test/test.h file not found"; fi
@@ -36,7 +36,7 @@ $(.RECIPEPREFIX)$(a)if [ ! -f $(d)tmp/usr/lib/libtests.dylib ]; then $(this_err)
 $(.RECIPEPREFIX)$(a)if [ ! -f $(d)tmp/usr/lib/libtests.0.dylib ]; then $(this_err) "tmp/usr/lib/libtests.0.dylib file not found"; fi
 $(.RECIPEPREFIX)$(a)if [ -f $(d)tmp/usr/lib/libtests_no_install.dylib ]; then $(this_err) "tmp/usr/lib/libtests_no_install.dylib file found, must not be there"; fi
 $(.RECIPEPREFIX)$(a)if [ -f $(d)tmp/usr/lib/libtests_no_install.0.dylib ]; then $(this_err) "tmp/usr/lib/libtests_no_install.0.dylib file found, must not be there"; fi
-else ifeq ($(os), windows)
+else ifeq ($(prorab_msys),true)
 $(.RECIPEPREFIX)$(a)if [ ! -f $(d)tmp/usr/bin/libtests.dll ]; then $(this_err) "tmp/usr/bin/libtests.dll file not found"; fi
 $(.RECIPEPREFIX)$(a)if [ ! -f $(d)tmp/usr/lib/libtests.dll.a ]; then $(this_err) "tmp/usr/lib/libtests.dll.a file not found"; fi
 $(.RECIPEPREFIX)$(a)if [ -f $(d)tmp/usr/bin/libtests_no_install.dll ]; then $(this_err) "tmp/usr/bin/libtests_no_install.dll file found, must not be there"; fi
@@ -48,7 +48,7 @@ $(.RECIPEPREFIX)$(a)if [ -f $(d)tmp/usr/lib/libtests_no_install.so ]; then $(thi
 $(.RECIPEPREFIX)$(a)if [ -f $(d)tmp/usr/lib/libtests_no_install.so.0 ]; then $(this_err) "tmp/usr/lib/libtests_no_install.so.0 file found, must not be there"; fi
 endif
 
-$(.RECIPEPREFIX)+$(a)$(MAKE) -C $(d)src uninstall DESTDIR=../tmp PREFIX=/usr || $(this_err) "'make uninstall' failed"
+$(.RECIPEPREFIX)+$(a)MSYS2_ARG_CONV_EXCL=* $(MAKE) -C $(d)src uninstall DESTDIR=../tmp PREFIX=/usr || $(this_err) "'make uninstall' failed"
 $(.RECIPEPREFIX)$(a)if [ -f $(d)tmp/usr/include/test.h ]; then $(this_err) "tmp/usr/include/test.h file found"; fi
 $(.RECIPEPREFIX)$(a)if [ -f $(d)tmp/usr/include/test.hpp ]; then $(this_err) "tmp/usr/include/test.hpp file found"; fi
 $(.RECIPEPREFIX)$(a)if [ -f $(d)tmp/usr/include/test/test.h ]; then $(this_err) "tmp/usr/include/test/test.h file found"; fi
@@ -57,7 +57,7 @@ $(.RECIPEPREFIX)$(a)if [ -f $(d)tmp/usr/lib/libtests.a ]; then $(this_err) "tmp/
 ifeq ($(os), macosx)
 $(.RECIPEPREFIX)$(a)if [ -f $(d)tmp/usr/lib/libtests.dylib ]; then $(this_err) "tmp/usr/lib/libtests.dylib file found"; fi
 $(.RECIPEPREFIX)$(a)if [ -f $(d)tmp/usr/lib/libtests.0.dylib ]; then $(this_err) "tmp/usr/lib/libtests.0.dylib file found"; fi
-else ifeq ($(os), windows)
+else ifeq ($(prorab_msys),true)
 $(.RECIPEPREFIX)$(a)if [ -f $(d)tmp/usr/bin/libtests.dll ]; then $(this_err) "tmp/usr/bin/libtests.dll file found"; fi
 $(.RECIPEPREFIX)$(a)if [ -f $(d)tmp/usr/lib/libtests.dll.a ]; then $(this_err) "tmp/usr/lib/libtests.dll.a file found"; fi
 else
