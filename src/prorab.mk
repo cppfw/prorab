@@ -124,6 +124,8 @@ ifneq ($(prorab_is_included),true)
     #############
     # variables #
 
+    prorab_fs_root := $(abspath /)
+
     prorab_root_makefile := $(abspath $(word $(call prorab-num,$(call prorab-dec,$(MAKEFILE_LIST))),$(MAKEFILE_LIST)))
     prorab_root_dir := $(dir $(prorab_root_makefile))
 
