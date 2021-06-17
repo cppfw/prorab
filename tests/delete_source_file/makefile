@@ -2,7 +2,7 @@ include $(d)../../src/prorab.mk
 
 include $(d)../common.mk
 
-ifeq ($(os),windows)
+ifeq ($(prorab_msys),true)
     this_a := .a
 else
     this_a :=
