@@ -4,6 +4,8 @@ class Prorab < Formula
   url "https://github.com/cppfw/prorab/archive/$(version).tar.gz"
   sha256 "$(sha256)"
 
+  depends_on "dos2unix" => :build
+
   def install
     ENV['PATH'] += ':/usr/local/bin'
     system "make", "-C", "src", "install", "PREFIX=#{prefix}"

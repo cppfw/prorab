@@ -14,7 +14,7 @@ $(.RECIPEPREFIX)$(a)if [ ! -f $(d)src/out1/libtests.dylib ]; then $(this_err) "s
 $(.RECIPEPREFIX)$(a)if [ ! -f $(d)src/out2/libtests_no_install.dylib ]; then $(this_err) "src/out2/libtests_no_install.dylib file not found"; fi
 $(.RECIPEPREFIX)$(a)if [ ! -f $(d)src/out1/libtests.0.dylib ]; then $(this_err) "src/out1/libtests.0.dylib file not found"; fi
 $(.RECIPEPREFIX)$(a)if [ ! -f $(d)src/out2/libtests_no_install.0.dylib ]; then $(this_err) "src/out2/libtests_no_install.0.dylib file not found"; fi
-else ifeq ($(os), windows)
+else ifeq ($(prorab_msys),true)
 $(.RECIPEPREFIX)$(a)if [ ! -f $(d)src/out1/libtests.dll ]; then $(this_err) "src/out1/libtests.dll file not found"; fi
 $(.RECIPEPREFIX)$(a)if [ ! -f $(d)src/out2/libtests_no_install.dll ]; then $(this_err) "src/out2/libtests_no_install.dll file not found"; fi
 $(.RECIPEPREFIX)$(a)if [ ! -f $(d)src/out1/libtests.dll.a ]; then $(this_err) "src/out1/libtests.dll.a file not found"; fi
@@ -45,7 +45,7 @@ $(.RECIPEPREFIX)$(a)if [ ! -f $(d)tmp/usr/lib/libtests.dylib ]; then $(this_err)
 $(.RECIPEPREFIX)$(a)if [ ! -f $(d)tmp/usr/lib/libtests.0.dylib ]; then $(this_err) "tmp/usr/lib/libtests.0.dylib file not found"; fi
 $(.RECIPEPREFIX)$(a)if [ -f $(d)tmp/usr/lib/libtests_no_install.dylib ]; then $(this_err) "tmp/usr/lib/libtests_no_install.dylib file found, must not be there"; fi
 $(.RECIPEPREFIX)$(a)if [ -f $(d)tmp/usr/lib/libtests_no_install.0.dylib ]; then $(this_err) "tmp/usr/lib/libtests_no_install.0.dylib file found, must not be there"; fi
-else ifeq ($(os), windows)
+else ifeq ($(prorab_msys),true)
 $(.RECIPEPREFIX)$(a)if [ ! -f $(d)tmp/usr/bin/libtests.dll ]; then $(this_err) "tmp/usr/bin/libtests.dll file not found"; fi
 $(.RECIPEPREFIX)$(a)if [ ! -f $(d)tmp/usr/lib/libtests.dll.a ]; then $(this_err) "tmp/usr/lib/libtests.dll.a file not found"; fi
 $(.RECIPEPREFIX)$(a)if [ -f $(d)tmp/usr/bin/libtests_no_install.dll ]; then $(this_err) "tmp/usr/bin/libtests_no_install.dll file found, must not be there"; fi
@@ -66,7 +66,7 @@ $(.RECIPEPREFIX)$(a)if [ -f $(d)tmp/usr/lib/libtests.a ]; then $(this_err) "tmp/
 ifeq ($(os), macosx)
 $(.RECIPEPREFIX)$(a)if [ -f $(d)tmp/usr/lib/libtests.dylib ]; then $(this_err) "tmp/usr/lib/libtests.dylib file found"; fi
 $(.RECIPEPREFIX)$(a)if [ -f $(d)tmp/usr/lib/libtests.0.dylib ]; then $(this_err) "tmp/usr/lib/libtests.0.dylib file found"; fi
-else ifeq ($(os), windows)
+else ifeq ($(prorab_msys),true)
 $(.RECIPEPREFIX)$(a)if [ -f $(d)tmp/usr/bin/libtests.dll ]; then $(this_err) "tmp/usr/bin/libtests.dll file found"; fi
 $(.RECIPEPREFIX)$(a)if [ -f $(d)tmp/usr/lib/libtests.dll.a ]; then $(this_err) "tmp/usr/lib/libtests.dll.a file found"; fi
 else

@@ -63,6 +63,8 @@ jobs:
         brew update
     - name: install ci tools
       run: brew install myci
+    - name: install deps
+      run: myci-brew-install.sh `myci-list-deps-homebrew.sh`
     - name: build
       run: make autojobs=true
     - name: test
@@ -101,3 +103,36 @@ jobs:
     - name: deploy
       run: myci-deploy-pacman-jfrog.sh --domain cppfw --repo msys2 --path msys --database cppfw_msys msys2/$PACKAGE_NAME-*-any.pkg.*
       if: startsWith(github.ref, 'refs/tags/')
+  msys2-mingw:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: msys2 {0}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - {arch: i686, repo: mingw32}
+          - {arch: x86_64, repo: mingw64}
+    name: msys2 - ${{ matrix.repo }}
+    steps:
+    - name: make msys2 to provide the default shell
+      uses: msys2/setup-msys2@v2
+      with:
+        update: true
+        msystem: ${{ matrix.repo }}
+        install: >-
+          msys2-devel
+          mingw-w64-${{ matrix.arch }}-toolchain
+          make
+          diffutils
+          dos2unix
+    - name: git clone
+      uses: actions/checkout@v2
+    - name: add cppfw pacman msys repo
+      uses: myci-actions/add-pacman-repo@master
+      with: {name: cppfw_msys, url: 'https://cppfw.jfrog.io/artifactory/msys2/msys', shell: 'msys2 {0}'}
+    - name: install ci tools
+      run: pacman -Sy --noconfirm myci
+    - name: test
+      run: make test

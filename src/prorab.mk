@@ -124,6 +124,8 @@ ifneq ($(prorab_is_included),true)
     #############
     # variables #
 
+    # this variable holds filesystem root directory
+    # (on Linux and MSYS it is /, on Windows/MinGW it is X:/, where X is the drive letter)
     prorab_fs_root := $(abspath /)
 
     prorab_root_makefile := $(abspath $(word $(call prorab-num,$(call prorab-dec,$(MAKEFILE_LIST))),$(MAKEFILE_LIST)))
@@ -177,14 +179,25 @@ ifneq ($(prorab_is_included),true)
         PREFIX := /usr/local
     endif
 
+    # actual install prefix
+    prorab_prefix := $(DESTDIR)$(PREFIX)
+    ifeq ($(filter %/,$(prorab_prefix)),) # make sure the prefix ends with /
+        prorab_prefix := $(prorab_prefix)/
+    endif
+
     # Detect operating system
     prorab_private_os := $(shell uname)
     prorab_private_os := $(patsubst MINGW%,Windows,$(prorab_private_os))
-    prorab_private_os := $(patsubst MSYS%,Windows,$(prorab_private_os))
-    prorab_private_os := $(patsubst CYGWIN%,Windows,$(prorab_private_os))
+
+    prorab_private_os := $(patsubst MSYS%,Msys,$(prorab_private_os))
+    prorab_private_os := $(patsubst CYGWIN%,Msys,$(prorab_private_os))
 
     ifeq ($(prorab_private_os), Windows)
         prorab_os := windows
+        prorab_msys := true
+    else ifeq ($(prorab_private_os), Msys)
+        prorab_os := linux # MSYS and CYGWIN emulate Linux
+        prorab_msys := true
     else ifeq ($(prorab_private_os), Darwin)
         prorab_os := macosx
     else ifeq ($(prorab_private_os), Linux)
@@ -197,15 +210,15 @@ ifneq ($(prorab_is_included),true)
     os := $(prorab_os)
 
     # set library suffix
-    ifeq ($(os), windows)
+    ifeq ($(prorab_msys),true)
         dot_so := .dll
-    else ifeq ($(os), macosx)
+    else ifeq ($(os),macosx)
         dot_so := .dylib
     else
         dot_so := .so
     endif
 
-    ifeq ($(os), windows)
+    ifeq ($(os),windows)
         dot_exe := .exe
     else
         dot_exe :=
@@ -277,6 +290,34 @@ $(.RECIPEPREFIX)$(a)rm -rf $(d)out
         $(eval override c := $(config))
         $(call prorab-private-config, $(config))
     endef
+
+    # helper function for making include path
+    ifeq ($(os),windows)
+        prorab-private-make-include-path = $(shell cygpath -m $1)
+    else
+        prorab-private-make-include-path = $1
+    endif
+
+    # d variable properly escaped to be used in sed pattern
+    prorab_private_d_for_sed = $(subst .,\.,$(subst /,\/,$(d)))
+
+    # sed command which prepends $(d) to local paths in .d files
+    prorab_private_d_file_sed_command_intermediate = sed -E -i -e "s/(^| )([^ /\][^ ]*)/\1\$$$$\(d\)\2/g;s/(^| )$(prorab_private_d_for_sed)([^ ]*)/\1\$$$$\(d\)\2/g" $$(patsubst %.o,%.d,$$@)
+
+    # for windows we have to convert windows paths to unix paths using cygpath
+    ifeq ($(os),windows)
+        # remove spaces in the line beginnings
+        # make .d file to have only a single path per line
+        # convert to unix paths using cygpath
+        # cygpath spoils new line escapes, so restore those (backslash at the line ends)
+        prorab_private_d_file_sed_command = sed -E -i -e "s/^ //g;s/([^ ]) ([^ \])/\1 \\\\\n\2/g" $$(patsubst %.o,%.d,$$@) \
+                && cygpath -f $$(patsubst %.o,%.d,$$@) > $$(patsubst %.o,%.d,$$@).tmp \
+                && mv $$(patsubst %.o,%.d,$$@).tmp $$(patsubst %.o,%.d,$$@) \
+                && sed -E -i -e "s/ \/$$$$/ \\\\/g" $$(patsubst %.o,%.d,$$@) \
+                && $(prorab_private_d_file_sed_command_intermediate)
+    else
+        prorab_private_d_file_sed_command = $(prorab_private_d_file_sed_command_intermediate)
+    endif
 
     ###############################
     # add target dependency macro #
@@ -431,14 +472,14 @@ $(.RECIPEPREFIX)+$(a)$(MAKE)
                 ,
                 install:: $(prorab_this_name)
 $(.RECIPEPREFIX)$(a) \
-                    install -d $(DESTDIR)$(PREFIX)/bin/ && \
-                    install $(prorab_this_name) $(DESTDIR)$(PREFIX)/bin/ \
+                    install -d $(prorab_prefix)bin/ && \
+                    install $(prorab_this_name) $(prorab_prefix)bin/ \
             )
 
         $(if $(filter $(this_no_install),true),
                 ,
                 uninstall::
-$(.RECIPEPREFIX)$(a)rm -f $(DESTDIR)$(PREFIX)/bin/$(notdir $(prorab_this_name)) \
+$(.RECIPEPREFIX)$(a)rm -f $(prorab_prefix)bin/$(notdir $(prorab_this_name)) \
             )
 
         # need empty line here to avoid merging with adjacent macro instantiations
@@ -470,23 +511,23 @@ $(.RECIPEPREFIX)$(a)(cd $$(dir $$<) && ln -f -s $$(notdir $$<) $$(notdir $$@))
 
         $(if $(filter $(this_no_install),true),
                 ,
-                install:: $(DESTDIR)$(PREFIX)/lib/$(notdir $(prorab_this_name))
-$(.RECIPEPREFIX)$(a)install -d $(DESTDIR)$(PREFIX)/lib/ && \
-                        (cd $(DESTDIR)$(PREFIX)/lib/ && ln -f -s $(notdir $(prorab_this_name)) $(notdir $(prorab_this_symbolic_name)))
+                install:: $(prorab_prefix)lib/$(notdir $(prorab_this_name))
+$(.RECIPEPREFIX)$(a)install -d $(prorab_prefix)lib/ && \
+                        (cd $(prorab_prefix)lib/ && ln -f -s $(notdir $(prorab_this_name)) $(notdir $(prorab_this_symbolic_name)))
             )
 
         $(if $(filter $(this_no_install),true),
                 ,
-                $(DESTDIR)$(PREFIX)/lib/$(notdir $(prorab_this_name)): $(prorab_this_name)
+                $(prorab_prefix)lib/$(notdir $(prorab_this_name)): $(prorab_this_name)
 $(.RECIPEPREFIX)$(a) \
-                        install -d $(DESTDIR)$(PREFIX)/lib/ && \
-                        install $(prorab_this_name) $(DESTDIR)$(PREFIX)/lib/
+                        install -d $(prorab_prefix)lib/ && \
+                        install $(prorab_this_name) $(prorab_prefix)lib/
             )
 
         $(if $(filter $(this_no_install),true),
                 ,
                 uninstall::
-$(.RECIPEPREFIX)$(a)rm -f $(DESTDIR)$(PREFIX)/lib/$(notdir $(prorab_this_symbolic_name))
+$(.RECIPEPREFIX)$(a)rm -f $(prorab_prefix)lib/$(notdir $(prorab_this_symbolic_name))
             )
 
         clean::
@@ -542,43 +583,42 @@ $(.RECIPEPREFIX)$(a)rm -f $(prorab_this_symbolic_name)
         $(eval prorab_this_hxx_test_objs := $(addsuffix .o,$(prorab_this_hxx_test_srcs)))
         $(eval prorab_this_h_test_objs := $(addsuffix .o,$(prorab_this_h_test_srcs)))
 
-        # gerenarte dummy source files for each header (for testing headers compilation)
+        # gerenarte dummy source files for each C++ header (for testing headers compilation)
         $(prorab_this_hxx_test_srcs): $(prorab_this_obj_dir)$(prorab_private_objspacer)%.test_cpp : $(prorab_private_headers_dir)%
 $(.RECIPEPREFIX)@test -t 1 && printf "\e[1;90mgenerate\e[0m $$(patsubst $(prorab_root_dir)%,%,$$@)\n" || printf "generate $$(patsubst $(prorab_root_dir)%,%,$$@)\n"
 $(.RECIPEPREFIX)$(a)mkdir -p $$(dir $$@)
-$(.RECIPEPREFIX)$(a)echo '#include "$$<"' > $$@
-$(.RECIPEPREFIX)$(a)echo '#include "$$<"' >> $$@
+$(.RECIPEPREFIX)$(a)echo '#include "$$(call prorab-private-make-include-path,$$<)"' > $$@
+$(.RECIPEPREFIX)$(a)echo '#include "$$(call prorab-private-make-include-path,$$<)"' >> $$@
 $(.RECIPEPREFIX)$(a)echo 'int main(int c, const char** v){(void)c;(void)v;return 0;}' >> $$@
 
+        # gerenarte dummy source files for each C header (for testing headers compilation)
         $(prorab_this_h_test_srcs): $(prorab_this_obj_dir)$(prorab_private_objspacer)%.test_c : $(prorab_private_headers_dir)%
 $(.RECIPEPREFIX)@test -t 1 && printf "\e[1;90mgenerate\e[0m $$(patsubst $(prorab_root_dir)%,%,$$@)\n" || printf "generate $$(patsubst $(prorab_root_dir)%,%,$$@)\n"
 $(.RECIPEPREFIX)$(a)mkdir -p $$(dir $$@)
-$(.RECIPEPREFIX)$(a)echo '#include "$$<"' > $$@
-$(.RECIPEPREFIX)$(a)echo '#include "$$<"' >> $$@
+$(.RECIPEPREFIX)$(a)echo '#include "$$(call prorab-private-make-include-path,$$<)"' > $$@
+$(.RECIPEPREFIX)$(a)echo '#include "$$(call prorab-private-make-include-path,$$<)"' >> $$@
 $(.RECIPEPREFIX)$(a)echo 'int main(int c, const char** v){(void)c;(void)v;return 0;}' >> $$@
 
         # compile .hpp.test_cpp static pattern rule
         $(prorab_this_hxx_test_objs): $(d)%.o: $(d)%
 $(.RECIPEPREFIX)@test -t 1 && printf "\e[1;34mcompile\e[0m $$(patsubst $(prorab_root_dir)%,%,$$<)\n" || printf "compile $$(patsubst $(prorab_root_dir)%,%,$$<)\n"
 $(.RECIPEPREFIX)$(a)mkdir -p $$(dir $$@)
-$(.RECIPEPREFIX)$(a)$(this_cxx) --language c++ -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -MP $(this_cxxflags_test) -o "$$@" $$<
+$(.RECIPEPREFIX)$(a)(cd $(d) && $(this_cxx) --language c++ -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -MP $(this_cxxflags_test) -o "$$@" $$<)
+$(.RECIPEPREFIX)$(a)$(prorab_private_d_file_sed_command)
 
         # compile .h.test_c static pattern rule
         $(prorab_this_h_test_objs): $(d)%.o: $(d)%
 $(.RECIPEPREFIX)@test -t 1 && printf "\e[0;35mcompile\e[0m $$(patsubst $(prorab_root_dir)%,%,$$<)\n" || printf "compile $$(patsubst $(prorab_root_dir)%,%,$$<)\n"
 $(.RECIPEPREFIX)$(a)mkdir -p $$(dir $$@)
-$(.RECIPEPREFIX)$(a)$(this_cc) --language c -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -MP $(this_cflags_test) -o "$$@" $$<
+$(.RECIPEPREFIX)$(a)(cd $(d) && $(this_cc) --language c -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -MP $(this_cflags_test) -o "$$@" $$<)
+$(.RECIPEPREFIX)$(a)$(prorab_private_d_file_sed_command)
 
         # include rules for header dependencies
         include $(wildcard $(addsuffix *.d,$(dir $(prorab_this_hxx_test_objs) $(prorab_this_h_test_objs))))
 
-        # NOTE: testing headers is disabled for windows due to problems with absolute paths in windows starting with drive letter, like C:/
-        $(if $(filter $(this_no_install),true),
-                ,
-                $(if $(filter windows,$(os)),
-                        ,
-                        test:: $(prorab_this_hxx_test_objs) $(prorab_this_h_test_objs)
-                    )
+        $(if $(filter $(this_no_install),true), \
+                , \
+                test:: $(prorab_this_hxx_test_objs) $(prorab_this_h_test_objs) \
             )
 
         # make sure install dir ends with /
@@ -592,8 +632,8 @@ $(.RECIPEPREFIX)$(a)$(this_cc) --language c -c -MF "$$(patsubst %.o,%.d,$$@)" -M
                 ,
                 install::
 $(.RECIPEPREFIX)$(a)for i in $(prorab_private_headers) $(prorab_private_c_hdrs) $(prorab_private_cxx_hdrs); do \
-                    install -d $(DESTDIR)$(PREFIX)/include/$(prorab_private_install_dir)$$$$(dirname $$$$i) && \
-                    install -m 644 $(prorab_private_headers_dir)$$$$i $(DESTDIR)$(PREFIX)/include/$(prorab_private_install_dir)$$$$i; \
+                    install -d $(prorab_prefix)include/$(prorab_private_install_dir)$$$$(dirname $$$$i) && \
+                    install -m 644 $(prorab_private_headers_dir)$$$$i $(prorab_prefix)include/$(prorab_private_install_dir)$$$$i; \
                 done
             )
 
@@ -602,7 +642,7 @@ $(.RECIPEPREFIX)$(a)for i in $(prorab_private_headers) $(prorab_private_c_hdrs) 
                 uninstall::
 $(.RECIPEPREFIX)$(a)for i in $(prorab_private_headers) $(this_install_c_hdrs) $(prorab_private_cxx_hdrs); do \
                     path=$$$$(echo $(prorab_private_install_dir)$$$$i | cut -d "/" -f1) && \
-                    [ ! -z "$$$$path" ] && rm -rf $(DESTDIR)$(PREFIX)/include/$$$$path; \
+                    [ ! -z "$$$$path" ] && rm -rf $(prorab_prefix)include/$$$$path; \
                 done
             )
 
@@ -616,7 +656,7 @@ $(.RECIPEPREFIX)$(a)for i in $(prorab_private_headers) $(this_install_c_hdrs) $(
 
         $(if $(this_name),,$(error this_name is not defined))
 
-        $(if $(filter windows,$(os)), \
+        $(if $(filter true,$(prorab_msys)), \
                 $(eval prorab_this_name := $(abspath $(d)$(prorab_private_out_dir)lib$(this_name)$(dot_so))) \
                 $(eval prorab_private_ldflags := -shared -s -Wl,--out-implib=$(abspath $(d)$(prorab_private_out_dir)lib$(this_name)$(dot_so).a)) \
                 $(eval prorab_this_symbolic_name := $(prorab_this_name)) \
@@ -627,25 +667,25 @@ $(.RECIPEPREFIX)$(a)for i in $(prorab_private_headers) $(this_install_c_hdrs) $(
         # in Cygwin and Msys2 the .dll files go to /usr/bin and .a and .dll.a files go to /usr/lib
         $(if $(filter $(this_no_install),true),
                 ,
-                install:: $(if $(filter windows,$(os)), $(prorab_this_name), $(DESTDIR)$(PREFIX)/lib/$(notdir $(prorab_this_name)))
-$(if $(filter windows,$(os)),$(.RECIPEPREFIX)$(a) \
-                    install -d $(DESTDIR)$(PREFIX)/bin/ && \
-                    install $(prorab_this_name) $(DESTDIR)$(PREFIX)/bin/ && \
-                    install -d $(DESTDIR)$(PREFIX)/lib/ && \
-                    install $(prorab_this_name).a $(DESTDIR)$(PREFIX)/lib/ )
+                install:: $(if $(filter true,$(prorab_msys)), $(prorab_this_name), $(prorab_prefix)lib/$(notdir $(prorab_this_name)))
+$(if $(filter true,$(prorab_msys)),$(.RECIPEPREFIX)$(a) \
+                    install -d $(prorab_prefix)bin/ && \
+                    install $(prorab_this_name) $(prorab_prefix)bin/ && \
+                    install -d $(prorab_prefix)lib/ && \
+                    install $(prorab_this_name).a $(prorab_prefix)lib/ )
 $(if $(filter macosx,$(os)),$(.RECIPEPREFIX)$(a) \
-                    install_name_tool -id "$(PREFIX)/lib/$(notdir $(prorab_this_name))" $(DESTDIR)$(PREFIX)/lib/$(notdir $(prorab_this_name)) )
+                    install_name_tool -id "$(PREFIX)/lib/$(notdir $(prorab_this_name))" $(prorab_prefix)lib/$(notdir $(prorab_this_name)) )
             )
 
         $(if $(filter $(this_no_install),true),
                 ,
                 uninstall::
-$(if $(filter windows,$(os)),
+$(if $(filter true,$(prorab_msys)),
 $(.RECIPEPREFIX)$(a) \
-                    rm -f $(DESTDIR)$(PREFIX)/lib/$(notdir $(prorab_this_name).a) && \
-                    rm -f $(DESTDIR)$(PREFIX)/bin/$(notdir $(prorab_this_name)) \
+                    rm -f $(prorab_prefix)lib/$(notdir $(prorab_this_name).a) && \
+                    rm -f $(prorab_prefix)bin/$(notdir $(prorab_this_name)) \
                     ,
-$(.RECIPEPREFIX)$(a)rm -f $(DESTDIR)$(PREFIX)/lib/$(notdir $(prorab_this_name)) \
+$(.RECIPEPREFIX)$(a)rm -f $(prorab_prefix)lib/$(notdir $(prorab_this_name)) \
                 )
             )
 
@@ -670,14 +710,14 @@ $(.RECIPEPREFIX)$(a)rm -f $(prorab_this_static_lib)
                 ,
                 install:: $(prorab_this_static_lib)
 $(.RECIPEPREFIX)$(a) \
-                    install -d $(DESTDIR)$(PREFIX)/lib/ && \
-                    install -m 644 $(prorab_this_static_lib) $(DESTDIR)$(PREFIX)/lib/ \
+                    install -d $(prorab_prefix)lib/ && \
+                    install -m 644 $(prorab_this_static_lib) $(prorab_prefix)lib/ \
             )
 
         $(if $(filter $(this_no_install),true),
                 ,
                 uninstall::
-$(.RECIPEPREFIX)$(a)rm -f $(DESTDIR)$(PREFIX)/lib/$(notdir $(prorab_this_static_lib)) \
+$(.RECIPEPREFIX)$(a)rm -f $(prorab_prefix)lib/$(notdir $(prorab_this_static_lib)) \
             )
 
         # static library rule
@@ -782,50 +822,56 @@ $(.RECIPEPREFIX)$(a)echo '$2' > $$@
         $(call prorab-private-args-file-rules, $(prorab_cflags_file),$(this_cc) $(prorab_cflags))
         $(call prorab-private-args-file-rules, $(prorab_asflags_file),$(this_as) $(prorab_asflags))
 
-        # gerenarte dummy source files for each header (for testing headers compilation)
+        # gerenarte dummy source files for each C++ header (for testing headers compilation)
         $(prorab_this_hxx_srcs): $(prorab_this_obj_dir)$(prorab_this_obj_spacer)%.hdr_cpp : $(d)%
 $(.RECIPEPREFIX)@test -t 1 && printf "\e[1;90mgenerate\e[0m $$(patsubst $(prorab_root_dir)%,%,$$@)\n" || printf "generate $$(patsubst $(prorab_root_dir)%,%,$$@)\n"
 $(.RECIPEPREFIX)$(a)mkdir -p $$(dir $$@)
-$(.RECIPEPREFIX)$(a)echo '#include "$$<"' > $$@
-$(.RECIPEPREFIX)$(a)echo '#include "$$<"' >> $$@
+$(.RECIPEPREFIX)$(a)echo '#include "$$(call prorab-private-make-include-path,$$<)"' > $$@
+$(.RECIPEPREFIX)$(a)echo '#include "$$(call prorab-private-make-include-path,$$<)"' >> $$@
 $(.RECIPEPREFIX)$(a)echo 'int main(int c, const char** v){(void)c;(void)v;return 0;}' >> $$@
 
+        # gerenarte dummy source files for each C header (for testing headers compilation)
         $(prorab_this_h_srcs): $(prorab_this_obj_dir)$(prorab_this_obj_spacer)%.hdr_c : $(d)%
 $(.RECIPEPREFIX)@test -t 1 && printf "\e[1;90mgenerate\e[0m $$(patsubst $(prorab_root_dir)%,%,$$@)\n" || printf "generate $$(patsubst $(prorab_root_dir)%,%,$$@)\n"
 $(.RECIPEPREFIX)$(a)mkdir -p $$(dir $$@)
-$(.RECIPEPREFIX)$(a)echo '#include "$$<"' > $$@
-$(.RECIPEPREFIX)$(a)echo '#include "$$<"' >> $$@
+$(.RECIPEPREFIX)$(a)echo '#include "$$(call prorab-private-make-include-path,$$<)"' > $$@
+$(.RECIPEPREFIX)$(a)echo '#include "$$(call prorab-private-make-include-path,$$<)"' >> $$@
 $(.RECIPEPREFIX)$(a)echo 'int main(int c, const char** v){(void)c;(void)v;return 0;}' >> $$@
 
         # compile .cpp static pattern rule
         $(prorab_this_cxx_objs): $(prorab_this_obj_dir)$(prorab_this_obj_spacer)%.o: $(d)% $(prorab_cxxflags_file)
 $(.RECIPEPREFIX)@test -t 1 && printf "\e[1;34mcompile\e[0m $$(patsubst $(prorab_root_dir)%,%,$$<)\n" || printf "compile $$(patsubst $(prorab_root_dir)%,%,$$<)\n"
 $(.RECIPEPREFIX)$(a)mkdir -p $$(dir $$@)
-$(.RECIPEPREFIX)$(a)$(this_cxx) --language c++ -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -MP -o "$$@" $(prorab_cxxflags) $$<
+$(.RECIPEPREFIX)$(a)(cd $(d) && $(this_cxx) --language c++ -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -MP -o "$$@" $(prorab_cxxflags) $$<)
+$(.RECIPEPREFIX)$(a)$(prorab_private_d_file_sed_command)
 
         # compile .hpp.hdr_cpp static pattern rule
         $(prorab_this_hxx_objs): $(d)%.o: $(d)% $(prorab_cxxflags_file)
 $(.RECIPEPREFIX)@test -t 1 && printf "\e[1;34mcompile\e[0m $$(patsubst $(prorab_root_dir)%,%,$$<)\n" || printf "compile $$(patsubst $(prorab_root_dir)%,%,$$<)\n"
 $(.RECIPEPREFIX)$(a)mkdir -p $$(dir $$@)
-$(.RECIPEPREFIX)$(a)$(this_cxx) --language c++ -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -MP -o "$$@" $(prorab_cxxflags) $$<
+$(.RECIPEPREFIX)$(a)(cd $(d) && $(this_cxx) --language c++ -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -MP -o "$$@" $(prorab_cxxflags) $$<)
+$(.RECIPEPREFIX)$(a)$(prorab_private_d_file_sed_command)
 
         # compile .c static pattern rule
         $(prorab_this_c_objs): $(prorab_this_obj_dir)$(prorab_this_obj_spacer)%.o: $(d)% $(prorab_cflags_file)
 $(.RECIPEPREFIX)@test -t 1 && printf "\e[0;35mcompile\e[0m $$(patsubst $(prorab_root_dir)%,%,$$<)\n" || printf "compile $$(patsubst $(prorab_root_dir)%,%,$$<)\n"
 $(.RECIPEPREFIX)$(a)mkdir -p $$(dir $$@)
-$(.RECIPEPREFIX)$(a)$(this_cc) --language c -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -MP -o "$$@" $(prorab_cflags) $$<
+$(.RECIPEPREFIX)$(a)(cd $(d) && $(this_cc) --language c -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -MP -o "$$@" $(prorab_cflags) $$<)
+$(.RECIPEPREFIX)$(a)$(prorab_private_d_file_sed_command)
 
         # compile .h.hdr_c static pattern rule
         $(prorab_this_h_objs): $(d)%.o: $(d)% $(prorab_cflags_file)
 $(.RECIPEPREFIX)@test -t 1 && printf "\e[0;35mcompile\e[0m $$(patsubst $(prorab_root_dir)%,%,$$<)\n" || printf "compile $$(patsubst $(prorab_root_dir)%,%,$$<)\n"
 $(.RECIPEPREFIX)$(a)mkdir -p $$(dir $$@)
-$(.RECIPEPREFIX)$(a)$(this_cc) --language c -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -MP -o "$$@" $(prorab_cflags) $$<
+$(.RECIPEPREFIX)$(a)(cd $(d) && $(this_cc) --language c -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -MP -o "$$@" $(prorab_cflags) $$<)
+$(.RECIPEPREFIX)$(a)$(prorab_private_d_file_sed_command)
 
         # compile .S static pattern rule
         $(prorab_this_as_objs): $(prorab_this_obj_dir)$(prorab_this_obj_spacer)%.o: $(d)% $(prorab_asflags_file)
 $(.RECIPEPREFIX)@test -t 1 && printf "\e[0;35mcompile\e[0m $$(patsubst $(prorab_root_dir)%,%,$$<)\n" || printf "compile $$(patsubst $(prorab_root_dir)%,%,$$<)\n"
 $(.RECIPEPREFIX)$(a)mkdir -p $$(dir $$@)
-$(.RECIPEPREFIX)$(a)$(this_as) $(if $(filter true,$(this_as_supports_deps_gen)),-MD "$$(patsubst %.o,%.d,$$@)") -o "$$@" $(prorab_asflags) $$<
+$(.RECIPEPREFIX)$(a)(cd $(d) && $(this_as) $(if $(filter true,$(this_as_supports_deps_gen)),-MD "$$(patsubst %.o,%.d,$$@)") -o "$$@" $(prorab_asflags) $$<)
+$(if $(filter true,$(this_as_supports_deps_gen)),$(.RECIPEPREFIX)$(a)$(prorab_private_d_file_sed_command))
 
         # include rules for header dependencies
         include $(wildcard $(addsuffix *.d,$(dir $(prorab_this_objs))))
@@ -856,10 +902,10 @@ $(.RECIPEPREFIX)$(a)rm -rf $(prorab_this_obj_dir)
         $(prorab_this_name): $(prorab_this_objs) $(prorab_ldargs_file) $(prorab_objs_file)
 $(.RECIPEPREFIX)@test -t 1 && printf "\e[0;31mlink\e[0m $$(patsubst $(prorab_root_dir)%,%,$$@)\n" || printf "link $$(patsubst $(prorab_root_dir)%,%,$$@)\n"
 $(.RECIPEPREFIX)$(a)mkdir -p $(d)$(prorab_private_out_dir)
-$(.RECIPEPREFIX)$(a)$(this_ld) $(prorab_ldflags) $$(filter %.o,$$^) $(prorab_ldlibs) -o "$$@"
+$(.RECIPEPREFIX)$(a)(cd $(d) && $(this_ld) $(prorab_ldflags) $$(filter %.o,$$^) $(prorab_ldlibs) -o "$$@")
 
         clean::
-$(.RECIPEPREFIX)$(if $(filter windows,$(os)), \
+$(.RECIPEPREFIX)$(if $(filter true,$(prorab_msys)), \
                     $(a)rm -f $(prorab_this_name).a \
                 )
 $(.RECIPEPREFIX)$(a)rm -f $(prorab_this_name)
