@@ -6,7 +6,7 @@ include $(d)../common.mk
 # Test that command line arguments of compiler and linker are relative to $(d).
 
 # This test does not work on Debian stretch due to old GCC
-ifneq ($(shell lsb_release -ds),Debian GNU/Linux 9 (stretch))
+ifneq ($(shell lsb_release -ds | sed -E -e "s/.*stretch.*/stretch/g"),stretch)
 
 define this_rules
 .PHONY: test

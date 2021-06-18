@@ -38,8 +38,7 @@ jobs:
           TZ=Europe/Helsinki ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
           apt update
-          apt install --assume-yes devscripts equivs myci lsb-release
-          lsb_release -sd
+          apt install --assume-yes devscripts equivs myci
       - name: set PACKAGE_VERSION
         uses: myci-actions/export-env-var@master
         with: {name: PACKAGE_VERSION, value: $(myci-deb-version.sh debian/changelog)}
