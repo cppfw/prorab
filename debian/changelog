@@ -1,3 +1,9 @@
+prorab (1.18.0) UNRELEASED; urgency=medium
+
+  * allow relative paths in this_* input variables
+
+ -- Ivan Gagis <igagis@gmail.com>  Fri, 18 Jun 2021 15:15:21 +0300
+
 prorab (1.17.11) unstable; urgency=medium
 
   * strip prorab-depend arguments
