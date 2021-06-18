@@ -298,7 +298,10 @@ $(.RECIPEPREFIX)$(a)rm -rf $(d)out
         prorab-private-make-include-path = $1
     endif
 
+    # d variable properly escaped to be used in sed pattern
     prorab_private_d_for_sed = $(subst .,\.,$(subst /,\/,$(d)))
+
+    # sed command which prepends $(d) to local paths in .d files
     prorab_private_d_file_sed_command_intermediate = sed -E -i -e "s/(^| )([^ /\][^ ]*)/\1\$$$$\(d\)\2/g;s/(^| )$(prorab_private_d_for_sed)([^ ]*)/\1\$$$$\(d\)\2/g" $$(patsubst %.o,%.d,$$@)
 
     # for windows we have to convert windows paths to unix paths using cygpath
