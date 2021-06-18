@@ -299,14 +299,16 @@ $(.RECIPEPREFIX)$(a)rm -rf $(d)out
     endif
 
     prorab_private_d_for_sed = $(subst .,\.,$(subst /,\/,$(d)))
-    prorab_private_d_file_sed_command = sed -E -i -e "s/(^| )([^ /\][^ ]*)/\1\$$$$\(d\)\2/g;s/(^| )$(prorab_private_d_for_sed)([^ ]*)/\1\$$$$\(d\)\2/g" $$(patsubst %.o,%.d,$$@)
+    prorab_private_d_file_sed_command_intermediate = sed -E -i -e "s/(^| )([^ /\][^ ]*)/\1\$$$$\(d\)\2/g;s/(^| )$(prorab_private_d_for_sed)([^ ]*)/\1\$$$$\(d\)\2/g" $$(patsubst %.o,%.d,$$@)
 
     # for windows we have to convert windows paths to unix paths using cygpath
     ifeq ($(os),windows)
         prorab_private_d_file_sed_command = sed -E -i -e "s/^ //g" $$(patsubst %.o,%.d,$$@) \
                 && cygpath -f $$(patsubst %.o,%.d,$$@) \
-                && sed -E -i -e "s/ \/\$$$$/ \\/g"
-                && $(prorab_private_d_file_sed_command)
+                && sed -E -i -e "s/ \/\$$$$/ \\/g" \
+                && $(prorab_private_d_file_sed_command_intermediate)
+    else
+        prorab_private_d_file_sed_command = $(prorab_private_d_file_sed_command_intermediate)
     endif
 
     ###############################
