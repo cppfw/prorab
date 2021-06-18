@@ -304,8 +304,9 @@ $(.RECIPEPREFIX)$(a)rm -rf $(d)out
     # for windows we have to convert windows paths to unix paths using cygpath
     ifeq ($(os),windows)
         prorab_private_d_file_sed_command = sed -E -i -e "s/^ //g" $$(patsubst %.o,%.d,$$@) \
-                && cygpath -f $$(patsubst %.o,%.d,$$@) \
-                && sed -E -i -e "s/ \/\$$$$/ \\/g" \
+                && cygpath -f $$(patsubst %.o,%.d,$$@) > $$(patsubst %.o,%.d,$$@).tmp \
+                && mv $$(patsubst %.o,%.d,$$@).tmp $$(patsubst %.o,%.d,$$@) \
+                && sed -E -i -e "s/ \/$$$$/ \\\\/g" $$(patsubst %.o,%.d,$$@) \
                 && $(prorab_private_d_file_sed_command_intermediate)
     else
         prorab_private_d_file_sed_command = $(prorab_private_d_file_sed_command_intermediate)
