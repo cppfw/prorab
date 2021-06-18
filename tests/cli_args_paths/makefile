@@ -5,6 +5,9 @@ include $(d)../common.mk
 # TEST DESCRIPTION:
 # Test that command line arguments of compiler and linker are relative to $(d).
 
+# This test does not work on Debian stretch due to old GCC
+ifneq ($(shell lsb_release -ds),Debian GNU/Linux 9 (stretch))
+
 define this_rules
 .PHONY: test
 test::
@@ -29,3 +32,5 @@ $(.RECIPEPREFIX)+$(a)$(MAKE) --directory=$(d)prj clean || $(this_err) "final 'ma
 $(.RECIPEPREFIX)@$(this_pass)
 endef
 $(eval $(this_rules))
+
+endif # ~not debian stretch
