@@ -19,7 +19,8 @@ endif
 $(.RECIPEPREFIX)$(a)(cd $(d)prj/app && LD_LIBRARY_PATH=../lib/out DYLD_LIBRARY_PATH=$$LD_LIBRARY_PATH out/app | dos2unix) > $(d)out.log
 $(.RECIPEPREFIX)$(a)cmp $(d)out.log $(d)out.log.cmp || (echo "out.log = "; cat $(d)out.log; echo "out.log.cmp = "; cat $(d)out.log.cmp; $(this_err) "first output log is not as expected");
 
-$(.RECIPEPREFIX)+$(a)$(MAKE) --directory=$(d)prj --no-print-directory | sed -E -e "s/^[^:]*://g" > $(d)out.log || $(this_err) "second 'make' failed"
+# use sed to unify the output across all environments
+$(.RECIPEPREFIX)+$(a)$(MAKE) --directory=$(d)prj --no-print-directory | sed -E -e "s/.*(Nothing to be done for).*/\1/g" > $(d)out.log || $(this_err) "second 'make' failed"
 $(.RECIPEPREFIX)$(a)cmp $(d)out.log $(d)out2.log.cmp || \
         (echo "out.log = "; cat $(d)out.log; echo "out2.log.cmp = "; cat $(d)out2.log.cmp; $(this_err) "second output log is not as expected");
 
