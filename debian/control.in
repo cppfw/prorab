@@ -4,6 +4,7 @@ Priority: extra
 Maintainer: Ivan Gagis <igagis@gmail.com>
 Build-Depends: debhelper (>= 9), make,
         dos2unix,
+        lsb-release,
         myci
 Standards-Version: 3.9.2
 
