@@ -298,14 +298,16 @@ $(.RECIPEPREFIX)$(a)rm -rf $(d)out
         prorab-private-make-include-path = $1
     endif
 
-    # prorab_private_d_for_sed := $(subst .,\.,$(subst /,\/,$(patsubst ./%,%,$(d))))
     prorab_private_d_for_sed = $(subst .,\.,$(subst /,\/,$(d)))
     prorab_private_d_file_sed_command = sed -E -i -e "s/(^| )([^ /\][^ ]*)/\1\$$$$\(d\)\2/g;s/(^| )$(prorab_private_d_for_sed)([^ ]*)/\1\$$$$\(d\)\2/g" $$(patsubst %.o,%.d,$$@)
-    # ifneq ($(prorab_private_d_for_sed),)
-    #     prorab_private_d_file_sed_command := sed -E -i -e "s/(^| )$(prorab_private_d_for_sed)([^ ]*)/\1\$$$$$$$$\(d\)\2/g" $$$$(patsubst %.o,%.d,$$$$@)
-    # else
-    #     prorab_private_d_file_sed_command := sed -E -i -e "s/(^| )([^ /\][^ ]*)/\1\$$$$$$$$\(d\)\2/g" $$$$(patsubst %.o,%.d,$$$$@)
-    # endif
+
+    # for windows we have to convert windows paths to unix paths using cygpath
+    ifeq ($(os),windows)
+        prorab_private_d_file_sed_command = sed -E -i -e "s/^ //g" $$(patsubst %.o,%.d,$$@) \
+                && cygpath -f $$(patsubst %.o,%.d,$$@) \
+                && sed -E -i -e "s/ \/\$$$$/ \\/g"
+                && $(prorab_private_d_file_sed_command)
+    endif
 
     ###############################
     # add target dependency macro #
