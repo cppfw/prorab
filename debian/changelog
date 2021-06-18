@@ -1,8 +1,8 @@
-prorab (1.18.0) UNRELEASED; urgency=medium
+prorab (1.18.0) unstable; urgency=medium
 
   * allow relative paths in this_* input variables
 
- -- Ivan Gagis <igagis@gmail.com>  Fri, 18 Jun 2021 15:15:21 +0300
+ -- Ivan Gagis <igagis@gmail.com>  Fri, 18 Jun 2021 17:16:04 +0300
 
 prorab (1.17.11) unstable; urgency=medium
 
