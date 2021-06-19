@@ -47,7 +47,7 @@ ifneq ($(prorab_is_included),true)
     prorab-add = $1 $2
 
     # increment variable
-    prarab-inc = x $1
+    prorab-inc = x $1
 
     # decrement variable
     prorab-dec = $(wordlist 2,$(words $1),$1)
@@ -125,7 +125,7 @@ ifneq ($(prorab_is_included),true)
     # variables #
 
     # this variable holds filesystem root directory
-    # (on Linux and MSYS it is /, on Windows/MinGW it is X:/, where X is the drive letter)
+    # (on Linux and MSYS it is /, on Windows with mingw32-make it is X:/, where X is the drive letter)
     prorab_fs_root := $(abspath /)
 
     prorab_root_makefile := $(abspath $(word $(call prorab-num,$(call prorab-dec,$(MAKEFILE_LIST))),$(MAKEFILE_LIST)))
@@ -141,7 +141,7 @@ ifneq ($(prorab_is_included),true)
     # define tab character
     prorab_tab := $(prorab_blank)	$(prorab_blank)
 
-    # defiane space character
+    # define space character
     prorab_space := $(prorab_blank) $(prorab_blank)
 
     # set recepie prefix to tab if it is not set (tab is default recepie prefix)
@@ -255,9 +255,9 @@ ifneq ($(prorab_is_included),true)
     ifeq ($(config),)
         override config := $(c)
     endif
-	ifeq ($(config),)
+    ifeq ($(config),)
         override config := default
-	endif
+    endif
 
     # shorthand alias for config variable
     override c := $(config)
@@ -542,7 +542,7 @@ $(.RECIPEPREFIX)$(a)rm -f $(prorab_this_symbolic_name)
         # need empty line here to avoid merging with adjacent macro instantiations
 
         # NOTE: Use 'abspath' to avoid second trailing slash in case 'this_headers_dir' already contains one.
-        #       It is ok to use 'abspath' here because $(d) is absolute path anyway.
+        #       It is ok to use 'abspath' here because 'd' is absolute path anyway.
         $(eval prorab_private_headers_dir := $(abspath $(d)$(this_headers_dir))/)
 
         $(eval prorab_private_headers := $(patsubst $(prorab_private_headers_dir)%,%, \

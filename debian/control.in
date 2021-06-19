@@ -11,7 +11,7 @@ Standards-Version: 3.9.2
 Package: prorab
 Section: devel
 Architecture: all
-Depends: sed, make
+Depends: sed, make, diffutils
 Description: GNU make based build system.
  GNU make based build system mainly for C++ programs.
  Defines building sequences for applications, libraries, debian packages.
