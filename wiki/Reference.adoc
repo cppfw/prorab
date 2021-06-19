@@ -24,9 +24,13 @@ Prorab defines `prorab_root_dir` variable which represents the directory of the 
 Prorab defines the `os` variable which indicates the host system on which the `make` is executed.
 
 .values
-- `linux` - any linux system
+- `linux` - any linux system or `Msys2-msys` environment.
 - `macosx` - any Mac OS X system
-- `windows` - Windows `Msys2` or `Cygwin` environment.
+- `windows` - Windows `Msys2-mingw` environment.
+
+== prorab_msys
+
+In case the host environment is `Msys2` (`msys` or `mingw`) the `prorab_msys` variable is set to `true`. Otherwise, undefined.
 
 == prorab_nproc
 
