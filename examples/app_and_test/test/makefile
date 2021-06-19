@@ -28,4 +28,4 @@ $(eval $(this_rules))
 # Note also that 'test' target depends on the application executable (nopapp), it has it as recipe prerequisite.
 # So, if this makefile is used as standalone one we need to know also how to build that prerequisite,
 # for that we just include the makefile of the app using 'prorab-try-include' macro:
-$(eval $(call prorab-try-include, ../app/makefile))
+$(eval $(call prorab-include, ../app/makefile))
