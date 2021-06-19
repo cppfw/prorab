@@ -10,6 +10,26 @@ Non-recursive **GNU make**-based build system.
 
 Provides rules for C/C++ library/application. Allows hierarchical makefile inclusion.
 
+== example
+
+The `makefile` for building a C++ application with `prorab` is as simple as follows:
+```makefile
+include prorab.mk
+
+this_name := myapp # this will be the executable file name
+
+this_cxxflags += -Wall
+this_cxxflags += -DDEBUG
+
+this_cflags += -Wall
+
+this_ldlibs += -lpthread
+
+this_srcs += main.cpp myapp.cpp legacy.c
+
+$(eval $(prorab-build-app))
+```
+
 == installation and documentation
 
 See **link:wiki/HomePage.adoc[WiKi]**
