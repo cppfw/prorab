@@ -24,7 +24,7 @@ After invocation of `prorab-build-app` there are following variables defined:
 
 Example:
 
-```
+```makefile
 include prorab.mk
 
 this_name := myapp
