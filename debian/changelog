@@ -1,3 +1,9 @@
+prorab (1.18.2) unstable; urgency=medium
+
+  * allow customizing shared library suffix and library prefix
+
+ -- Ivan Gagis <igagis@gmail.com>  Tue, 22 Jun 2021 15:19:36 +0300
+
 prorab (1.18.1) unstable; urgency=medium
 
   * build for debian stretch
