@@ -26,10 +26,17 @@
 ifneq ($(prorab_is_included),true)
     prorab_is_included := true
 
-    # check if running minimal supported GNU make version
+    # other popular make utilities like 'nmake' or 'BSD make' have even different syntax for preprocessor
+    # commands like ifeq/ifneq, so it is unlikely we reach here if wrong 'make' us used.
+    # but nevertheless, check that we are running exactly 'GNU make'
+    ifneq ($(shell $(MAKE) --version | sed -E -n 's/.*(GNU Make).*/\1/p'),GNU Make)
+        $(error "error: non-GNU make detected, prorab requires GNU make")
+    endif
+
+    # check if running minimal supported 'GNU make' version
     prorab_min_gnumake_version := 3.81
     ifeq ($(filter $(prorab_min_gnumake_version),$(firstword $(sort $(MAKE_VERSION) $(prorab_min_gnumake_version)))),)
-        $(error GNU make $(prorab_min_gnumake_version) or higher is needed, but found only $(MAKE_VERSION))
+        $(error GNU make version $(prorab_min_gnumake_version) or higher is needed, but found only $(MAKE_VERSION))
     endif
 
     # check that prorab.mk is the first file included
