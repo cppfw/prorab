@@ -93,6 +93,9 @@ ifneq ($(prorab_is_included),true)
         # clear all vars
         $(foreach var,$(filter this_%,$(.VARIABLES)),$(eval $(var) := ))
 
+        $(eval this_dot_so := $(dot_so))
+        $(eval this_lib_prefix := lib)
+
         $(eval this_dot_cxx := .cpp)
         $(eval this_dot_hxx := .hpp)
 
@@ -492,10 +495,10 @@ $(.RECIPEPREFIX)$(a)rm -f $(prorab_prefix)bin/$(notdir $(prorab_this_name)) \
 
         $(if $(this_soname),,$(error this_soname is not defined))
 
-        $(eval prorab_this_symbolic_name := $(abspath $(d)$(prorab_private_out_dir)lib$(this_name)$(dot_so)))
+        $(eval prorab_this_symbolic_name := $(abspath $(d)$(prorab_private_out_dir)$(this_lib_prefix)$(this_name)$(this_dot_so)))
 
         $(if $(filter macosx,$(os)), \
-                $(eval prorab_this_name := $(abspath $(d)$(prorab_private_out_dir)lib$(this_name).$(this_soname)$(dot_so))) \
+                $(eval prorab_this_name := $(abspath $(d)$(prorab_private_out_dir)$(this_lib_prefix)$(this_name).$(this_soname)$(this_dot_so))) \
                 $(eval prorab_private_ldflags := -dynamiclib -Wl,-install_name,@rpath/$(notdir $(prorab_this_name)),-headerpad_max_install_names,-undefined,dynamic_lookup,-compatibility_version,1.0,-current_version,1.0) \
             ,\
                 $(eval prorab_this_name := $(prorab_this_symbolic_name).$(this_soname)) \
@@ -657,8 +660,8 @@ $(.RECIPEPREFIX)$(a)for i in $(prorab_private_headers) $(this_install_c_hdrs) $(
         $(if $(this_name),,$(error this_name is not defined))
 
         $(if $(filter true,$(prorab_msys)), \
-                $(eval prorab_this_name := $(abspath $(d)$(prorab_private_out_dir)lib$(this_name)$(dot_so))) \
-                $(eval prorab_private_ldflags := -shared -s -Wl,--out-implib=$(abspath $(d)$(prorab_private_out_dir)lib$(this_name)$(dot_so).a)) \
+                $(eval prorab_this_name := $(abspath $(d)$(prorab_private_out_dir)$(this_lib_prefix)$(this_name)$(this_dot_so))) \
+                $(eval prorab_private_ldflags := -shared -s -Wl,--out-implib=$(abspath $(d)$(prorab_private_out_dir)$(this_lib_prefix)$(this_name)$(this_dot_so).a)) \
                 $(eval prorab_this_symbolic_name := $(prorab_this_name)) \
             , \
                 $(prorab-private-dynamic-lib-specific-rules-nix-systems) \
@@ -699,7 +702,7 @@ $(.RECIPEPREFIX)$(a)rm -f $(prorab_prefix)lib/$(notdir $(prorab_this_name)) \
 
         $(if $(this_name),,$(error this_name is not defined))
 
-        $(eval prorab_this_static_lib := $(abspath $(d)$(prorab_private_out_dir)lib$(this_name).a))
+        $(eval prorab_this_static_lib := $(abspath $(d)$(prorab_private_out_dir)$(this_lib_prefix)$(this_name).a))
 
         all: $(prorab_this_static_lib)
 
