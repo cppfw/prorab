@@ -528,6 +528,8 @@ this_install_c_hdrs := <c-headers-to-install>
 this_install_cxx_hdrs := <cxx-headers-to-install>
 this_static_lib_only := <static-lib-only>
 this_ar := <archiver>
+this_dot_so := <shared-lib-suffix>
+this_lib_prefix := <library-prefix>
 
 # same input variables as for application
 this_name := <name>
@@ -568,6 +570,8 @@ $(eval $(prorab-build-lib))
 - `this_install_cxx_hdrs` - list of `c++`-only header files to install. See `this_install_hdrs` for details. Relative to `$(d)`. The `test` target will test these header files for compilation.
 - `this_static_lib_only` - disables building of shared library. If `true` only static library is built. Otherwise both, shared and static libraries are built. Defaults to empty.
 - `this_ar` - the archiver program to use. Defaults to `$(AR)`.
+- `this_dot_so` - suffix of the shared library file. Defaults to `$(dot_so)`.
+- `this_lib_prefix` - library file prefix. Defaults to `lib`.
 - `this_name` - name of the library. It will be used to generate the output binary filename. **Mandatory**.
 - `this_srcs` - list of sources, ok to use `+=` right a way. Relative to `$(d)`. Files with suffix `$(this_dot_cxx)` will be compiled by {cpp} compiler, files with suffix `.c` will be compiled with C compiler, files with suffix `.S` will be compiled with assembler.
 - `this_c_srcs` - list of source files to be compiled by C compiler. Rleative to `$(d)`.
