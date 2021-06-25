@@ -344,6 +344,27 @@ $(.RECIPEPREFIX)$(a)rm -rf $(d)out
     ################################
     # makefile inclusion functions #
 
+    # check if makefile was already included with prorab-try-include-once, prorab-include or prorab-try-include
+    # - returns 'true' in case file was included
+    # - returns nothing otherwise
+    define prorab-is-included
+
+        $(eval prorab_private_include_file := $(abspath $1))
+        $(if $(filter $(prorab_private_include_file),$(MAKEFILE_LIST)),true)
+
+    endef
+
+    # include makefile if it is not included already, does not fail if file does not exist
+    define prorab-try-include-once
+
+        $(eval prorab_private_include_file := $(abspath $1))
+        $(if $(filter $(prorab_private_include_file),$(MAKEFILE_LIST)), \
+                , \
+                -include $(prorab_private_include_file) \
+            )
+
+    endef
+
     # for storing list of included makefiles
     prorab_included_makefiles :=
 
