@@ -188,6 +188,28 @@ $(eval $(call prorab-include, ../some_dir/makefile))
 
 Same as `prorab-include` but does not fail in case the specified `makefile` does not exist.
 
+== prorab-try-simple-include
+
+Include file once without adjusting the `d` variable. In case the given file has already been included before then nothing is done.
+In case specified file does not exist the evaluation does not fail.
+
+.syntax
+[source,makefile]
+....
+$(eval $(call prorab-try-simple-include, <file>))
+....
+
+.arguments
+- `file` - path to the file to include. Relative to `$(d)`.
+
+.example
+[source,makefile]
+....
+include prorab.mk
+
+$(eval $(call prorab-try-simple-include, ../some_dir/common.mk))
+....
+
 == prorab-include-subdirs
 
 Include `makefile`s from all subdirectories of `$(d)`. Subdirectories which do not have a `makefile` are ignored.
@@ -211,6 +233,35 @@ Note: `$(eval $(prorab-include-subdirs))` is same as `$(eval $(call prorab-inclu
 include prorab.mk
 
 $(eval $(call prorab-include-subdirs, Makefile))
+....
+
+== prorab-is-included
+
+Check if given file has already been included by `prorab-try-simple-include`, `prorab-include` or `prorab-try-include`.
+Returns `true` in case the file was already included. Returns nothing in case the file has not been included yet.
+
+.syntax
+[source,makefile]
+....
+$(call prorab-is-included, <file-name>)
+....
+
+.arguments
+- `file-name` - name of the file to check for inclusion.
+
+.example
+[source,makefile]
+....
+
+include prorab.mk
+
+$(eval $(call prorab-try-include, ../some/makefile))
+
+ifeq ($(call prorab-is-included, ../some/makefile),true)
+    # ... assume ../some/makefile is included
+else
+    $(error no '../some/makefile' found)
+endif
 ....
 
 == prorab-clear-this-vars
