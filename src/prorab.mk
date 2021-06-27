@@ -47,9 +47,6 @@ ifneq ($(prorab_is_included),true)
     ###############################
     # define arithmetic functions #
 
-    # get number from variable
-    prorab-num = $(words $1)
-
     # add two variables
     prorab-add = $1 $2
 
@@ -132,7 +129,7 @@ ifneq ($(prorab_is_included),true)
     # (on Linux and MSYS it is /, on Windows with mingw32-make it is X:/, where X is the drive letter)
     prorab_fs_root := $(abspath /)
 
-    prorab_root_makefile := $(abspath $(word $(call prorab-num,$(call prorab-dec,$(MAKEFILE_LIST))),$(MAKEFILE_LIST)))
+    prorab_root_makefile := $(abspath $(word $(words $(call prorab-dec,$(MAKEFILE_LIST))),$(MAKEFILE_LIST)))
     prorab_root_dir := $(dir $(prorab_root_makefile))
 
     prorab_this_makefile := $(prorab_root_makefile)
@@ -285,7 +282,7 @@ $(.RECIPEPREFIX)$(a)rm -rf $(d)out
     define prorab-config
         $(if $1,,$(error no 'config dir' argument is given to prorab-config macro))
         $(eval config_dir := $(abspath $(d)$(strip $1))/)
-        $(call prorab-private-config, $(config))
+        $(call prorab-private-config,$(config))
     endef
 
     define prorab-config-default
@@ -368,39 +365,52 @@ $(.RECIPEPREFIX)$(a)rm -rf $(d)out
     prorab_included_makefiles :=
 
     define prorab-include
-        $(eval prorab_private_path_to_makefile := $(d)$(strip $1))
+        $(eval prorab_private_path_to_makefile := $(abspath $(d)$(strip $1)))
 
         # if makefile is already included do nothing
-        $(if $(filter $(abspath $(prorab_private_path_to_makefile)),$(prorab_included_makefiles)), \
+        $(if $(filter $(prorab_private_path_to_makefile),$(prorab_included_makefiles)), \
             , \
-                $(eval prorab_included_makefiles += $(abspath $(prorab_private_path_to_makefile))) \
-                $(call prorab-private-include,$(prorab_private_path_to_makefile)) \
+                $(eval prorab_included_makefiles += $(prorab_private_path_to_makefile)) \
+                $(call prorab-private-include,$(prorab_private_path_to_makefile),,$(strip $2)) \
             )
     endef
 
     define prorab-try-include
-        $(eval prorab_private_path_to_makefile := $(d)$(strip $1))
+        $(eval prorab_private_path_to_makefile := $(abspath $(d)$(strip $1)))
 
         # if makefile is already included do nothing
-        $(if $(filter $(abspath $(prorab_private_path_to_makefile)),$(prorab_included_makefiles)), \
+        $(if $(filter $(prorab_private_path_to_makefile),$(prorab_included_makefiles)), \
             , \
-                $(eval prorab_included_makefiles += $(abspath $(prorab_private_path_to_makefile))) \
-                $(call prorab-private-include,$(prorab_private_path_to_makefile),-) \
+                $(eval prorab_included_makefiles += $(prorab_private_path_to_makefile)) \
+                $(call prorab-private-include,$(prorab_private_path_to_makefile),-,$(strip $2)) \
             )
     endef
 
     # for storing previous prorab_this_makefile when including other makefiles
     prorab_private_this_makefiles :=
 
+    # configs stack
+    prorab_private_configs :=
+
     # include file with correct current directory
     define prorab-private-include
+        # push config name
+        prorab_private_configs += $$(config)
+        override config := $$(if $3,$3,$$(config))
+        override c := $$(config)
+
         prorab_private_this_makefiles += $$(prorab_this_makefile)
-        prorab_this_makefile := $(abspath $1)
+        prorab_this_makefile := $1
         d := $$(dir $$(prorab_this_makefile))
         $2include $1
         prorab_this_makefile := $$(lastword $$(prorab_private_this_makefiles))
         d := $$(dir $$(prorab_this_makefile))
-        prorab_private_this_makefiles := $$(wordlist 1,$$(call prorab-num,$$(call prorab-dec,$$(prorab_private_this_makefiles))),$$(prorab_private_this_makefiles))
+        prorab_private_this_makefiles := $$(wordlist 1,$$(words $$(call prorab-dec,$$(prorab_private_this_makefiles))),$$(prorab_private_this_makefiles))
+
+        # pop config name
+        override config := $$(lastword $$(prorab_private_configs))
+        override c := $$(config)
+        prorab_private_configs := $$(wordlist 1,$$(words $$(call prorab-dec,$$(prorab_private_configs))),$$(prorab_private_configs))
     endef
 
     # include all makefiles in subdirectories
