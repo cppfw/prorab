@@ -13,3 +13,6 @@ $(.RECIPEPREFIX)$(a)echo "hello prorab" > $(d)$(this_out_dir)out.txt
 $(.RECIPEPREFIX)$(a)rm -f $(d)$(this_out_dir)out.txt
 endef
 $(eval $(this_rules))
+
+# test including makefile with different config
+$(eval $(call prorab-include, makefile2, dbg))

@@ -165,16 +165,17 @@ Essentially, it just adds a recipe-less rule:
 
 == prorab-include
 
-Include another `makefile` adjusting the `d` variable for the included file. Include the given `makefile` only once. In case the given `makefile` has already been included before then nothing is done. In case specified `makefile` does not exist the evaluation fails.
+Include another `makefile` adjusting the `d` and `config`/`c` variables for the included file. Include the given `makefile` only once. In case the given `makefile` has already been included before then nothing is done. In case specified `makefile` does not exist the evaluation fails.
 
 .syntax
 [source,makefile]
 ....
-$(eval $(call prorab-include, <makefile>))
+$(eval $(call prorab-include, <makefile>, <config-name>))
 ....
 
 .arguments
 - `makefile` - path to the `makefile` to include. Relative to `$(d)`.
+- `config-name` - name of the configuration to use for included `makefile`. Optional.
 
 .example
 [source,makefile]

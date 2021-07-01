@@ -4,6 +4,7 @@ include $(d)../common.mk
 
 # TEST DESCRIPTION:
 # Test prorab-config macro.
+# Test prorab-inlcude macro with config switching.
 
 define this_rules
 .PHONY: test
@@ -13,8 +14,10 @@ $(.RECIPEPREFIX)@$(this_running) $(this_test)
 $(.RECIPEPREFIX)+$(a)$(MAKE) -C $(d)src clean config=rel || $(this_err) "initial 'make clean config=rel' failed"
 $(.RECIPEPREFIX)+$(a)$(MAKE) -C $(d)src config=rel || $(this_err) "'make config=rel' failed"
 $(.RECIPEPREFIX)$(a)if [ ! -f $(d)src/out/rel/out.txt ]; then $(this_err) "$(d)src/out/rel/out.txt file not found"; fi
+$(.RECIPEPREFIX)$(a)if [ ! -f $(d)src/out/dbg/out2.txt ]; then $(this_err) "$(d)src/out/dbg/out2.txt file not found"; fi
 $(.RECIPEPREFIX)+$(a)$(MAKE) -C $(d)src clean config=rel || $(this_err) "final 'make clean config=rel' failed"
 $(.RECIPEPREFIX)$(a)if [ -f $(d)src/out/rel/out.txt ]; then $(this_err) "$(d)src/out/rel/out.txt file unexpectedly found"; fi
+$(.RECIPEPREFIX)$(a)if [ -f $(d)src/out/dbg/out2.txt ]; then $(this_err) "$(d)src/out/dbg/out2.txt file unexpectedly found"; fi
 
 $(.RECIPEPREFIX)+$(a)$(MAKE) -C $(d)src clean || $(this_err) "initial 'make clean' failed"
 $(.RECIPEPREFIX)+$(a)$(MAKE) -C $(d)src || $(this_err) "'make' failed"

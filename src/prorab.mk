@@ -47,9 +47,6 @@ ifneq ($(prorab_is_included),true)
     ###############################
     # define arithmetic functions #
 
-    # get number from variable
-    prorab-num = $(words $1)
-
     # add two variables
     prorab-add = $1 $2
 
@@ -94,9 +91,6 @@ ifneq ($(prorab_is_included),true)
 
     # function which clears all 'this_'-prefixed variables and sets default values
     define prorab-clear-this-vars
-
-        # need empty line here to avoid merging with adjacent macro instantiations
-
         # clear all vars
         $(foreach var,$(filter this_%,$(.VARIABLES)),$(eval $(var) := ))
 
@@ -126,9 +120,6 @@ ifneq ($(prorab_is_included),true)
         $(eval this_asflags := $(ASFLAGS))
         $(eval this_ldflags := $(LDFLAGS))
         $(eval this_ldlibs := $(LDLIBS))
-
-        # need empty line here to avoid merging with adjacent macro instantiations
-
     endef
 
     #############
@@ -138,7 +129,7 @@ ifneq ($(prorab_is_included),true)
     # (on Linux and MSYS it is /, on Windows with mingw32-make it is X:/, where X is the drive letter)
     prorab_fs_root := $(abspath /)
 
-    prorab_root_makefile := $(abspath $(word $(call prorab-num,$(call prorab-dec,$(MAKEFILE_LIST))),$(MAKEFILE_LIST)))
+    prorab_root_makefile := $(abspath $(word $(words $(call prorab-dec,$(MAKEFILE_LIST))),$(MAKEFILE_LIST)))
     prorab_root_dir := $(dir $(prorab_root_makefile))
 
     prorab_this_makefile := $(prorab_root_makefile)
@@ -153,6 +144,11 @@ ifneq ($(prorab_is_included),true)
 
     # define space character
     prorab_space := $(prorab_blank) $(prorab_blank)
+
+    # define new line character
+    define prorab_newline
+
+    endef
 
     # set recepie prefix to tab if it is not set (tab is default recepie prefix)
     ifeq ($(.RECIPEPREFIX),)
@@ -286,7 +282,7 @@ $(.RECIPEPREFIX)$(a)rm -rf $(d)out
     define prorab-config
         $(if $1,,$(error no 'config dir' argument is given to prorab-config macro))
         $(eval config_dir := $(abspath $(d)$(strip $1))/)
-        $(call prorab-private-config, $(config))
+        $(call prorab-private-config,$(config))
     endef
 
     define prorab-config-default
@@ -369,73 +365,61 @@ $(.RECIPEPREFIX)$(a)rm -rf $(d)out
     prorab_included_makefiles :=
 
     define prorab-include
-
-        # need empty line here to avoid merging with adjacent macro instantiations
-
-        $(eval prorab_private_path_to_makefile := $(d)$(strip $1))
+        $(eval prorab_private_path_to_makefile := $(abspath $(d)$(strip $1)))
 
         # if makefile is already included do nothing
-        $(if $(filter $(abspath $(prorab_private_path_to_makefile)),$(prorab_included_makefiles)), \
+        $(if $(filter $(prorab_private_path_to_makefile),$(prorab_included_makefiles)), \
             , \
-                $(eval prorab_included_makefiles += $(abspath $(prorab_private_path_to_makefile))) \
-                $(call prorab-private-include,$(prorab_private_path_to_makefile)) \
+                $(eval prorab_included_makefiles += $(prorab_private_path_to_makefile)) \
+                $(call prorab-private-include,$(prorab_private_path_to_makefile),,$(strip $2)) \
             )
-
-        # need empty line here to avoid merging with adjacent macro instantiations
-
     endef
 
     define prorab-try-include
-
-        # need empty line here to avoid merging with adjacent macro instantiations
-
-        $(eval prorab_private_path_to_makefile := $(d)$(strip $1))
+        $(eval prorab_private_path_to_makefile := $(abspath $(d)$(strip $1)))
 
         # if makefile is already included do nothing
-        $(if $(filter $(abspath $(prorab_private_path_to_makefile)),$(prorab_included_makefiles)), \
+        $(if $(filter $(prorab_private_path_to_makefile),$(prorab_included_makefiles)), \
             , \
-                $(eval prorab_included_makefiles += $(abspath $(prorab_private_path_to_makefile))) \
-                $(call prorab-private-include,$(prorab_private_path_to_makefile),-) \
+                $(eval prorab_included_makefiles += $(prorab_private_path_to_makefile)) \
+                $(call prorab-private-include,$(prorab_private_path_to_makefile),-,$(strip $2)) \
             )
-
-        # need empty line here to avoid merging with adjacent macro instantiations
-
     endef
 
     # for storing previous prorab_this_makefile when including other makefiles
     prorab_private_this_makefiles :=
 
+    # configs stack
+    prorab_private_configs :=
+
     # include file with correct current directory
     define prorab-private-include
-
-        # need empty line here to avoid merging with adjacent macro instantiations
+        # push config name
+        prorab_private_configs += $$(config)
+        override config := $$(if $3,$3,$$(config))
+        override c := $$(config)
 
         prorab_private_this_makefiles += $$(prorab_this_makefile)
-        prorab_this_makefile := $(abspath $1)
+        prorab_this_makefile := $1
         d := $$(dir $$(prorab_this_makefile))
         $2include $1
         prorab_this_makefile := $$(lastword $$(prorab_private_this_makefiles))
         d := $$(dir $$(prorab_this_makefile))
-        prorab_private_this_makefiles := $$(wordlist 1,$$(call prorab-num,$$(call prorab-dec,$$(prorab_private_this_makefiles))),$$(prorab_private_this_makefiles))
+        prorab_private_this_makefiles := $$(wordlist 1,$$(words $$(call prorab-dec,$$(prorab_private_this_makefiles))),$$(prorab_private_this_makefiles))
 
-        # need empty line here to avoid merging with adjacent macro instantiations
-
+        # pop config name
+        override config := $$(lastword $$(prorab_private_configs))
+        override c := $$(config)
+        prorab_private_configs := $$(wordlist 1,$$(words $$(call prorab-dec,$$(prorab_private_configs))),$$(prorab_private_configs))
     endef
-    # !!!NOTE: the trailing empty line in 'prorab-private-include' definition is needed so that include files would be separated from each other
 
     # include all makefiles in subdirectories
     define prorab-include-subdirs
-
-        # need empty line here to avoid merging with adjacent macro instantiations
-
         $(eval prorab_private_makefilename := $(if $(strip $1),$1,makefile))
 
         $(foreach path,$(wildcard $(d)*/$(prorab_private_makefilename)), \
-                $$(eval $$(call prorab-include,$(patsubst $(d)%,%,$(path)))) \
+                $$(eval $$(call prorab-include,$(patsubst $(d)%,%,$(path)))$(prorab_newline)) \
             )
-
-        # need empty line here to avoid merging with adjacent macro instantiations
-
     endef
 
     # TODO: deprecated, remove
@@ -488,9 +472,6 @@ $(.RECIPEPREFIX)+$(a)$(MAKE)
     prorab_private_out_dir = $(if $(this_out_dir),$(if $(patsubst %/,,$(this_out_dir)),$(this_out_dir)/,$(this_out_dir)))
 
     define prorab-private-app-specific-rules
-
-        # need empty line here to avoid merging with adjacent macro instantiations
-
         $(if $(this_name),,$(error this_name is not defined))
 
         $(eval prorab_private_ldflags := )
@@ -512,15 +493,9 @@ $(.RECIPEPREFIX)$(a) \
                 uninstall::
 $(.RECIPEPREFIX)$(a)rm -f $(prorab_prefix)bin/$(notdir $(prorab_this_name)) \
             )
-
-        # need empty line here to avoid merging with adjacent macro instantiations
-
     endef
 
     define prorab-private-dynamic-lib-specific-rules-nix-systems
-
-        # need empty line here to avoid merging with adjacent macro instantiations
-
         $(if $(this_soname),,$(error this_soname is not defined))
 
         $(eval prorab_this_symbolic_name := $(abspath $(d)$(prorab_private_out_dir)$(this_lib_prefix)$(this_name)$(this_dot_so)))
@@ -563,15 +538,9 @@ $(.RECIPEPREFIX)$(a)rm -f $(prorab_prefix)lib/$(notdir $(prorab_this_symbolic_na
 
         clean::
 $(.RECIPEPREFIX)$(a)rm -f $(prorab_this_symbolic_name)
-
-        # need empty line here to avoid merging with adjacent macro instantiations
-
     endef
 
     define prorab-private-lib-install-headers-rule
-
-        # need empty line here to avoid merging with adjacent macro instantiations
-
         # NOTE: Use 'abspath' to avoid second trailing slash in case 'this_headers_dir' already contains one.
         #       It is ok to use 'abspath' here because 'd' is absolute path anyway.
         $(eval prorab_private_headers_dir := $(abspath $(d)$(this_headers_dir))/)
@@ -676,15 +645,9 @@ $(.RECIPEPREFIX)$(a)for i in $(prorab_private_headers) $(this_install_c_hdrs) $(
                     [ ! -z "$$$$path" ] && rm -rf $(prorab_prefix)include/$$$$path; \
                 done
             )
-
-        # need empty line here to avoid merging with adjacent macro instantiations
-
     endef
 
     define prorab-private-dynamic-lib-specific-rules
-
-        # need empty line here to avoid merging with adjacent macro instantiations
-
         $(if $(this_name),,$(error this_name is not defined))
 
         $(if $(filter true,$(prorab_msys)), \
@@ -719,15 +682,9 @@ $(.RECIPEPREFIX)$(a) \
 $(.RECIPEPREFIX)$(a)rm -f $(prorab_prefix)lib/$(notdir $(prorab_this_name)) \
                 )
             )
-
-        # need empty line here to avoid merging with adjacent macro instantiations
-
     endef
 
     define prorab-private-lib-static-library-rule
-
-        # need empty line here to avoid merging with adjacent macro instantiations
-
         $(if $(this_name),,$(error this_name is not defined))
 
         $(eval prorab_this_static_lib := $(abspath $(d)$(prorab_private_out_dir)$(this_lib_prefix)$(this_name).a))
@@ -757,28 +714,16 @@ $(.RECIPEPREFIX)$(a)rm -f $(prorab_prefix)lib/$(notdir $(prorab_this_static_lib)
 $(.RECIPEPREFIX)@test -t 1 && printf "\e[0;33mcreate static library\e[0m $$(notdir $$@)\n" || printf "create static library $$(notdir $$@)\n"
 $(.RECIPEPREFIX)$(a)rm -f $$@
 $(.RECIPEPREFIX)$(a)$(this_ar) cr $$@ $$(filter %.o,$$^)
-
-        # need empty line here to avoid merging with adjacent macro instantiations
-
     endef
 
     define prorab-private-args-file-rules
-
-        # need empty line here to avoid merging with adjacent macro instantiations
-
         $1: $(if $(shell echo '$2' | cmp $1 2>/dev/null), phony,)
 $(.RECIPEPREFIX)$(a)mkdir -p $$(dir $$@)
 $(.RECIPEPREFIX)$(a)touch $$@
 $(.RECIPEPREFIX)$(a)echo '$2' > $$@
-
-        # need empty line here to avoid merging with adjacent macro instantiations
-
     endef
 
     define prorab-private-compile-rules
-
-        # need empty line here to avoid merging with adjacent macro instantiations
-
         ############################################################################################
         # NOTE: here we also compile header files listed in this_hdrs variable to check that those #
         #       are compileable with the same compiler flags as source files                       #
@@ -909,15 +854,9 @@ $(if $(filter true,$(this_as_supports_deps_gen)),$(.RECIPEPREFIX)$(a)$(prorab_pr
 
         clean::
 $(.RECIPEPREFIX)$(a)rm -rf $(prorab_this_obj_dir)
-
-        # need empty line here to avoid merging with adjacent macro instantiations
-
     endef
 
     define prorab-private-link-rules
-
-        # need empty line here to avoid merging with adjacent macro instantiations
-
         $(if $(prorab_this_obj_dir),,$(error prorab_this_obj_dir is not defined))
 
         $(eval prorab_ldflags := $(this_ldflags) $(prorab_private_ldflags))
@@ -940,16 +879,10 @@ $(.RECIPEPREFIX)$(if $(filter true,$(prorab_msys)), \
                     $(a)rm -f $(prorab_this_name).a \
                 )
 $(.RECIPEPREFIX)$(a)rm -f $(prorab_this_name)
-
-        # need empty line here to avoid merging with adjacent macro instantiations
-
     endef
 
     # if there are no any sources in this_srcs then just install headers, no need to build binaries
     define prorab-build-lib
-
-        # need empty line here to avoid merging with adjacent macro instantiations
-
         $(prorab-private-lib-install-headers-rule)
         $(if $(this_srcs)$(this_c_srcs)$(this_cxx_srcs), \
                 $(prorab-private-compile-rules) \
@@ -961,21 +894,12 @@ $(.RECIPEPREFIX)$(a)rm -f $(prorab_this_name)
                     ) \
                 , \
             )
-
-        # need empty line here to avoid merging with adjacent macro instantiations
-
     endef
 
     define prorab-build-app
-
-        # need empty line here to avoid merging with adjacent macro instantiations
-
         $(prorab-private-app-specific-rules)
         $(prorab-private-compile-rules)
         $(prorab-private-link-rules)
-
-        # need empty line here to avoid merging with adjacent macro instantiations
-
     endef
 
 endif # ~include guard
