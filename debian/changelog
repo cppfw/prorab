@@ -1,3 +1,9 @@
+prorab (1.18.3) unstable; urgency=medium
+
+  * prorab-include specific config
+
+ -- Ivan Gagis <igagis@gmail.com>  Thu, 01 Jul 2021 19:26:35 +0300
+
 prorab (1.18.2) unstable; urgency=medium
 
   * allow customizing shared library suffix and library prefix
