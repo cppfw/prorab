@@ -1,3 +1,9 @@
+prorab (1.18.7) unstable; urgency=medium
+
+  * add CXXFLAGS to this_cxxflags_test by default
+
+ -- Ivan Gagis <igagis@gmail.com>  Mon, 05 Jul 2021 00:53:29 +0300
+
 prorab (1.18.6) unstable; urgency=medium
 
   * do not use override for immediate assignment
