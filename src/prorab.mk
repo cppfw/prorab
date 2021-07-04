@@ -126,16 +126,16 @@ ifneq ($(prorab_is_included),true)
     # variables #
 
     # make standard variables immediate assignment, as those are deferred assignment by default which is not needed
-    override CC := $(CC)
-    override CXX := $(CXX)
-    override AS := $(AS)
-    override AR := $(AR)
-    override CFLAGS := $(CFLAGS)
-    override CXXFLAGS := $(CXXFLAGS)
-    override ASFLAGS := $(ASFLAGS)
-    override CPPFLAGS := $(CPPFLAGS)
-    override LDFLAGS := $(LDFLAGS)
-    override LDLIBS := $(LDLIBS)
+    CC := $(CC)
+    CXX := $(CXX)
+    AS := $(AS)
+    AR := $(AR)
+    CFLAGS := $(CFLAGS)
+    CXXFLAGS := $(CXXFLAGS)
+    ASFLAGS := $(ASFLAGS)
+    CPPFLAGS := $(CPPFLAGS)
+    LDFLAGS := $(LDFLAGS)
+    LDLIBS := $(LDLIBS)
 
     # this variable holds filesystem root directory
     # (on Linux and MSYS it is /, on Windows with mingw32-make it is X:/, where X is the drive letter)

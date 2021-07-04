@@ -1,0 +1,36 @@
+include $(d)../../src/prorab.mk
+
+this_var :=
+
+CC += $(this_var)
+CXX += $(this_var)
+AS += $(this_var)
+AR += $(this_var)
+ASFLAGS += $(this_var)
+CFLAGS += $(this_var)
+CXXFLAGS += $(this_var)
+CPPFLAGS += $(this_var)
+LDFLAGS += $(this_var)
+LDLIBS += $(this_var)
+
+this_var := helloworld
+
+ifneq ($(filter helloworld,$(CC) $(CXX) $(AS) $(AR) $(ASFLAGS) $(CFLAGS) $(CXXFLAGS) $(CPPFLAGS) $(LDFLAGS) $(LDLIBS)),)
+    $(info CC = $(CC))
+    $(info CXX = $(CXX))
+    $(info AS = $(AS))
+    $(info AR = $(AR))
+    $(info ASFLAGS = $(ASFLAGS))
+    $(info CFLAGS = $(CFLAGS))
+    $(info CXXFLAGS = $(CXXFLAGS))
+    $(info CPPFLAGS = $(CPPFLAGS))
+    $(info LDFLAGS = $(LDFLAGS))
+    $(info LDLIBS = $(LDLIBS))
+    $(error test failed)
+endif
+
+define this_rules
+test::
+$(.RECIPEPREFIX)$(a)echo "test CXXFLAGS etc. vars immediate assignment"
+endef
+$(eval $(this_rules))
