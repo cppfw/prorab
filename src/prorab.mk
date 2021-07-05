@@ -357,7 +357,7 @@ $(.RECIPEPREFIX)$(a)rm -rf $(d)out
     # - returns nothing otherwise
     define prorab-is-included
 
-        $(eval prorab_private_include_file := $(abspath $(d)$1))
+        $(eval prorab_private_include_file := $(abspath $(if $(filter /%,$(strip $1)),$(strip $1),$(d)$(strip $1))))
         $(if $(filter $(prorab_private_include_file),$(MAKEFILE_LIST)),true)
 
     endef
@@ -365,7 +365,7 @@ $(.RECIPEPREFIX)$(a)rm -rf $(d)out
     # include makefile if it is not included already, does not fail if file does not exist
     define prorab-try-simple-include
 
-        $(eval prorab_private_include_file := $(abspath $(d)$1))
+        $(eval prorab_private_include_file := $(abspath $(if $(filter /%,$(strip $1)),$(strip $1),$(d)$(strip $1))))
         $(if $(filter $(prorab_private_include_file),$(MAKEFILE_LIST)), \
                 , \
                 -include $(prorab_private_include_file) \
