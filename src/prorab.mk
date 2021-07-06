@@ -532,6 +532,8 @@ $(.RECIPEPREFIX)$(a)(cd $$(dir $$<) && ln -f -s $$(notdir $$<) $$(notdir $$@))
                 install:: $(prorab_prefix)lib/$(notdir $(prorab_this_name))
 $(.RECIPEPREFIX)$(a)install -d $(prorab_prefix)lib/ && \
                         (cd $(prorab_prefix)lib/ && ln -f -s $(notdir $(prorab_this_name)) $(notdir $(prorab_this_symbolic_name)))
+$(if $(filter macosx,$(os)),$(.RECIPEPREFIX)$(a) \
+                        install_name_tool -id "$(PREFIX)/lib/$(notdir $(prorab_this_name))" $(prorab_prefix)lib/$(notdir $(prorab_this_name)) )
             )
 
         $(if $(filter $(this_no_install),true),
@@ -671,17 +673,17 @@ $(.RECIPEPREFIX)$(a)for i in $(prorab_private_headers) $(this_install_c_hdrs) $(
             )
 
         # in Cygwin and Msys2 the .dll files go to /usr/bin and .a and .dll.a files go to /usr/lib
+$(if $(filter true,$(prorab_msys)),
         $(if $(filter $(this_no_install),true),
                 ,
-                install:: $(if $(filter true,$(prorab_msys)), $(prorab_this_name), $(prorab_prefix)lib/$(notdir $(prorab_this_name)))
-$(if $(filter true,$(prorab_msys)),$(.RECIPEPREFIX)$(a) \
+                install:: $(prorab_this_name)
+$(.RECIPEPREFIX)$(a) \
                     install -d $(prorab_prefix)bin/ && \
                     install $(prorab_this_name) $(prorab_prefix)bin/ && \
                     install -d $(prorab_prefix)lib/ && \
-                    install $(prorab_this_name).a $(prorab_prefix)lib/ )
-$(if $(filter macosx,$(os)),$(.RECIPEPREFIX)$(a) \
-                    install_name_tool -id "$(PREFIX)/lib/$(notdir $(prorab_this_name))" $(prorab_prefix)lib/$(notdir $(prorab_this_name)) )
+                    install $(prorab_this_name).a $(prorab_prefix)lib/ \
             )
+    )
 
         $(if $(filter $(this_no_install),true),
                 ,
@@ -884,7 +886,7 @@ $(.RECIPEPREFIX)$(a)rm -rf $(prorab_this_obj_dir)
         $(prorab_this_name): $(prorab_this_objs) $(prorab_ldargs_file) $(prorab_objs_file)
 $(.RECIPEPREFIX)@test -t 1 && printf "\e[0;31mlink\e[0m $$(patsubst $(prorab_root_dir)%,%,$$@)\n" || printf "link $$(patsubst $(prorab_root_dir)%,%,$$@)\n"
 $(.RECIPEPREFIX)$(a)mkdir -p $(d)$(prorab_private_out_dir)
-$(.RECIPEPREFIX)$(a)(cd $(d) && $(this_ld) $(prorab_ldflags) $$(filter %.o,$$^) $(prorab_ldlibs) -o "$$@")
+$(.RECIPEPREFIX)$(a)(cd $(d) && $(this_ld) $(prorab_ldflags) $$(filter %.o,$$^) $(prorab_ldlibs) -o "$(prorab_this_name)")
 
         clean::
 $(.RECIPEPREFIX)$(if $(filter true,$(prorab_msys)), \
