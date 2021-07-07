@@ -619,13 +619,13 @@ $(.RECIPEPREFIX)$(a)for i in $(prorab_private_headers) $(this_install_c_hdrs) $(
 
         $(eval prorab_this_symbolic_name := $(abspath $(d)$(prorab_private_out_dir)$(this_lib_prefix)$(this_name)$(this_dot_so)))
 
-        $(if $(filter macosx,$(os)), \
-                $(eval prorab_this_name := $(abspath $(d)$(prorab_private_out_dir)$(this_lib_prefix)$(this_name).$(this_soname)$(this_dot_so))) \
-                $(eval prorab_private_ldflags := -dynamiclib -Wl,-install_name,@rpath/$(notdir $(prorab_this_name)),-headerpad_max_install_names,-undefined,dynamic_lookup,-compatibility_version,1.0,-current_version,1.0) \
-            ,\
-                $(eval prorab_this_name := $(prorab_this_symbolic_name).$(this_soname)) \
-                $(eval prorab_private_ldflags := -shared -Wl,-soname,$(notdir $(prorab_this_name))) \
-            )
+        ifeq ($(os),macosx)
+                $(eval prorab_this_name := $(abspath $(d)$(prorab_private_out_dir)$(this_lib_prefix)$(this_name).$(this_soname)$(this_dot_so)))
+                $(eval prorab_private_ldflags := -dynamiclib -Wl,-install_name,@rpath/$(notdir $(prorab_this_name)),-headerpad_max_install_names,-undefined,dynamic_lookup,-compatibility_version,1.0,-current_version,1.0)
+        else
+                $(eval prorab_this_name := $(prorab_this_symbolic_name).$(this_soname))
+                $(eval prorab_private_ldflags := -shared -Wl,-soname,$(notdir $(prorab_this_name)))
+        endif
 
         # symbolic link to shared library rule
         $(prorab_this_symbolic_name): $(prorab_this_name)
@@ -664,13 +664,13 @@ $(.RECIPEPREFIX)$(a)rm -f $(prorab_this_symbolic_name)
     define prorab-private-dynamic-lib-specific-rules
         $(if $(this_name),,$(error this_name is not defined))
 
-        $(if $(filter true,$(prorab_msys)), \
-                $(eval prorab_this_name := $(abspath $(d)$(prorab_private_out_dir)$(this_lib_prefix)$(this_name)$(this_dot_so))) \
-                $(eval prorab_private_ldflags := -shared -s -Wl,--out-implib=$(abspath $(d)$(prorab_private_out_dir)$(this_lib_prefix)$(this_name)$(this_dot_so).a)) \
-                $(eval prorab_this_symbolic_name := $(prorab_this_name)) \
-            , \
-                $(prorab-private-dynamic-lib-specific-rules-nix-systems) \
-            )
+        ifeq ($(prorab_msys),true)
+                $(eval prorab_this_name := $(abspath $(d)$(prorab_private_out_dir)$(this_lib_prefix)$(this_name)$(this_dot_so)))
+                $(eval prorab_private_ldflags := -shared -s -Wl,--out-implib=$(abspath $(d)$(prorab_private_out_dir)$(this_lib_prefix)$(this_name)$(this_dot_so).a))
+                $(eval prorab_this_symbolic_name := $(prorab_this_name))
+        else
+                $(prorab-private-dynamic-lib-specific-rules-nix-systems)
+        endif
 
         # in Cygwin and Msys2 the .dll files go to /usr/bin and .a and .dll.a files go to /usr/lib
 $(if $(filter true,$(prorab_msys)),

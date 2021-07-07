@@ -26,7 +26,7 @@ jobs:
     name: linux - ${{ matrix.image_owner }}${{ matrix.os }}:${{ matrix.codename }}
     steps:
       - name: git clone
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
       - name: add cppfw deb repo
         uses: myci-actions/add-deb-repo@master
         with:
