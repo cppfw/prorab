@@ -655,8 +655,8 @@ Note: `this_ldlibs` and `this_ldflags` are separated because sometimes order of 
 The `this_hdrs`, `this_cxx_hdrs` and `this_c_hdrs` specify the header files to check for compilation. For each header file a trivial C/{cpp} source file will be generated which includes the header file twice. Then those generated {cpp} files are compiled. This checks that the header file does not miss include guard and itself includes all the needed dependency header files. Compilation is done with the same compiler flags as the normal source files.
 
 .output variables
-- `prorab_this_name` - resulting name of the binary file. Absolute path.
-- `prorab_this_symbolic_name` - resulting symbolic link to shared library. Absolute path.
+- `prorab_this_name` - resulting name of the binary file. Can be a symbolic link. Absolute path.
+- `prorab_this_so_name` - resulting so-named shared library. Absolute path.
 - `prorab_this_static_lib` - resulting filename of the static library. Absolute path.
 - `prorab_this_objs` - list of generated object files. Absolute paths.
 - `prorab_this_obj_dir` - object files output directory.
