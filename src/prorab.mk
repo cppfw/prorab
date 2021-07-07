@@ -483,30 +483,6 @@ $(.RECIPEPREFIX)+$(a)$(MAKE)
     # this is to make sure out dir ends with /
     prorab_private_out_dir = $(if $(this_out_dir),$(if $(patsubst %/,,$(this_out_dir)),$(this_out_dir)/,$(this_out_dir)))
 
-    define prorab-private-app-specific-rules
-        $(if $(this_name),,$(error this_name is not defined))
-
-        $(eval prorab_private_ldflags := )
-
-        $(eval prorab_this_name := $(abspath $(d)$(prorab_private_out_dir)$(this_name)$(dot_exe)))
-
-        $(eval prorab_this_symbolic_name := $(prorab_this_name))
-
-        $(if $(filter $(this_no_install),true),
-                ,
-                install:: $(prorab_this_name)
-$(.RECIPEPREFIX)$(a) \
-                    install -d $(prorab_prefix)bin/ && \
-                    install $(prorab_this_name) $(prorab_prefix)bin/ \
-            )
-
-        $(if $(filter $(this_no_install),true),
-                ,
-                uninstall::
-$(.RECIPEPREFIX)$(a)rm -f $(prorab_prefix)bin/$(notdir $(prorab_this_name)) \
-            )
-    endef
-
     define prorab-private-lib-install-headers-rule
         # NOTE: Use 'abspath' to avoid second trailing slash in case 'this_headers_dir' already contains one.
         #       It is ok to use 'abspath' here because 'd' is absolute path anyway.
@@ -611,6 +587,30 @@ $(.RECIPEPREFIX)$(a)for i in $(prorab_private_headers) $(this_install_c_hdrs) $(
                     path=$$$$(echo $(prorab_private_install_dir)$$$$i | cut -d "/" -f1) && \
                     [ ! -z "$$$$path" ] && rm -rf $(prorab_prefix)include/$$$$path; \
                 done
+            )
+    endef
+
+    define prorab-private-app-specific-rules
+        $(if $(this_name),,$(error this_name is not defined))
+
+        $(eval prorab_private_ldflags := )
+
+        $(eval prorab_this_name := $(abspath $(d)$(prorab_private_out_dir)$(this_name)$(dot_exe)))
+
+        $(eval prorab_this_symbolic_name := $(prorab_this_name))
+
+        $(if $(filter $(this_no_install),true),
+                ,
+                install:: $(prorab_this_name)
+$(.RECIPEPREFIX)$(a) \
+                    install -d $(prorab_prefix)bin/ && \
+                    install $(prorab_this_name) $(prorab_prefix)bin/ \
+            )
+
+        $(if $(filter $(this_no_install),true),
+                ,
+                uninstall::
+$(.RECIPEPREFIX)$(a)rm -f $(prorab_prefix)bin/$(notdir $(prorab_this_name)) \
             )
     endef
 
