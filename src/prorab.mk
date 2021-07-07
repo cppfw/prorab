@@ -617,48 +617,41 @@ $(.RECIPEPREFIX)$(a)rm -f $(prorab_prefix)bin/$(notdir $(prorab_this_name)) \
     define prorab-private-dynamic-lib-specific-rules-nix-systems
         $(if $(this_soname),,$(error this_soname is not defined))
 
-        $(eval prorab_this_so_name := $(abspath $(d)$(prorab_private_out_dir)$(this_lib_prefix)$(this_name)$(this_dot_so)))
+        $(eval prorab_this_name := $(abspath $(d)$(prorab_private_out_dir)$(this_lib_prefix)$(this_name)$(this_dot_so)))
 
         $(if $(filter macosx,$(os)), \
-                $(eval prorab_this_name := $(abspath $(d)$(prorab_private_out_dir)$(this_lib_prefix)$(this_name).$(this_soname)$(this_dot_so))) \
-                $(eval prorab_private_ldflags := -dynamiclib -Wl,-install_name,@rpath/$(notdir $(prorab_this_name)),-headerpad_max_install_names,-undefined,dynamic_lookup,-compatibility_version,1.0,-current_version,1.0) \
+                $(eval prorab_this_so_name := $(abspath $(d)$(prorab_private_out_dir)$(this_lib_prefix)$(this_name).$(this_soname)$(this_dot_so))) \
+                $(eval prorab_private_ldflags := -dynamiclib -Wl,-install_name,@rpath/$(notdir $(prorab_this_so_name)),-headerpad_max_install_names,-undefined,dynamic_lookup,-compatibility_version,1.0,-current_version,1.0) \
             ,\
-                $(eval prorab_this_name := $(prorab_this_so_name).$(this_soname)) \
-                $(eval prorab_private_ldflags := -shared -Wl,-soname,$(notdir $(prorab_this_name))) \
+                $(eval prorab_this_so_name := $(prorab_this_name).$(this_soname)) \
+                $(eval prorab_private_ldflags := -shared -Wl,-soname,$(notdir $(prorab_this_so_name))) \
             )
-
-        # symbolic link to shared library rule
-        $(prorab_this_so_name): $(prorab_this_name)
-$(.RECIPEPREFIX)@test -t 1 && printf "\e[1;36mcreate symbolic link\e[0m $$(notdir $$@) -> $$(notdir $$<)\n" || printf "create symbolic link $$(notdir $$@) -> $$(notdir $$<)\n"
-$(.RECIPEPREFIX)$(a)(cd $$(dir $$<) && ln -f -s $$(notdir $$<) $$(notdir $$@))
-
-        all: $(prorab_this_so_name)
 
         $(if $(filter $(this_no_install),true),
                 ,
-                install:: $(prorab_prefix)lib/$(notdir $(prorab_this_name))
+                install:: $(prorab_prefix)lib/$(notdir $(prorab_this_so_name))
 $(.RECIPEPREFIX)$(a)install -d $(prorab_prefix)lib/ && \
-                        (cd $(prorab_prefix)lib/ && ln -f -s $(notdir $(prorab_this_name)) $(notdir $(prorab_this_so_name)))
-$(if $(filter macosx,$(os)),$(.RECIPEPREFIX)$(a) \
-                        install_name_tool -id "$(PREFIX)/lib/$(notdir $(prorab_this_name))" $(prorab_prefix)lib/$(notdir $(prorab_this_name)) )
+                        (cd $(prorab_prefix)lib/ && ln -f -s $(notdir $(prorab_this_so_name)) $(notdir $(prorab_this_name)))
+                $(if $(filter macosx,$(os)),
+$(.RECIPEPREFIX)$(a)install_name_tool -id "$(PREFIX)/lib/$(notdir $(prorab_this_so_name))" $(prorab_prefix)lib/$(notdir $(prorab_this_so_name))
+                    )
             )
 
         $(if $(filter $(this_no_install),true),
                 ,
-                $(prorab_prefix)lib/$(notdir $(prorab_this_name)): $(prorab_this_name)
-$(.RECIPEPREFIX)$(a) \
-                        install -d $(prorab_prefix)lib/ && \
-                        install $(prorab_this_name) $(prorab_prefix)lib/
+                $(prorab_prefix)lib/$(notdir $(prorab_this_so_name)): $(prorab_this_so_name)
+$(.RECIPEPREFIX)$(a)install -d $(prorab_prefix)lib/ && \
+                        install $(prorab_this_so_name) $(prorab_prefix)lib/
             )
 
         $(if $(filter $(this_no_install),true),
                 ,
                 uninstall::
-$(.RECIPEPREFIX)$(a)rm -f $(prorab_prefix)lib/$(notdir $(prorab_this_so_name))
+$(.RECIPEPREFIX)$(a)rm -f $(prorab_prefix)lib/$(notdir $(prorab_this_name))
             )
 
         clean::
-$(.RECIPEPREFIX)$(a)rm -f $(prorab_this_so_name)
+$(.RECIPEPREFIX)$(a)rm -f $(prorab_this_name)
     endef
 
     define prorab-private-dynamic-lib-specific-rules
@@ -667,7 +660,7 @@ $(.RECIPEPREFIX)$(a)rm -f $(prorab_this_so_name)
         $(if $(filter true,$(prorab_msys)), \
                 $(eval prorab_this_name := $(abspath $(d)$(prorab_private_out_dir)$(this_lib_prefix)$(this_name)$(this_dot_so))) \
                 $(eval prorab_private_ldflags := -shared -s -Wl,--out-implib=$(abspath $(d)$(prorab_private_out_dir)$(this_lib_prefix)$(this_name)$(this_dot_so).a)) \
-                $(eval prorab_this_so_name := $(prorab_this_name)) \
+                $(eval prorab_this_so_name := ) \
             , \
                 $(prorab-private-dynamic-lib-specific-rules-nix-systems) \
             )
@@ -693,7 +686,7 @@ $(.RECIPEPREFIX)$(a) \
                     rm -f $(prorab_prefix)lib/$(notdir $(prorab_this_name).a) && \
                     rm -f $(prorab_prefix)bin/$(notdir $(prorab_this_name)) \
                     ,
-$(.RECIPEPREFIX)$(a)rm -f $(prorab_prefix)lib/$(notdir $(prorab_this_name)) \
+$(.RECIPEPREFIX)$(a)rm -f $(prorab_prefix)lib/$(notdir $(prorab_this_so_name)) \
                 )
             )
     endef
@@ -882,17 +875,27 @@ $(.RECIPEPREFIX)$(a)rm -rf $(prorab_this_obj_dir)
 
         all: $(prorab_this_name)
 
-        # link rule
+        # in case of shared library on *nix systems the prorab_this_name is a symbolic link to prorab_this_so_name,
+        $(eval prorab_private_this_binary_name := $(if $(prorab_this_so_name),$(prorab_this_so_name),$(prorab_this_name)))
+
+        # note, that in case of shared library for *nix systems, we need to create the binary and its symbolic link at the same time.
+        # this is needed to avoid problems when adding dependencies to the symbolic link name, thus the dependency will effectively be added
+        # to the binary name.
+        # this is why we build the binary and create symbolic link in the same recepie.
         $(prorab_this_name): $(prorab_this_objs) $(prorab_ldargs_file) $(prorab_objs_file)
-$(.RECIPEPREFIX)@test -t 1 && printf "\e[0;31mlink\e[0m $$(patsubst $(prorab_root_dir)%,%,$$@)\n" || printf "link $$(patsubst $(prorab_root_dir)%,%,$$@)\n"
+$(.RECIPEPREFIX)@test -t 1 && printf "\e[0;31mlink\e[0m $(patsubst $(prorab_root_dir)%,%,$(prorab_private_this_binary_name))\n" || printf "link $(patsubst $(prorab_root_dir)%,%,$(prorab_private_this_binary_name))\n"
 $(.RECIPEPREFIX)$(a)mkdir -p $(d)$(prorab_private_out_dir)
-$(.RECIPEPREFIX)$(a)(cd $(d) && $(this_ld) $(prorab_ldflags) $$(filter %.o,$$^) $(prorab_ldlibs) -o "$(prorab_this_name)")
+$(.RECIPEPREFIX)$(a)(cd $(d) && $(this_ld) $(prorab_ldflags) $$(filter %.o,$$^) $(prorab_ldlibs) -o "$(prorab_private_this_binary_name)")
+        $(if $(prorab_this_so_name),
+$(.RECIPEPREFIX)@test -t 1 && printf "\e[1;36mcreate symbolic link\e[0m $(notdir $(prorab_this_name)) -> $(notdir $(prorab_private_this_binary_name))\n" || printf "create symbolic link $(notdir $(prorab_this_name)) -> $(notdir $(prorab_private_this_binary_name))\n"
+$(.RECIPEPREFIX)$(a)(cd $(dir $(prorab_private_this_binary_name)) && ln -f -s $(notdir $(prorab_private_this_binary_name)) $(notdir $(prorab_this_name)))
+            )
 
         clean::
 $(.RECIPEPREFIX)$(if $(filter true,$(prorab_msys)), \
                     $(a)rm -f $(prorab_this_name).a \
                 )
-$(.RECIPEPREFIX)$(a)rm -f $(prorab_this_name)
+$(.RECIPEPREFIX)$(a)rm -f $(prorab_private_this_binary_name)
     endef
 
     # if there are no any sources in this_srcs then just install headers, no need to build binaries
