@@ -1,6 +1,7 @@
 prorab (1.19.0) UNRELEASED; urgency=medium
 
   * create shared lib binary and symbolic link at the same time
+  * refactoring
 
  -- Ivan Gagis <igagis@gmail.com>  Wed, 07 Jul 2021 17:20:57 +0300
 
