@@ -14,7 +14,7 @@ Note: `this_ldlibs` and `this_ldflags` are separated because sometimes order of 
 
 After invocation of `prorab-build-lib` there are following variables defined:
 - `prorab_this_name` - resulting name of the binary file.
-- `prorab_this_symbolic_name` - name of the symbolic link to a shared library.
+- `prorab_this_so_name` - name of the so-named library.
 - `prorab_this_static_lib` - name of the static library file.
 - `prorab_this_objs` - list of generated object files.
 

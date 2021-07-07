@@ -483,73 +483,12 @@ $(.RECIPEPREFIX)+$(a)$(MAKE)
     # this is to make sure out dir ends with /
     prorab_private_out_dir = $(if $(this_out_dir),$(if $(patsubst %/,,$(this_out_dir)),$(this_out_dir)/,$(this_out_dir)))
 
-    define prorab-private-app-specific-rules
-        $(if $(this_name),,$(error this_name is not defined))
-
-        $(eval prorab_private_ldflags := )
-
-        $(eval prorab_this_name := $(abspath $(d)$(prorab_private_out_dir)$(this_name)$(dot_exe)))
-
-        $(eval prorab_this_symbolic_name := $(prorab_this_name))
-
-        $(if $(filter $(this_no_install),true),
-                ,
-                install:: $(prorab_this_name)
-$(.RECIPEPREFIX)$(a) \
-                    install -d $(prorab_prefix)bin/ && \
-                    install $(prorab_this_name) $(prorab_prefix)bin/ \
-            )
-
-        $(if $(filter $(this_no_install),true),
-                ,
-                uninstall::
-$(.RECIPEPREFIX)$(a)rm -f $(prorab_prefix)bin/$(notdir $(prorab_this_name)) \
-            )
-    endef
-
-    define prorab-private-dynamic-lib-specific-rules-nix-systems
-        $(if $(this_soname),,$(error this_soname is not defined))
-
-        $(eval prorab_this_symbolic_name := $(abspath $(d)$(prorab_private_out_dir)$(this_lib_prefix)$(this_name)$(this_dot_so)))
-
-        $(if $(filter macosx,$(os)), \
-                $(eval prorab_this_name := $(abspath $(d)$(prorab_private_out_dir)$(this_lib_prefix)$(this_name).$(this_soname)$(this_dot_so))) \
-                $(eval prorab_private_ldflags := -dynamiclib -Wl,-install_name,@rpath/$(notdir $(prorab_this_name)),-headerpad_max_install_names,-undefined,dynamic_lookup,-compatibility_version,1.0,-current_version,1.0) \
-            ,\
-                $(eval prorab_this_name := $(prorab_this_symbolic_name).$(this_soname)) \
-                $(eval prorab_private_ldflags := -shared -Wl,-soname,$(notdir $(prorab_this_name))) \
-            )
-
-        # symbolic link to shared library rule
-        $(prorab_this_symbolic_name): $(prorab_this_name)
-$(.RECIPEPREFIX)@test -t 1 && printf "\e[1;36mcreate symbolic link\e[0m $$(notdir $$@) -> $$(notdir $$<)\n" || printf "create symbolic link $$(notdir $$@) -> $$(notdir $$<)\n"
-$(.RECIPEPREFIX)$(a)(cd $$(dir $$<) && ln -f -s $$(notdir $$<) $$(notdir $$@))
-
-        all: $(prorab_this_symbolic_name)
-
-        $(if $(filter $(this_no_install),true),
-                ,
-                install:: $(prorab_prefix)lib/$(notdir $(prorab_this_name))
-$(.RECIPEPREFIX)$(a)install -d $(prorab_prefix)lib/ && \
-                        (cd $(prorab_prefix)lib/ && ln -f -s $(notdir $(prorab_this_name)) $(notdir $(prorab_this_symbolic_name)))
-            )
-
-        $(if $(filter $(this_no_install),true),
-                ,
-                $(prorab_prefix)lib/$(notdir $(prorab_this_name)): $(prorab_this_name)
-$(.RECIPEPREFIX)$(a) \
-                        install -d $(prorab_prefix)lib/ && \
-                        install $(prorab_this_name) $(prorab_prefix)lib/
-            )
-
-        $(if $(filter $(this_no_install),true),
-                ,
-                uninstall::
-$(.RECIPEPREFIX)$(a)rm -f $(prorab_prefix)lib/$(notdir $(prorab_this_symbolic_name))
-            )
-
-        clean::
-$(.RECIPEPREFIX)$(a)rm -f $(prorab_this_symbolic_name)
+    define prorab-private-generate-test-source-file-recepie
+$(.RECIPEPREFIX)@test -t 1 && printf "\e[1;90mgenerate\e[0m $$(patsubst $(prorab_root_dir)%,%,$$@)\n" || printf "generate $$(patsubst $(prorab_root_dir)%,%,$$@)\n"
+$(.RECIPEPREFIX)$(a)mkdir -p $$(dir $$@)
+$(.RECIPEPREFIX)$(a)echo '#include "$$(call prorab-private-make-include-path,$$<)"' > $$@
+$(.RECIPEPREFIX)$(a)echo '#include "$$(call prorab-private-make-include-path,$$<)"' >> $$@
+$(.RECIPEPREFIX)$(a)echo 'int main(int c, const char** v){(void)c;(void)v;return 0;}' >> $$@
     endef
 
     define prorab-private-lib-install-headers-rule
@@ -597,19 +536,11 @@ $(.RECIPEPREFIX)$(a)rm -f $(prorab_this_symbolic_name)
 
         # gerenarte dummy source files for each C++ header (for testing headers compilation)
         $(prorab_this_hxx_test_srcs): $(prorab_this_obj_dir)$(prorab_private_objspacer)%.test_cpp : $(prorab_private_headers_dir)%
-$(.RECIPEPREFIX)@test -t 1 && printf "\e[1;90mgenerate\e[0m $$(patsubst $(prorab_root_dir)%,%,$$@)\n" || printf "generate $$(patsubst $(prorab_root_dir)%,%,$$@)\n"
-$(.RECIPEPREFIX)$(a)mkdir -p $$(dir $$@)
-$(.RECIPEPREFIX)$(a)echo '#include "$$(call prorab-private-make-include-path,$$<)"' > $$@
-$(.RECIPEPREFIX)$(a)echo '#include "$$(call prorab-private-make-include-path,$$<)"' >> $$@
-$(.RECIPEPREFIX)$(a)echo 'int main(int c, const char** v){(void)c;(void)v;return 0;}' >> $$@
+$(prorab-private-generate-test-source-file-recepie)
 
         # gerenarte dummy source files for each C header (for testing headers compilation)
         $(prorab_this_h_test_srcs): $(prorab_this_obj_dir)$(prorab_private_objspacer)%.test_c : $(prorab_private_headers_dir)%
-$(.RECIPEPREFIX)@test -t 1 && printf "\e[1;90mgenerate\e[0m $$(patsubst $(prorab_root_dir)%,%,$$@)\n" || printf "generate $$(patsubst $(prorab_root_dir)%,%,$$@)\n"
-$(.RECIPEPREFIX)$(a)mkdir -p $$(dir $$@)
-$(.RECIPEPREFIX)$(a)echo '#include "$$(call prorab-private-make-include-path,$$<)"' > $$@
-$(.RECIPEPREFIX)$(a)echo '#include "$$(call prorab-private-make-include-path,$$<)"' >> $$@
-$(.RECIPEPREFIX)$(a)echo 'int main(int c, const char** v){(void)c;(void)v;return 0;}' >> $$@
+$(prorab-private-generate-test-source-file-recepie)
 
         # compile .hpp.test_cpp static pattern rule
         $(prorab_this_hxx_test_objs): $(d)%.o: $(d)%
@@ -628,9 +559,9 @@ $(.RECIPEPREFIX)$(a)$(prorab_private_d_file_sed_command)
         # include rules for header dependencies
         include $(wildcard $(addsuffix *.d,$(dir $(prorab_this_hxx_test_objs) $(prorab_this_h_test_objs))))
 
-        $(if $(filter $(this_no_install),true), \
-                , \
-                test:: $(prorab_this_hxx_test_objs) $(prorab_this_h_test_objs) \
+        $(if $(filter $(this_no_install),true),
+                ,
+                test:: $(prorab_this_hxx_test_objs) $(prorab_this_h_test_objs)
             )
 
         # make sure install dir ends with /
@@ -644,55 +575,103 @@ $(.RECIPEPREFIX)$(a)$(prorab_private_d_file_sed_command)
                 ,
                 install::
 $(.RECIPEPREFIX)$(a)for i in $(prorab_private_headers) $(prorab_private_c_hdrs) $(prorab_private_cxx_hdrs); do \
-                    install -d $(prorab_prefix)include/$(prorab_private_install_dir)$$$$(dirname $$$$i) && \
-                    install -m 644 $(prorab_private_headers_dir)$$$$i $(prorab_prefix)include/$(prorab_private_install_dir)$$$$i; \
-                done
+                        install -d $(prorab_prefix)include/$(prorab_private_install_dir)$$$$(dirname $$$$i) && \
+                        install -m 644 $(prorab_private_headers_dir)$$$$i $(prorab_prefix)include/$(prorab_private_install_dir)$$$$i; \
+                    done
+
+                uninstall::
+$(.RECIPEPREFIX)$(a)for i in $(prorab_private_headers) $(this_install_c_hdrs) $(prorab_private_cxx_hdrs); do \
+                        path=$$$$(echo $(prorab_private_install_dir)$$$$i | cut -d "/" -f1) && \
+                        [ ! -z "$$$$path" ] && rm -rf $(prorab_prefix)include/$$$$path; \
+                    done
             )
+    endef
+
+    define prorab-private-app-specific-rules
+        $(if $(this_name),,$(error this_name is not defined))
+
+        $(eval prorab_private_ldflags := )
+
+        $(eval prorab_this_name := $(abspath $(d)$(prorab_private_out_dir)$(this_name)$(dot_exe)))
+
+        $(eval prorab_this_so_name := )
 
         $(if $(filter $(this_no_install),true),
                 ,
+                install:: $(prorab_this_name)
+$(.RECIPEPREFIX)$(a) \
+                    install -d $(prorab_prefix)bin/ && \
+                    install $(prorab_this_name) $(prorab_prefix)bin/ \
+
                 uninstall::
-$(.RECIPEPREFIX)$(a)for i in $(prorab_private_headers) $(this_install_c_hdrs) $(prorab_private_cxx_hdrs); do \
-                    path=$$$$(echo $(prorab_private_install_dir)$$$$i | cut -d "/" -f1) && \
-                    [ ! -z "$$$$path" ] && rm -rf $(prorab_prefix)include/$$$$path; \
-                done
+$(.RECIPEPREFIX)$(a)rm -f $(prorab_prefix)bin/$(notdir $(prorab_this_name)) \
+            )
+    endef
+
+    define prorab-private-dynamic-lib-specific-rules-nix-systems
+        $(if $(this_soname),,$(error this_soname is not defined))
+
+        $(eval prorab_this_name := $(abspath $(d)$(prorab_private_out_dir)$(this_lib_prefix)$(this_name)$(this_dot_so)))
+
+        $(if $(filter macosx,$(os)),
+                $(eval prorab_this_so_name := $(abspath $(d)$(prorab_private_out_dir)$(this_lib_prefix)$(this_name).$(this_soname)$(this_dot_so)))
+                $(eval prorab_private_ldflags := -dynamiclib -Wl,-install_name,@rpath/$(notdir $(prorab_this_so_name)),-headerpad_max_install_names,-undefined,dynamic_lookup,-compatibility_version,1.0,-current_version,1.0)
+            ,
+                $(eval prorab_this_so_name := $(prorab_this_name).$(this_soname))
+                $(eval prorab_private_ldflags := -shared -Wl,-soname,$(notdir $(prorab_this_so_name)))
+            )
+
+        $(if $(filter $(this_no_install),true),
+            ,
+                install:: $(prorab_prefix)lib/$(notdir $(prorab_this_so_name))
+$(.RECIPEPREFIX)$(a)install -d $(prorab_prefix)lib/ && \
+                        (cd $(prorab_prefix)lib/ && ln -f -s $(notdir $(prorab_this_so_name)) $(notdir $(prorab_this_name)))
+                        $(if $(filter macosx,$(os)),
+$(.RECIPEPREFIX)$(a)install_name_tool -id "$(PREFIX)/lib/$(notdir $(prorab_this_so_name))" $(prorab_prefix)lib/$(notdir $(prorab_this_so_name))
+                            )
+
+                $(prorab_prefix)lib/$(notdir $(prorab_this_so_name)): $(prorab_this_so_name)
+$(.RECIPEPREFIX)$(a)install -d $(prorab_prefix)lib/ && \
+                        install $(prorab_this_so_name) $(prorab_prefix)lib/
+
+                uninstall::
+$(.RECIPEPREFIX)$(a)rm -f $(prorab_prefix)lib/$(notdir $(prorab_this_name))
+$(.RECIPEPREFIX)$(a)rm -f $(prorab_prefix)lib/$(notdir $(prorab_this_so_name))
+            )
+
+        clean::
+$(.RECIPEPREFIX)$(a)rm -f $(prorab_this_name)
+    endef
+
+    define prorab-private-dynamic-lib-specific-rules-msys
+        $(eval prorab_this_name := $(abspath $(d)$(prorab_private_out_dir)$(this_lib_prefix)$(this_name)$(this_dot_so)))
+        $(eval prorab_private_ldflags := -shared -s -Wl,--out-implib=$(prorab_this_name).a)
+        $(eval prorab_this_so_name := )
+
+        $(if $(filter $(this_no_install),true),
+            ,
+                # in Cygwin and Msys2 the .dll files go to /usr/bin and .a and .dll.a files go to /usr/lib
+                install:: $(prorab_this_name)
+$(.RECIPEPREFIX)$(a) \
+                    install -d $(prorab_prefix)bin/ && \
+                    install $(prorab_this_name) $(prorab_prefix)bin/ && \
+                    install -d $(prorab_prefix)lib/ && \
+                    install $(prorab_this_name).a $(prorab_prefix)lib/ \
+                
+                uninstall::
+$(.RECIPEPREFIX)$(a) \
+                    rm -f $(prorab_prefix)lib/$(notdir $(prorab_this_name).a) && \
+                    rm -f $(prorab_prefix)bin/$(notdir $(prorab_this_name))
             )
     endef
 
     define prorab-private-dynamic-lib-specific-rules
         $(if $(this_name),,$(error this_name is not defined))
 
-        $(if $(filter true,$(prorab_msys)), \
-                $(eval prorab_this_name := $(abspath $(d)$(prorab_private_out_dir)$(this_lib_prefix)$(this_name)$(this_dot_so))) \
-                $(eval prorab_private_ldflags := -shared -s -Wl,--out-implib=$(abspath $(d)$(prorab_private_out_dir)$(this_lib_prefix)$(this_name)$(this_dot_so).a)) \
-                $(eval prorab_this_symbolic_name := $(prorab_this_name)) \
-            , \
-                $(prorab-private-dynamic-lib-specific-rules-nix-systems) \
-            )
-
-        # in Cygwin and Msys2 the .dll files go to /usr/bin and .a and .dll.a files go to /usr/lib
-        $(if $(filter $(this_no_install),true),
-                ,
-                install:: $(if $(filter true,$(prorab_msys)), $(prorab_this_name), $(prorab_prefix)lib/$(notdir $(prorab_this_name)))
-$(if $(filter true,$(prorab_msys)),$(.RECIPEPREFIX)$(a) \
-                    install -d $(prorab_prefix)bin/ && \
-                    install $(prorab_this_name) $(prorab_prefix)bin/ && \
-                    install -d $(prorab_prefix)lib/ && \
-                    install $(prorab_this_name).a $(prorab_prefix)lib/ )
-$(if $(filter macosx,$(os)),$(.RECIPEPREFIX)$(a) \
-                    install_name_tool -id "$(PREFIX)/lib/$(notdir $(prorab_this_name))" $(prorab_prefix)lib/$(notdir $(prorab_this_name)) )
-            )
-
-        $(if $(filter $(this_no_install),true),
-                ,
-                uninstall::
-$(if $(filter true,$(prorab_msys)),
-$(.RECIPEPREFIX)$(a) \
-                    rm -f $(prorab_prefix)lib/$(notdir $(prorab_this_name).a) && \
-                    rm -f $(prorab_prefix)bin/$(notdir $(prorab_this_name)) \
-                    ,
-$(.RECIPEPREFIX)$(a)rm -f $(prorab_prefix)lib/$(notdir $(prorab_this_name)) \
-                )
+        $(if $(filter true,$(prorab_msys)),
+                $(prorab-private-dynamic-lib-specific-rules-msys)
+            ,
+                $(prorab-private-dynamic-lib-specific-rules-nix-systems)
             )
     endef
 
@@ -707,15 +686,12 @@ $(.RECIPEPREFIX)$(a)rm -f $(prorab_prefix)lib/$(notdir $(prorab_this_name)) \
 $(.RECIPEPREFIX)$(a)rm -f $(prorab_this_static_lib)
 
         $(if $(filter $(this_no_install),true),
-                ,
+            ,
                 install:: $(prorab_this_static_lib)
 $(.RECIPEPREFIX)$(a) \
                     install -d $(prorab_prefix)lib/ && \
                     install -m 644 $(prorab_this_static_lib) $(prorab_prefix)lib/ \
-            )
 
-        $(if $(filter $(this_no_install),true),
-                ,
                 uninstall::
 $(.RECIPEPREFIX)$(a)rm -f $(prorab_prefix)lib/$(notdir $(prorab_this_static_lib)) \
             )
@@ -812,19 +788,11 @@ $(.RECIPEPREFIX)$(a)echo '$2' > $$@
 
         # gerenarte dummy source files for each C++ header (for testing headers compilation)
         $(prorab_this_hxx_srcs): $(prorab_this_obj_dir)$(prorab_this_obj_spacer)%.hdr_cpp : $(d)%
-$(.RECIPEPREFIX)@test -t 1 && printf "\e[1;90mgenerate\e[0m $$(patsubst $(prorab_root_dir)%,%,$$@)\n" || printf "generate $$(patsubst $(prorab_root_dir)%,%,$$@)\n"
-$(.RECIPEPREFIX)$(a)mkdir -p $$(dir $$@)
-$(.RECIPEPREFIX)$(a)echo '#include "$$(call prorab-private-make-include-path,$$<)"' > $$@
-$(.RECIPEPREFIX)$(a)echo '#include "$$(call prorab-private-make-include-path,$$<)"' >> $$@
-$(.RECIPEPREFIX)$(a)echo 'int main(int c, const char** v){(void)c;(void)v;return 0;}' >> $$@
+$(prorab-private-generate-test-source-file-recepie)
 
         # gerenarte dummy source files for each C header (for testing headers compilation)
         $(prorab_this_h_srcs): $(prorab_this_obj_dir)$(prorab_this_obj_spacer)%.hdr_c : $(d)%
-$(.RECIPEPREFIX)@test -t 1 && printf "\e[1;90mgenerate\e[0m $$(patsubst $(prorab_root_dir)%,%,$$@)\n" || printf "generate $$(patsubst $(prorab_root_dir)%,%,$$@)\n"
-$(.RECIPEPREFIX)$(a)mkdir -p $$(dir $$@)
-$(.RECIPEPREFIX)$(a)echo '#include "$$(call prorab-private-make-include-path,$$<)"' > $$@
-$(.RECIPEPREFIX)$(a)echo '#include "$$(call prorab-private-make-include-path,$$<)"' >> $$@
-$(.RECIPEPREFIX)$(a)echo 'int main(int c, const char** v){(void)c;(void)v;return 0;}' >> $$@
+$(prorab-private-generate-test-source-file-recepie)
 
         # compile .cpp static pattern rule
         $(prorab_this_cxx_objs): $(prorab_this_obj_dir)$(prorab_this_obj_spacer)%.o: $(d)% $(prorab_cxxflags_file)
@@ -880,17 +848,27 @@ $(.RECIPEPREFIX)$(a)rm -rf $(prorab_this_obj_dir)
 
         all: $(prorab_this_name)
 
-        # link rule
+        # in case of shared library on *nix systems the prorab_this_name is a symbolic link to prorab_this_so_name,
+        $(eval prorab_private_this_binary_name := $(if $(prorab_this_so_name),$(prorab_this_so_name),$(prorab_this_name)))
+
+        # note, that in case of shared library for *nix systems, we need to create the binary and its symbolic link at the same time.
+        # this is needed to avoid problems when adding dependencies to the symbolic link name, thus the dependency will effectively be added
+        # to the binary name.
+        # this is why we build the binary and create symbolic link in the same recepie.
         $(prorab_this_name): $(prorab_this_objs) $(prorab_ldargs_file) $(prorab_objs_file)
-$(.RECIPEPREFIX)@test -t 1 && printf "\e[0;31mlink\e[0m $$(patsubst $(prorab_root_dir)%,%,$$@)\n" || printf "link $$(patsubst $(prorab_root_dir)%,%,$$@)\n"
+$(.RECIPEPREFIX)@test -t 1 && printf "\e[0;31mlink\e[0m $(patsubst $(prorab_root_dir)%,%,$(prorab_private_this_binary_name))\n" || printf "link $(patsubst $(prorab_root_dir)%,%,$(prorab_private_this_binary_name))\n"
 $(.RECIPEPREFIX)$(a)mkdir -p $(d)$(prorab_private_out_dir)
-$(.RECIPEPREFIX)$(a)(cd $(d) && $(this_ld) $(prorab_ldflags) $$(filter %.o,$$^) $(prorab_ldlibs) -o "$$@")
+$(.RECIPEPREFIX)$(a)(cd $(d) && $(this_ld) $(prorab_ldflags) $$(filter %.o,$$^) $(prorab_ldlibs) -o "$(prorab_private_this_binary_name)")
+        $(if $(prorab_this_so_name),
+$(.RECIPEPREFIX)@test -t 1 && printf "\e[1;36mcreate symbolic link\e[0m $(notdir $(prorab_this_name)) -> $(notdir $(prorab_private_this_binary_name))\n" || printf "create symbolic link $(notdir $(prorab_this_name)) -> $(notdir $(prorab_private_this_binary_name))\n"
+$(.RECIPEPREFIX)$(a)(cd $(dir $(prorab_private_this_binary_name)) && ln -f -s $(notdir $(prorab_private_this_binary_name)) $(notdir $(prorab_this_name)))
+            )
 
         clean::
 $(.RECIPEPREFIX)$(if $(filter true,$(prorab_msys)), \
                     $(a)rm -f $(prorab_this_name).a \
                 )
-$(.RECIPEPREFIX)$(a)rm -f $(prorab_this_name)
+$(.RECIPEPREFIX)$(a)rm -f $(prorab_private_this_binary_name)
     endef
 
     # if there are no any sources in this_srcs then just install headers, no need to build binaries
