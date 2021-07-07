@@ -619,16 +619,16 @@ $(.RECIPEPREFIX)$(a)rm -f $(prorab_prefix)bin/$(notdir $(prorab_this_name)) \
 
         $(eval prorab_this_name := $(abspath $(d)$(prorab_private_out_dir)$(this_lib_prefix)$(this_name)$(this_dot_so)))
 
-        $(if $(filter macosx,$(os)), \
-                $(eval prorab_this_so_name := $(abspath $(d)$(prorab_private_out_dir)$(this_lib_prefix)$(this_name).$(this_soname)$(this_dot_so))) \
-                $(eval prorab_private_ldflags := -dynamiclib -Wl,-install_name,@rpath/$(notdir $(prorab_this_so_name)),-headerpad_max_install_names,-undefined,dynamic_lookup,-compatibility_version,1.0,-current_version,1.0) \
-            ,\
-                $(eval prorab_this_so_name := $(prorab_this_name).$(this_soname)) \
-                $(eval prorab_private_ldflags := -shared -Wl,-soname,$(notdir $(prorab_this_so_name))) \
+        $(if $(filter macosx,$(os)),
+                $(eval prorab_this_so_name := $(abspath $(d)$(prorab_private_out_dir)$(this_lib_prefix)$(this_name).$(this_soname)$(this_dot_so)))
+                $(eval prorab_private_ldflags := -dynamiclib -Wl,-install_name,@rpath/$(notdir $(prorab_this_so_name)),-headerpad_max_install_names,-undefined,dynamic_lookup,-compatibility_version,1.0,-current_version,1.0)
+            ,
+                $(eval prorab_this_so_name := $(prorab_this_name).$(this_soname))
+                $(eval prorab_private_ldflags := -shared -Wl,-soname,$(notdir $(prorab_this_so_name)))
             )
 
         $(if $(filter $(this_no_install),true),
-                ,
+            ,
                 install:: $(prorab_prefix)lib/$(notdir $(prorab_this_so_name))
 $(.RECIPEPREFIX)$(a)install -d $(prorab_prefix)lib/ && \
                         (cd $(prorab_prefix)lib/ && ln -f -s $(notdir $(prorab_this_so_name)) $(notdir $(prorab_this_name)))
@@ -638,56 +638,52 @@ $(.RECIPEPREFIX)$(a)install_name_tool -id "$(PREFIX)/lib/$(notdir $(prorab_this_
             )
 
         $(if $(filter $(this_no_install),true),
-                ,
+            ,
                 $(prorab_prefix)lib/$(notdir $(prorab_this_so_name)): $(prorab_this_so_name)
 $(.RECIPEPREFIX)$(a)install -d $(prorab_prefix)lib/ && \
                         install $(prorab_this_so_name) $(prorab_prefix)lib/
             )
 
         $(if $(filter $(this_no_install),true),
-                ,
+            ,
                 uninstall::
 $(.RECIPEPREFIX)$(a)rm -f $(prorab_prefix)lib/$(notdir $(prorab_this_name))
+$(.RECIPEPREFIX)$(a)rm -f $(prorab_prefix)lib/$(notdir $(prorab_this_so_name))
             )
 
         clean::
 $(.RECIPEPREFIX)$(a)rm -f $(prorab_this_name)
     endef
 
-    define prorab-private-dynamic-lib-specific-rules
-        $(if $(this_name),,$(error this_name is not defined))
+    define prorab-private-dynamic-lib-specific-rules-msys
+        $(eval prorab_this_name := $(abspath $(d)$(prorab_private_out_dir)$(this_lib_prefix)$(this_name)$(this_dot_so)))
+        $(eval prorab_private_ldflags := -shared -s -Wl,--out-implib=$(abspath $(d)$(prorab_private_out_dir)$(this_lib_prefix)$(this_name)$(this_dot_so).a))
+        $(eval prorab_this_so_name := )
 
-        $(if $(filter true,$(prorab_msys)), \
-                $(eval prorab_this_name := $(abspath $(d)$(prorab_private_out_dir)$(this_lib_prefix)$(this_name)$(this_dot_so))) \
-                $(eval prorab_private_ldflags := -shared -s -Wl,--out-implib=$(abspath $(d)$(prorab_private_out_dir)$(this_lib_prefix)$(this_name)$(this_dot_so).a)) \
-                $(eval prorab_this_so_name := ) \
-            , \
-                $(prorab-private-dynamic-lib-specific-rules-nix-systems) \
-            )
-
-        # in Cygwin and Msys2 the .dll files go to /usr/bin and .a and .dll.a files go to /usr/lib
-$(if $(filter true,$(prorab_msys)),
         $(if $(filter $(this_no_install),true),
-                ,
+            ,
+                # in Cygwin and Msys2 the .dll files go to /usr/bin and .a and .dll.a files go to /usr/lib
                 install:: $(prorab_this_name)
 $(.RECIPEPREFIX)$(a) \
                     install -d $(prorab_prefix)bin/ && \
                     install $(prorab_this_name) $(prorab_prefix)bin/ && \
                     install -d $(prorab_prefix)lib/ && \
                     install $(prorab_this_name).a $(prorab_prefix)lib/ \
-            )
-    )
-
-        $(if $(filter $(this_no_install),true),
-                ,
+                
                 uninstall::
-$(if $(filter true,$(prorab_msys)),
 $(.RECIPEPREFIX)$(a) \
                     rm -f $(prorab_prefix)lib/$(notdir $(prorab_this_name).a) && \
-                    rm -f $(prorab_prefix)bin/$(notdir $(prorab_this_name)) \
-                    ,
-$(.RECIPEPREFIX)$(a)rm -f $(prorab_prefix)lib/$(notdir $(prorab_this_so_name)) \
-                )
+                    rm -f $(prorab_prefix)bin/$(notdir $(prorab_this_name))
+            )
+    endef
+
+    define prorab-private-dynamic-lib-specific-rules
+        $(if $(this_name),,$(error this_name is not defined))
+
+        $(if $(filter true,$(prorab_msys)),
+                $(prorab-private-dynamic-lib-specific-rules-msys)
+            ,
+                $(prorab-private-dynamic-lib-specific-rules-nix-systems)
             )
     endef
 
@@ -702,7 +698,7 @@ $(.RECIPEPREFIX)$(a)rm -f $(prorab_prefix)lib/$(notdir $(prorab_this_so_name)) \
 $(.RECIPEPREFIX)$(a)rm -f $(prorab_this_static_lib)
 
         $(if $(filter $(this_no_install),true),
-                ,
+            ,
                 install:: $(prorab_this_static_lib)
 $(.RECIPEPREFIX)$(a) \
                     install -d $(prorab_prefix)lib/ && \
@@ -710,7 +706,7 @@ $(.RECIPEPREFIX)$(a) \
             )
 
         $(if $(filter $(this_no_install),true),
-                ,
+            ,
                 uninstall::
 $(.RECIPEPREFIX)$(a)rm -f $(prorab_prefix)lib/$(notdir $(prorab_this_static_lib)) \
             )
