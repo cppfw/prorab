@@ -657,7 +657,7 @@ $(.RECIPEPREFIX)$(a)rm -f $(prorab_this_name)
 
     define prorab-private-dynamic-lib-specific-rules-msys
         $(eval prorab_this_name := $(abspath $(d)$(prorab_private_out_dir)$(this_lib_prefix)$(this_name)$(this_dot_so)))
-        $(eval prorab_private_ldflags := -shared -s -Wl,--out-implib=$(abspath $(d)$(prorab_private_out_dir)$(this_lib_prefix)$(this_name)$(this_dot_so).a))
+        $(eval prorab_private_ldflags := -shared -s -Wl,--out-implib=$(prorab_this_name).a)
         $(eval prorab_this_so_name := )
 
         $(if $(filter $(this_no_install),true),
