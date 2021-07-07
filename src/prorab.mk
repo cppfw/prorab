@@ -559,9 +559,9 @@ $(.RECIPEPREFIX)$(a)$(prorab_private_d_file_sed_command)
         # include rules for header dependencies
         include $(wildcard $(addsuffix *.d,$(dir $(prorab_this_hxx_test_objs) $(prorab_this_h_test_objs))))
 
-        $(if $(filter $(this_no_install),true), \
-                , \
-                test:: $(prorab_this_hxx_test_objs) $(prorab_this_h_test_objs) \
+        $(if $(filter $(this_no_install),true),
+                ,
+                test:: $(prorab_this_hxx_test_objs) $(prorab_this_h_test_objs)
             )
 
         # make sure install dir ends with /
@@ -575,18 +575,15 @@ $(.RECIPEPREFIX)$(a)$(prorab_private_d_file_sed_command)
                 ,
                 install::
 $(.RECIPEPREFIX)$(a)for i in $(prorab_private_headers) $(prorab_private_c_hdrs) $(prorab_private_cxx_hdrs); do \
-                    install -d $(prorab_prefix)include/$(prorab_private_install_dir)$$$$(dirname $$$$i) && \
-                    install -m 644 $(prorab_private_headers_dir)$$$$i $(prorab_prefix)include/$(prorab_private_install_dir)$$$$i; \
-                done
-            )
+                        install -d $(prorab_prefix)include/$(prorab_private_install_dir)$$$$(dirname $$$$i) && \
+                        install -m 644 $(prorab_private_headers_dir)$$$$i $(prorab_prefix)include/$(prorab_private_install_dir)$$$$i; \
+                    done
 
-        $(if $(filter $(this_no_install),true),
-                ,
                 uninstall::
 $(.RECIPEPREFIX)$(a)for i in $(prorab_private_headers) $(this_install_c_hdrs) $(prorab_private_cxx_hdrs); do \
-                    path=$$$$(echo $(prorab_private_install_dir)$$$$i | cut -d "/" -f1) && \
-                    [ ! -z "$$$$path" ] && rm -rf $(prorab_prefix)include/$$$$path; \
-                done
+                        path=$$$$(echo $(prorab_private_install_dir)$$$$i | cut -d "/" -f1) && \
+                        [ ! -z "$$$$path" ] && rm -rf $(prorab_prefix)include/$$$$path; \
+                    done
             )
     endef
 
@@ -605,10 +602,7 @@ $(.RECIPEPREFIX)$(a)for i in $(prorab_private_headers) $(this_install_c_hdrs) $(
 $(.RECIPEPREFIX)$(a) \
                     install -d $(prorab_prefix)bin/ && \
                     install $(prorab_this_name) $(prorab_prefix)bin/ \
-            )
 
-        $(if $(filter $(this_no_install),true),
-                ,
                 uninstall::
 $(.RECIPEPREFIX)$(a)rm -f $(prorab_prefix)bin/$(notdir $(prorab_this_name)) \
             )
@@ -632,20 +626,14 @@ $(.RECIPEPREFIX)$(a)rm -f $(prorab_prefix)bin/$(notdir $(prorab_this_name)) \
                 install:: $(prorab_prefix)lib/$(notdir $(prorab_this_so_name))
 $(.RECIPEPREFIX)$(a)install -d $(prorab_prefix)lib/ && \
                         (cd $(prorab_prefix)lib/ && ln -f -s $(notdir $(prorab_this_so_name)) $(notdir $(prorab_this_name)))
-                $(if $(filter macosx,$(os)),
+                        $(if $(filter macosx,$(os)),
 $(.RECIPEPREFIX)$(a)install_name_tool -id "$(PREFIX)/lib/$(notdir $(prorab_this_so_name))" $(prorab_prefix)lib/$(notdir $(prorab_this_so_name))
-                    )
-            )
+                            )
 
-        $(if $(filter $(this_no_install),true),
-            ,
                 $(prorab_prefix)lib/$(notdir $(prorab_this_so_name)): $(prorab_this_so_name)
 $(.RECIPEPREFIX)$(a)install -d $(prorab_prefix)lib/ && \
                         install $(prorab_this_so_name) $(prorab_prefix)lib/
-            )
 
-        $(if $(filter $(this_no_install),true),
-            ,
                 uninstall::
 $(.RECIPEPREFIX)$(a)rm -f $(prorab_prefix)lib/$(notdir $(prorab_this_name))
 $(.RECIPEPREFIX)$(a)rm -f $(prorab_prefix)lib/$(notdir $(prorab_this_so_name))
@@ -703,10 +691,7 @@ $(.RECIPEPREFIX)$(a)rm -f $(prorab_this_static_lib)
 $(.RECIPEPREFIX)$(a) \
                     install -d $(prorab_prefix)lib/ && \
                     install -m 644 $(prorab_this_static_lib) $(prorab_prefix)lib/ \
-            )
 
-        $(if $(filter $(this_no_install),true),
-            ,
                 uninstall::
 $(.RECIPEPREFIX)$(a)rm -f $(prorab_prefix)lib/$(notdir $(prorab_this_static_lib)) \
             )
