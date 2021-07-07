@@ -483,6 +483,14 @@ $(.RECIPEPREFIX)+$(a)$(MAKE)
     # this is to make sure out dir ends with /
     prorab_private_out_dir = $(if $(this_out_dir),$(if $(patsubst %/,,$(this_out_dir)),$(this_out_dir)/,$(this_out_dir)))
 
+    define prorab-private-generate-test-source-file-recepie
+$(.RECIPEPREFIX)@test -t 1 && printf "\e[1;90mgenerate\e[0m $$(patsubst $(prorab_root_dir)%,%,$$@)\n" || printf "generate $$(patsubst $(prorab_root_dir)%,%,$$@)\n"
+$(.RECIPEPREFIX)$(a)mkdir -p $$(dir $$@)
+$(.RECIPEPREFIX)$(a)echo '#include "$$(call prorab-private-make-include-path,$$<)"' > $$@
+$(.RECIPEPREFIX)$(a)echo '#include "$$(call prorab-private-make-include-path,$$<)"' >> $$@
+$(.RECIPEPREFIX)$(a)echo 'int main(int c, const char** v){(void)c;(void)v;return 0;}' >> $$@
+    endef
+
     define prorab-private-lib-install-headers-rule
         # NOTE: Use 'abspath' to avoid second trailing slash in case 'this_headers_dir' already contains one.
         #       It is ok to use 'abspath' here because 'd' is absolute path anyway.
@@ -528,19 +536,11 @@ $(.RECIPEPREFIX)+$(a)$(MAKE)
 
         # gerenarte dummy source files for each C++ header (for testing headers compilation)
         $(prorab_this_hxx_test_srcs): $(prorab_this_obj_dir)$(prorab_private_objspacer)%.test_cpp : $(prorab_private_headers_dir)%
-$(.RECIPEPREFIX)@test -t 1 && printf "\e[1;90mgenerate\e[0m $$(patsubst $(prorab_root_dir)%,%,$$@)\n" || printf "generate $$(patsubst $(prorab_root_dir)%,%,$$@)\n"
-$(.RECIPEPREFIX)$(a)mkdir -p $$(dir $$@)
-$(.RECIPEPREFIX)$(a)echo '#include "$$(call prorab-private-make-include-path,$$<)"' > $$@
-$(.RECIPEPREFIX)$(a)echo '#include "$$(call prorab-private-make-include-path,$$<)"' >> $$@
-$(.RECIPEPREFIX)$(a)echo 'int main(int c, const char** v){(void)c;(void)v;return 0;}' >> $$@
+$(prorab-private-generate-test-source-file-recepie)
 
         # gerenarte dummy source files for each C header (for testing headers compilation)
         $(prorab_this_h_test_srcs): $(prorab_this_obj_dir)$(prorab_private_objspacer)%.test_c : $(prorab_private_headers_dir)%
-$(.RECIPEPREFIX)@test -t 1 && printf "\e[1;90mgenerate\e[0m $$(patsubst $(prorab_root_dir)%,%,$$@)\n" || printf "generate $$(patsubst $(prorab_root_dir)%,%,$$@)\n"
-$(.RECIPEPREFIX)$(a)mkdir -p $$(dir $$@)
-$(.RECIPEPREFIX)$(a)echo '#include "$$(call prorab-private-make-include-path,$$<)"' > $$@
-$(.RECIPEPREFIX)$(a)echo '#include "$$(call prorab-private-make-include-path,$$<)"' >> $$@
-$(.RECIPEPREFIX)$(a)echo 'int main(int c, const char** v){(void)c;(void)v;return 0;}' >> $$@
+$(prorab-private-generate-test-source-file-recepie)
 
         # compile .hpp.test_cpp static pattern rule
         $(prorab_this_hxx_test_objs): $(d)%.o: $(d)%
@@ -788,19 +788,11 @@ $(.RECIPEPREFIX)$(a)echo '$2' > $$@
 
         # gerenarte dummy source files for each C++ header (for testing headers compilation)
         $(prorab_this_hxx_srcs): $(prorab_this_obj_dir)$(prorab_this_obj_spacer)%.hdr_cpp : $(d)%
-$(.RECIPEPREFIX)@test -t 1 && printf "\e[1;90mgenerate\e[0m $$(patsubst $(prorab_root_dir)%,%,$$@)\n" || printf "generate $$(patsubst $(prorab_root_dir)%,%,$$@)\n"
-$(.RECIPEPREFIX)$(a)mkdir -p $$(dir $$@)
-$(.RECIPEPREFIX)$(a)echo '#include "$$(call prorab-private-make-include-path,$$<)"' > $$@
-$(.RECIPEPREFIX)$(a)echo '#include "$$(call prorab-private-make-include-path,$$<)"' >> $$@
-$(.RECIPEPREFIX)$(a)echo 'int main(int c, const char** v){(void)c;(void)v;return 0;}' >> $$@
+$(prorab-private-generate-test-source-file-recepie)
 
         # gerenarte dummy source files for each C header (for testing headers compilation)
         $(prorab_this_h_srcs): $(prorab_this_obj_dir)$(prorab_this_obj_spacer)%.hdr_c : $(d)%
-$(.RECIPEPREFIX)@test -t 1 && printf "\e[1;90mgenerate\e[0m $$(patsubst $(prorab_root_dir)%,%,$$@)\n" || printf "generate $$(patsubst $(prorab_root_dir)%,%,$$@)\n"
-$(.RECIPEPREFIX)$(a)mkdir -p $$(dir $$@)
-$(.RECIPEPREFIX)$(a)echo '#include "$$(call prorab-private-make-include-path,$$<)"' > $$@
-$(.RECIPEPREFIX)$(a)echo '#include "$$(call prorab-private-make-include-path,$$<)"' >> $$@
-$(.RECIPEPREFIX)$(a)echo 'int main(int c, const char** v){(void)c;(void)v;return 0;}' >> $$@
+$(prorab-private-generate-test-source-file-recepie)
 
         # compile .cpp static pattern rule
         $(prorab_this_cxx_objs): $(prorab_this_obj_dir)$(prorab_this_obj_spacer)%.o: $(d)% $(prorab_cxxflags_file)
