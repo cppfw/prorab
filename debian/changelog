@@ -1,3 +1,9 @@
+prorab (1.19.1) unstable; urgency=medium
+
+  * deploy to own server
+
+ -- Ivan Gagis <igagis@gmail.com>  Tue, 13 Jul 2021 01:09:58 +0300
+
 prorab (1.19.0) unstable; urgency=medium
 
   * create shared lib binary and symbolic link at the same time
