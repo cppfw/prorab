@@ -95,7 +95,7 @@ jobs:
     - name: add cppfw pacman msys repo
       uses: myci-actions/add-pacman-repo@master
       with:
-        name: cppfw_msys,
+        name: cppfw_msys
         url: http://gagis.hopto.org/repo/cppfw/msys2/msys
         shell: 'msys2 {0}'
         key-server: http://gagis.hopto.org/repo/cppfw/pubkey.gpg
@@ -142,7 +142,7 @@ jobs:
     - name: add cppfw pacman msys repo
       uses: myci-actions/add-pacman-repo@master
       with:
-        name: cppfw_msys,
+        name: cppfw_msys
         url: http://gagis.hopto.org/repo/cppfw/msys2/msys
         shell: 'msys2 {0}'
         key-server: http://gagis.hopto.org/repo/cppfw/pubkey.gpg
