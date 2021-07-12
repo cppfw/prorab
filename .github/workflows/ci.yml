@@ -94,7 +94,11 @@ jobs:
       uses: actions/checkout@v2
     - name: add cppfw pacman msys repo
       uses: myci-actions/add-pacman-repo@master
-      with: {name: cppfw_msys, url: 'http://gagis.hopto.org/repo/cppfw/msys2/msys', shell: 'msys2 {0}'}
+      with:
+        name: cppfw_msys,
+        url: http://gagis.hopto.org/repo/cppfw/msys2/msys
+        shell: 'msys2 {0}'
+        key-server: http://gagis.hopto.org/repo/cppfw/pubkey.gpg
     - name: install ci tools
       run: pacman -Sy --noconfirm myci
     - name: prepare pacman package
@@ -137,7 +141,11 @@ jobs:
       uses: actions/checkout@v2
     - name: add cppfw pacman msys repo
       uses: myci-actions/add-pacman-repo@master
-      with: {name: cppfw_msys, url: 'http://gagis.hopto.org/repo/cppfw/msys2/msys', shell: 'msys2 {0}'}
+      with:
+        name: cppfw_msys,
+        url: http://gagis.hopto.org/repo/cppfw/msys2/msys
+        shell: 'msys2 {0}'
+        key-server: http://gagis.hopto.org/repo/cppfw/pubkey.gpg
     - name: install ci tools
       run: pacman -Sy --noconfirm myci
     - name: test
