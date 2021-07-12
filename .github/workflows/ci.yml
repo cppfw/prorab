@@ -4,8 +4,6 @@ on:
   pull_request:
 env:
   PACKAGE_NAME: ${{ github.event.repository.name }}
-  MYCI_JFROG_USERNAME: ivan.gagis@gmail.com
-  MYCI_JFROG_PASSWORD: ${{ secrets.MYCI_JFROG_PASSWORD }}
   MYCI_GIT_USERNAME: igagis
   MYCI_GIT_PASSWORD: ${{ secrets.MYCI_GIT_ACCESS_TOKEN }}
 jobs:
