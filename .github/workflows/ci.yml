@@ -30,9 +30,9 @@ jobs:
       - name: add cppfw deb repo
         uses: myci-actions/add-deb-repo@master
         with:
-          repo: deb https://cppfw.jfrog.io/artifactory/${{ matrix.os }} ${{ matrix.codename }} main
+          repo: deb http://gagis.hopto.org/repo/cppfw/${{ matrix.os }} ${{ matrix.codename }} main
           repo-name: cppfw
-          key-server: https://cppfw.jfrog.io/artifactory/api/gpg/key/public
+          key-server: http://gagis.hopto.org/repo/cppfw/pubkey.gpg
       - name: install ci tools
         run: |
           # configure timezone to avoid 'tzdata' package to require user interaction during installation (needed for ubuntu:focal)
@@ -50,7 +50,9 @@ jobs:
       - name: build
         run: dpkg-buildpackage --unsigned-source --unsigned-changes
       - name: deploy deb packages
-        run: myci-deploy-debian-jfrog.sh --domain cppfw --repo ${{ matrix.os }} --distro ${{ matrix.codename }} --component main ../${PACKAGE_NAME}*_${PACKAGE_VERSION}_*.deb
+        run: |
+          echo "${{ secrets.MYCI_REPO_SSH_KEY }}" > repo_key_rsa && chmod 600 repo_key_rsa
+          myci-deploy-debian-ssh-freight.sh --key repo_key_rsa --server gagis.hopto.org --owner cppfw --repo ${{ matrix.os }} --distro ${{ matrix.codename }} --component main ../${PACKAGE_NAME}*_${PACKAGE_VERSION}_*.deb
         if: matrix.package_type == 'deb' && startsWith(github.ref, 'refs/tags/')
 ##### macosx #####
   macosx:
@@ -92,7 +94,7 @@ jobs:
       uses: actions/checkout@v2
     - name: add cppfw pacman msys repo
       uses: myci-actions/add-pacman-repo@master
-      with: {name: cppfw_msys, url: 'https://cppfw.jfrog.io/artifactory/msys2/msys', shell: 'msys2 {0}'}
+      with: {name: cppfw_msys, url: 'http://gagis.hopto.org/repo/cppfw/msys2/msys', shell: 'msys2 {0}'}
     - name: install ci tools
       run: pacman -Sy --noconfirm myci
     - name: prepare pacman package
@@ -102,8 +104,11 @@ jobs:
         cd msys2
         makepkg --syncdeps --noconfirm --skipinteg
     - name: deploy
-      run: myci-deploy-pacman-jfrog.sh --domain cppfw --repo msys2 --path msys --database cppfw_msys msys2/$PACKAGE_NAME-*-any.pkg.*
+      run: |
+        echo "${{ secrets.MYCI_REPO_SSH_KEY }}" > repo_key_rsa && chmod 600 repo_key_rsa
+        myci-deploy-pacman-ssh.sh --server gagis.hopto.org --key repo_key_rsa --owner cppfw --repo msys2/msys --database cppfw_msys msys2/$PACKAGE_NAME-*-any.pkg.*
       if: startsWith(github.ref, 'refs/tags/')
+##### mingw #####
   msys2-mingw:
     runs-on: windows-latest
     defaults:
@@ -132,7 +137,7 @@ jobs:
       uses: actions/checkout@v2
     - name: add cppfw pacman msys repo
       uses: myci-actions/add-pacman-repo@master
-      with: {name: cppfw_msys, url: 'https://cppfw.jfrog.io/artifactory/msys2/msys', shell: 'msys2 {0}'}
+      with: {name: cppfw_msys, url: 'http://gagis.hopto.org/repo/cppfw/msys2/msys', shell: 'msys2 {0}'}
     - name: install ci tools
       run: pacman -Sy --noconfirm myci
     - name: test
