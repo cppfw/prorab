@@ -23,8 +23,6 @@ jobs:
     container: ${{ matrix.image_owner }}${{ matrix.os }}:${{ matrix.codename }}
     name: linux - ${{ matrix.image_owner }}${{ matrix.os }}:${{ matrix.codename }}
     steps:
-      - name: git clone
-        uses: actions/checkout@v2
       - name: add cppfw deb repo
         uses: myci-actions/add-deb-repo@master
         with:
@@ -37,7 +35,9 @@ jobs:
           TZ=Europe/Helsinki ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
           apt update
-          apt install --assume-yes devscripts equivs myci
+          apt install --assume-yes devscripts equivs myci git
+      - name: git clone
+        uses: myci-actions:checkout@master
       - name: set PACKAGE_VERSION
         uses: myci-actions/export-env-var@master
         with: {name: PACKAGE_VERSION, value: $(myci-deb-version.sh debian/changelog)}
@@ -57,7 +57,7 @@ jobs:
     runs-on: macos-latest
     steps:
     - name: git clone
-      uses: actions/checkout@v2
+      uses: myci-actions:checkout@master
     - name: add cppfw tap
       run: |
         brew tap cppfw/tap
@@ -88,8 +88,6 @@ jobs:
         install: >-
           msys2-devel
           make
-    - name: git clone
-      uses: actions/checkout@v2
     - name: add cppfw pacman msys repo
       uses: myci-actions/add-pacman-repo@master
       with:
@@ -98,7 +96,9 @@ jobs:
         shell: 'msys2 {0}'
         key-server: http://gagis.hopto.org/repo/cppfw/pubkey.gpg
     - name: install ci tools
-      run: pacman -Sy --noconfirm myci
+      run: pacman -Sy --noconfirm myci git
+    - name: git clone
+      uses: myci-actions:checkout@master
     - name: prepare pacman package
       run: myci-apply-version.sh -v $(myci-deb-version.sh debian/changelog) msys2/PKGBUILD.in
     - name: build
@@ -135,8 +135,6 @@ jobs:
           make
           diffutils
           dos2unix
-    - name: git clone
-      uses: actions/checkout@v2
     - name: add cppfw pacman msys repo
       uses: myci-actions/add-pacman-repo@master
       with:
@@ -145,6 +143,8 @@ jobs:
         shell: 'msys2 {0}'
         key-server: http://gagis.hopto.org/repo/cppfw/pubkey.gpg
     - name: install ci tools
-      run: pacman -Sy --noconfirm myci
+      run: pacman -Sy --noconfirm myci git
+    - name: git clone
+      uses: myci-actions:checkout@master
     - name: test
       run: make test
