@@ -630,7 +630,9 @@ $(.RECIPEPREFIX)$(a)install -d $(prorab_prefix)lib/ && \
 $(.RECIPEPREFIX)$(a)install_name_tool -id "$(PREFIX)/lib/$(notdir $(prorab_this_so_name))" $(prorab_prefix)lib/$(notdir $(prorab_this_so_name))
                             )
 
-                $(prorab_prefix)lib/$(notdir $(prorab_this_so_name)): $(prorab_this_so_name)
+                # NOTE: prorab_this_so_name file is created aong with prorab_this_name file,
+                #       there is no dedicated rule for prorab_this_so_name, thus here we need to depend on prorab_this_name
+                $(prorab_prefix)lib/$(notdir $(prorab_this_so_name)): $(prorab_this_name)
 $(.RECIPEPREFIX)$(a)install -d $(prorab_prefix)lib/ && \
                         install $(prorab_this_so_name) $(prorab_prefix)lib/
 
@@ -864,6 +866,8 @@ $(.RECIPEPREFIX)@test -t 1 && printf "\e[1;36mcreate symbolic link\e[0m $(notdir
 $(.RECIPEPREFIX)$(a)(cd $(dir $(prorab_private_this_binary_name)) && ln -f -s $(notdir $(prorab_private_this_binary_name)) $(notdir $(prorab_this_name)))
             )
 
+        # in case of shared library on *nix systems, the symbolic link prorab_this_name is removed in a
+        # separate clean:: rule, see prorab-private-dynamic-lib-specific-rules-nix-systems macro.
         clean::
 $(.RECIPEPREFIX)$(if $(filter true,$(prorab_msys)), \
                     $(a)rm -f $(prorab_this_name).a \
