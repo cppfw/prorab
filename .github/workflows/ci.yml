@@ -37,7 +37,7 @@ jobs:
           apt update
           apt install --assume-yes devscripts equivs myci git
       - name: git clone
-        uses: myci-actions:checkout@master
+        uses: myci-actions/checkout@master
       - name: set PACKAGE_VERSION
         uses: myci-actions/export-env-var@master
         with: {name: PACKAGE_VERSION, value: $(myci-deb-version.sh debian/changelog)}
@@ -57,7 +57,7 @@ jobs:
     runs-on: macos-latest
     steps:
     - name: git clone
-      uses: myci-actions:checkout@master
+      uses: myci-actions/checkout@master
     - name: add cppfw tap
       run: |
         brew tap cppfw/tap
@@ -98,7 +98,7 @@ jobs:
     - name: install ci tools
       run: pacman -Sy --noconfirm myci git
     - name: git clone
-      uses: myci-actions:checkout@master
+      uses: myci-actions/checkout@master
     - name: prepare pacman package
       run: myci-apply-version.sh -v $(myci-deb-version.sh debian/changelog) msys2/PKGBUILD.in
     - name: build
@@ -145,6 +145,6 @@ jobs:
     - name: install ci tools
       run: pacman -Sy --noconfirm myci git
     - name: git clone
-      uses: myci-actions:checkout@master
+      uses: myci-actions/checkout@master
     - name: test
       run: make test
