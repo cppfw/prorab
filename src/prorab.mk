@@ -588,7 +588,7 @@ $(.RECIPEPREFIX)$(a)for i in $(prorab_private_headers) $(this_install_c_hdrs) $(
     endef
 
     define prorab-private-app-specific-rules
-        $(if $(this_name),,$(error this_name is not defined))
+        $(if $(this_name),,$(error prorab-build-app: this_name is not defined))
 
         $(eval prorab_private_ldflags := )
 
@@ -666,7 +666,7 @@ $(.RECIPEPREFIX)$(a) \
     endef
 
     define prorab-private-dynamic-lib-specific-rules
-        $(if $(this_name),,$(error this_name is not defined))
+        $(if $(this_name),,$(error ASSERT(false): prorab-build-lib: this_name is not defined))
 
         $(if $(filter true,$(prorab_msys)),
                 $(prorab-private-dynamic-lib-specific-rules-msys)
@@ -676,7 +676,7 @@ $(.RECIPEPREFIX)$(a) \
     endef
 
     define prorab-private-lib-static-library-rule
-        $(if $(this_name),,$(error this_name is not defined))
+        $(if $(this_name),,$(error prorab-build-lib: this_name is not defined))
 
         $(eval prorab_this_static_lib := $(abspath $(d)$(prorab_private_out_dir)$(this_lib_prefix)$(this_name).a))
 
