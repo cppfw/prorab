@@ -29,13 +29,14 @@ jobs:
           repo: deb http://gagis.hopto.org/repo/cppfw/${{ matrix.os }} ${{ matrix.codename }} main
           repo-name: cppfw
           key-server: http://gagis.hopto.org/repo/cppfw/pubkey.gpg
+          install: git myci
       - name: install ci tools
         run: |
           # configure timezone to avoid 'tzdata' package to require user interaction during installation (needed for ubuntu:focal)
           TZ=Europe/Helsinki ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
           apt update
-          apt install --assume-yes devscripts equivs myci git
+          apt install --assume-yes devscripts equivs
       - name: git clone
         uses: myci-actions/checkout@master
       - name: set PACKAGE_VERSION
@@ -95,8 +96,7 @@ jobs:
         url: http://gagis.hopto.org/repo/cppfw/msys2/msys
         shell: 'msys2 {0}'
         key-server: http://gagis.hopto.org/repo/cppfw/pubkey.gpg
-    - name: install ci tools
-      run: pacman -Sy --noconfirm myci git
+        install: myci git
     - name: git clone
       uses: myci-actions/checkout@master
     - name: prepare pacman package
@@ -142,8 +142,7 @@ jobs:
         url: http://gagis.hopto.org/repo/cppfw/msys2/msys
         shell: 'msys2 {0}'
         key-server: http://gagis.hopto.org/repo/cppfw/pubkey.gpg
-    - name: install ci tools
-      run: pacman -Sy --noconfirm myci git
+        install: myci git
     - name: git clone
       uses: myci-actions/checkout@master
     - name: test
