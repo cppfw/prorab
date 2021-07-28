@@ -39,6 +39,11 @@ ifneq ($(prorab_is_included),true)
         $(error GNU make version $(prorab_min_gnumake_version) or higher is needed, but found only $(MAKE_VERSION))
     endif
 
+    prorab_min_recommended_gnumake_verison := 4.2.1
+    ifeq ($(filter $(prorab_min_recommended_gnumake_verison),$(firstword $(sort $(MAKE_VERSION) $(prorab_min_recommended_gnumake_verison)))),)
+        $(info WARNING: GNU make version less than $(prorab_min_recommended_gnumake_verison) detected. Note, that prior GNU make versions have bugs and showed crashes at least on MacOS.)
+    endif
+
     # check that prorab.mk is the first file included
     ifneq ($(words $(MAKEFILE_LIST)),2)
         $(error prorab.mk is not a first include in the makefile, include prorab.mk should be the very first thing done in the makefile.)
