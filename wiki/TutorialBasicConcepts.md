@@ -160,16 +160,8 @@ $(eval $(prorab-build-app))
 
 ## Using automatic number of parallel jobs
 
-Sometimes it is needed to have number of parallel jobs exactly as the number of physical processors on the system. **prorab** allows to do that. Just pass the `autojobs` variable set to `true` to the `make` command.
-
-```console
-make autojobs=true
-```
-Valid valies for `autojobs` are `true` or `false` or not set.
-
-The `aj` is a shorthand alias for `autojobs`. If `aj` is not set or set to `0` or `false` then it is equivalent to `autojobs=true`. Otehrwise, if `aj` is set to any other value then it is same as `autojobs=true`.
-Set `autojobs` variable has higher priority than set `aj` variable.
-
+`prorab` will automatically set number of parallel jobs to the number of physical CPU threads on the system, unless `-j`/`--jobs` command line option
+is given to the `make` invocation.
 
 ## Adding prorab.mk to project tree
 

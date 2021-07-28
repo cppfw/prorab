@@ -253,24 +253,9 @@ ifneq ($(prorab_is_included),true)
         prorab_nproc := $(shell nproc)
     endif
 
-    # 'autojobs' valid values are only 'true' or 'false'
-    ifeq ($(autojobs),true)
-        override aj := true
-    else ifeq ($(autojobs),false)
-        override aj := false
-    else ifeq ($(aj),0)
-        override aj := false
-    else ifeq ($(aj),false)
-        # do nothing
-    else ifeq ($(aj),)
-        override aj := false
-    else
-        override aj := true
-    endif
-
-    ifeq ($(aj),true)
-        MAKEFLAGS += -j$(prorab_nproc)
-    endif
+    # set number of parallel jobs. In case number of jobs is given from the command line via '-j' or '--jobs' option
+    # then this setting will be ignored by GNU make
+    MAKEFLAGS += -j$(prorab_nproc)
 
     #########################################
     # macro for setting build configuration #

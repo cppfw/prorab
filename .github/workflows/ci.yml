@@ -71,7 +71,7 @@ jobs:
     - name: install deps
       run: myci-brew-install.sh `myci-list-deps-homebrew.sh`
     - name: build
-      run: make autojobs=true
+      run: make
     - name: test
       run: make test
     - name: deploy
