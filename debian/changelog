@@ -1,3 +1,9 @@
+prorab (2.0.2) unstable; urgency=medium
+
+  * correct homebrew formulae
+
+ -- Ivan Gagis <igagis@gmail.com>  Tue, 10 Aug 2021 01:49:59 +0300
+
 prorab (2.0.1) unstable; urgency=medium
 
   * correct log message wording
