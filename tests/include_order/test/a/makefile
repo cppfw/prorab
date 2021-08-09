@@ -10,5 +10,8 @@ ifneq ($(test_var_b),test_value_b)
     $(error test_var_b = '$(test_var_b)', while expected value is 'test_value_b')
 endif
 
+define this_rules
 test::
-	@echo "testing..."
+$(.RECIPEPREFIX)@echo "testing..."
+endef
+$(eval $(this_rules))

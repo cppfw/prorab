@@ -13,8 +13,8 @@ include prorab.mk
 define this_rules
 .PHONY: test
 test:: $(abspath $(d)../app/nopapp)
-	@$(d)../app/nopapp; \
-	    if [ $$$$? -eq 0 ]; then echo "PASSED!"; else echo "ERROR: application exited with code $$$$?"; fi
+$(.RECIPEPREFIX)@$(d)../app/nopapp; \
+		if [ $$$$? -eq 0 ]; then echo "PASSED!"; else echo "ERROR: application exited with code $$$$?"; fi
 
 endef
 $(eval $(this_rules))

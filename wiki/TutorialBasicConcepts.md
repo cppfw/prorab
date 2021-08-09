@@ -28,7 +28,7 @@ Right after inclusion of `prorab.mk` there will be following variables defined:
 - `os` - operating system where makefile is run, can be `linux`, `macosx`, `windows`. Note, that `windows` is when building under `Cygwin` or `Msys2`.
 - `dot_so` - typical suffix for dynamically linked libraries in the OS (windows: `.dll`, linux: `.so`, macosx: `.dylib`)
 - `dot_exe` - typical suffix for executable files (windows: `.exe`, linux: empty, macosx: empty)
-- `.RECIPEPREFIX` - this is a built-in variable of `GNU make`, but by default it is empty which means the default recipe prefix will be the tab character. Prorab explicitly sets the value of this variable to tab character, so that this variable could be used in user's makefiles.
+- `.RECIPEPREFIX` - this is a built-in variable of `GNU make`, but by default it is empty which means the default recipe prefix will be the tab character. Prorab explicitly sets the value of this variable to `>` character.
 - `a` - this variable is either empty or set to `@` depending on value of `verbose` or `v` variables. See about verbosity below.
 
 ## Prorab macros and variables naming conventions
@@ -181,9 +181,9 @@ It is often necessary to add custom rules. `GNU make` expands variables in `make
 define this_rules
 
 test:: $(d)my_executable_binary
-    @echo "Running my_executable_binary"
-    @$$^
-    @echo "program finished"
+>   @echo "Running my_executable_binary"
+>   @$$^
+>   @echo "program finished"
 
 endef
 $(eval $(this_rules))
