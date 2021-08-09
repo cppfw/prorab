@@ -1,8 +1,8 @@
-prorab (2.0.0) UNRELEASED; urgency=medium
+prorab (2.0.0) unstable; urgency=medium
 
   * set recipe prefix character to >
 
- -- Ivan Gagis <igagis@gmail.com>  Tue, 10 Aug 2021 01:00:05 +0300
+ -- Ivan Gagis <igagis@gmail.com>  Tue, 10 Aug 2021 01:05:05 +0300
 
 prorab (1.19.3) unstable; urgency=medium
 
