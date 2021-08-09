@@ -167,9 +167,9 @@ ifneq ($(prorab_is_included),true)
 
     endef
 
-    # set recepie prefix to tab if it is not set (tab is default recepie prefix)
+    # set recepie prefix to '>' if it is not set
     ifeq ($(.RECIPEPREFIX),)
-        .RECIPEPREFIX := >
+        .RECIPEPREFIX :=>
     endif
 
     # 'verbose' valid values are only 'true' or 'false'
