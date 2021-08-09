@@ -447,7 +447,7 @@ $(.RECIPEPREFIX)$(a)rm -rf $(d)out
 $(.RECIPEPREFIX)@test -t 1 && printf "\e[0;32mclean\e[0m\n" || printf "clean\n"
 
         echo-clean-all:
-$(.RECIPEPREFIX)@test -t 1 && printf "\e[0;32mclean all configurations\e[0m\n" || printf "clean\n"
+$(.RECIPEPREFIX)@test -t 1 && printf "\e[0;32mclean all configurations\e[0m\n" || printf "clean all configurations\n"
 
         clean:: echo-clean
 
