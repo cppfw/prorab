@@ -5,13 +5,15 @@ class Prorab < Formula
   sha256 "$(sha256)"
 
   depends_on "dos2unix" => :build
+  depends_on "make"
 
+  # use gmake here because otherwise homebrew uses default Mac's make which is of old version 3.81 which has bugs
   def install
     ENV['PATH'] += ':/usr/local/bin'
-    system "make", "install", "PREFIX=#{prefix}"
+    system "gmake", "install", "PREFIX=#{prefix}"
   end
   
   test do
-    system "make", "test"
+    system "gmake", "test"
   end
 end
