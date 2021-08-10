@@ -1,3 +1,9 @@
+prorab (2.0.5) unstable; urgency=medium
+
+  * update minimal GNU make supported version
+
+ -- Ivan Gagis <igagis@gmail.com>  Tue, 10 Aug 2021 14:43:55 +0300
+
 prorab (2.0.4) unstable; urgency=medium
 
   * homebrew formulae use direct path to make
