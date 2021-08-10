@@ -10,10 +10,10 @@ class Prorab < Formula
   # use gmake here because otherwise homebrew uses default Mac's make which is of old version 3.81 which has bugs
   def install
     ENV['PATH'] += ':/usr/local/bin'
-    system "gmake", "install", "PREFIX=#{prefix}"
+    system "/usr/local/opt/make/libexec/gnubin/make", "install", "PREFIX=#{prefix}"
   end
   
   test do
-    system "gmake", "test"
+    system "/usr/local/opt/make/libexec/gnubin/make", "test"
   end
 end
