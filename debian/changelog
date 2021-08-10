@@ -1,3 +1,9 @@
+prorab (2.0.4) unstable; urgency=medium
+
+  * homebrew formulae use direct path to make
+
+ -- Ivan Gagis <igagis@gmail.com>  Tue, 10 Aug 2021 03:04:10 +0300
+
 prorab (2.0.3) unstable; urgency=medium
 
   * make homebrew formulae use gmake
