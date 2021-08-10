@@ -7,7 +7,7 @@ class Prorab < Formula
   depends_on "dos2unix" => :build
   depends_on "make"
 
-  # use gmake here because otherwise homebrew uses default Mac's make which is of old version 3.81 which has bugs
+  # use gmake here because otherwise homebrew uses default Mac's make which is of too old version 3.81
   def install
     ENV['PATH'] += ':/usr/local/bin'
     system "/usr/local/opt/make/libexec/gnubin/make", "install", "PREFIX=#{prefix}"

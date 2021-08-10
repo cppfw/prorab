@@ -1,6 +1,6 @@
 # The MIT License (MIT)
 #
-# Copyright (c) 2021 Ivan Gagis <igagis@gmail.com>
+# Copyright (c) 2015-2021 Ivan Gagis <igagis@gmail.com>
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -34,7 +34,7 @@ ifneq ($(prorab_is_included),true)
     endif
 
     # check if running minimal supported 'GNU make' version
-    prorab_min_gnumake_version := 3.81
+    prorab_min_gnumake_version := 3.82
     ifeq ($(filter $(prorab_min_gnumake_version),$(firstword $(sort $(MAKE_VERSION) $(prorab_min_gnumake_version)))),)
         $(error GNU make version $(prorab_min_gnumake_version) or higher is needed, but found only $(MAKE_VERSION))
     endif
@@ -169,6 +169,7 @@ ifneq ($(prorab_is_included),true)
 
     # set recepie prefix to '>' if it is not set
     ifeq ($(.RECIPEPREFIX),)
+        # the .RECIPEPREFIX is supported since GNU make version 3.82
         .RECIPEPREFIX := >
     endif
 

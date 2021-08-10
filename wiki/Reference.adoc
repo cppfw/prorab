@@ -1,6 +1,6 @@
 = prorab reference
 
-Minimum version of `GNU make` required is `3.81`.
+Minimum version of `GNU make` required is `3.82`.
 
 Before using **prorab** one has to include it.
 
