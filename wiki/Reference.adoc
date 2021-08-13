@@ -188,7 +188,7 @@ $(eval $(call prorab-try-simple-include, ../some_dir/common.mk))
 
 == prorab-include-subdirs
 
-Include `makefile`s from all subdirectories of `$(d)`. Subdirectories which do not have a `makefile` are ignored.
+Include `makefile` from all subdirectories of `$(d)`. Subdirectories which do not have a `makefile` are ignored.
 
 .syntax
 [source,makefile]
