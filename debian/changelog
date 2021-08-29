@@ -1,3 +1,9 @@
+prorab (2.0.6) unstable; urgency=medium
+
+  * build for debian bullseye
+
+ -- Ivan Gagis <igagis@gmail.com>  Sun, 29 Aug 2021 17:29:13 +0300
+
 prorab (2.0.5) unstable; urgency=medium
 
   * update minimal GNU make supported version
