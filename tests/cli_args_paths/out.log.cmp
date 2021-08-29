@@ -1,7 +1,7 @@
 Hello stuff!
-lib: cpp source file = ./stuff.cpp
+lib: cpp source file = stuff.cpp
 15
-app: c source file = ./some.c
-lib: c source file = ./stuff.c
+app: c source file = some.c
+lib: c source file = stuff.c
 17
-app: cpp source file = ./main.cpp
+app: cpp source file = main.cpp
