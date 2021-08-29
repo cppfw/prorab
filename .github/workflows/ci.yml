@@ -15,6 +15,7 @@ jobs:
         include:
           - {os: debian, codename: stretch, image_owner: , package_type: deb}
           - {os: debian, codename: buster, image_owner: , package_type: deb}
+          - {os: debian, codename: bullseye, image_owner: , package_type: deb}
           # - {os: ubuntu, codename: bionic, image_owner: , package_type: deb}
           - {os: ubuntu, codename: focal, image_owner: , package_type: deb}
           # - {os: raspbian, codename: stretch, image_owner: igagis/, package_type: deb, labels: [arm,docker]}
@@ -28,7 +29,7 @@ jobs:
         with:
           repo: deb http://gagis.hopto.org/repo/cppfw/${{ matrix.os }} ${{ matrix.codename }} main
           repo-name: cppfw
-          key-server: http://gagis.hopto.org/repo/cppfw/pubkey.gpg
+          keys-asc: http://gagis.hopto.org/repo/cppfw/pubkey.gpg
           install: git myci
       - name: install ci tools
         run: |
