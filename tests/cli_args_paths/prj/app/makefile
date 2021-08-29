@@ -19,6 +19,6 @@ this_ldlibs += -lstdc++ -lstuff
 
 $(eval $(prorab-build-app))
 
-$(prorab_this_name): $(abspath $(d)../lib/out/libstuff$(dot_so))
+$(eval $(call prorab-depend, $(prorab_this_name), ../lib/out/libstuff$(dot_so) ))
 
 $(eval $(call prorab-include, ../lib/makefile))
