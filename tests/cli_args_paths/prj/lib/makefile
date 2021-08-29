@@ -12,10 +12,8 @@ this_hdrs := $(call prorab-hdr-dir,.)
 
 this_cxxflags += -fPIC
 
-$(info g++ version = $(shell g++ --version))
-
-this_cxxflags += -fmacro-prefix-map=$(d)=
-this_cflags += -fmacro-prefix-map=$(d)=
+this_cxxflags += -ffile-prefix-map=$(d)=
+this_cflags += -ffile-prefix-map=$(d)=
 
 this_ldlibs += -lstdc++
 
