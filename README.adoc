@@ -33,7 +33,3 @@ $(eval $(prorab-build-app))
 == installation and documentation
 
 See **link:wiki/HomePage.adoc[WiKi]**
-
-== questions
-
-In case of questions about **prorab** usage, please submit those as link:https://github.com/cppfw/prorab/issues[Issue].
