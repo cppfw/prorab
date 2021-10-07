@@ -1,3 +1,9 @@
+prorab (2.0.7) unstable; urgency=medium
+
+  * build for raspbian bullseye
+
+ -- Ivan Gagis <igagis@gmail.com>  Fri, 08 Oct 2021 01:22:43 +0300
+
 prorab (2.0.6) unstable; urgency=medium
 
   * build for debian bullseye
