@@ -25,7 +25,7 @@ Basically, all makefiles in the project are supposed to use **prorab** and have 
 
 Right after inclusion of `prorab.mk` there will be following variables defined:
 - `d` - directory where this `makefile` resides
-- `os` - operating system where makefile is run, can be `linux`, `macosx`, `windows`. Note, that `windows` is when building under `Cygwin` or `Msys2`.
+- `os` - operating system where makefile is run, can be `linux`, `macosx`, `windows`. Note, that `windows` is when building under `Msys2/MinGW`.
 - `dot_so` - typical suffix for dynamically linked libraries in the OS (windows: `.dll`, linux: `.so`, macosx: `.dylib`)
 - `dot_exe` - typical suffix for executable files (windows: `.exe`, linux: empty, macosx: empty)
 - `.RECIPEPREFIX` - this is a built-in variable of `GNU make`, but by default it is empty which means the default recipe prefix will be the tab character. Prorab explicitly sets the value of this variable to `>` character.
