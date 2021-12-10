@@ -370,6 +370,12 @@ $(.RECIPEPREFIX)$(a)rm -rf $(d)out
     define prorab-include
         $(eval prorab_private_path_to_makefile := $(abspath $(d)$(strip $1)))
 
+        # check that the makefile exists
+        $(if $(wildcard $(prorab_private_path_to_makefile)), \
+            , \
+                $(error prorab-include: file not found: $(prorab_private_path_to_makefile), did you forget git submodules?) \
+            )
+
         # if makefile is already included do nothing
         $(if $(filter $(prorab_private_path_to_makefile),$(prorab_included_makefiles)), \
             , \
