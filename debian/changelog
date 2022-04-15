@@ -1,3 +1,9 @@
+prorab (2.0.9) unstable; urgency=medium
+
+  * add prorab_comma constant
+
+ -- Ivan Gagis <igagis@gmail.com>  Fri, 15 Apr 2022 19:31:23 +0300
+
 prorab (2.0.8) unstable; urgency=medium
 
   * print git submodules reminder in case prorab-include fails due to
