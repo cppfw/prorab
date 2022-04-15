@@ -162,6 +162,9 @@ ifneq ($(prorab_is_included),true)
     # define space character
     prorab_space := $(prorab_blank) $(prorab_blank)
 
+    # define comma character
+    prorab_comma := ,
+
     # define new line character
     define prorab_newline
 
