@@ -809,6 +809,7 @@ $(.RECIPEPREFIX)@test -t 1 && printf "\e[0;35mcompile\e[0m $$(patsubst $(prorab_
 $(.RECIPEPREFIX)$(a)mkdir -p $$(dir $$@)
 $(.RECIPEPREFIX)$(a)(cd $(d) && $(this_cc) --language c -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -MP -o "$$@" $(prorab_cflags) $$<)
 $(.RECIPEPREFIX)$(a)$(prorab_private_d_file_sed_command)
+$(if $(this_lint_cmd),$(.RECIPEPREFIX)$(a)(cd $(d) && $(this_lint_cmd)))
 
         # compile .h.hdr_c static pattern rule
         $(prorab_this_h_objs): $(d)%.o: $(d)% $(prorab_cflags_file)
