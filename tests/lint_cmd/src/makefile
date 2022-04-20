@@ -8,6 +8,8 @@ this_srcs += $(call prorab-src-dir, .)
 
 this_ldlibs += -lstdc++
 
-this_lint_cmd = clang-tidy $$< -- $(this_cppflags) $(this_cxxflags)
+ifeq ($(os),linux)
+	this_lint_cmd = clang-tidy $$< -- $(this_cppflags) $(this_cxxflags)
+endif
 
 $(eval $(prorab-build-app))
