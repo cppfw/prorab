@@ -12,7 +12,8 @@ this_cflags := -D DUMMY_MACRO_C
 this_ldlibs += -lstdc++
 
 ifeq ($(os),linux)
-	this_lint_cmd = $(prorab_lint_cmd_clang_tidy)
+	# clang-tidy in Debian 9 (stetch) doesn't support --quiet flag, so filter it out from the lint command
+	this_lint_cmd = $(subst --quiet,,$(prorab_lint_cmd_clang_tidy))
 endif
 
 $(eval $(prorab-build-app))
