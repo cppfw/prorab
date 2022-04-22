@@ -118,6 +118,27 @@ Prorab sets the `dot_exe` variable to the executable files suffix which is nativ
 - empty - for Linux and Mac OS X
 - `.exe` - for Windows
 
+== prorab_lint_cmd_clang_tidy
+
+Predefined command for `clang-tidy` linter. The value of this constant can be used as a value of
+`this_lint_cmd` input variable for `prorab-build-app` and `prorab-build-lib` macros.
+
+.defined as
+[source,makefile]
+....
+prorab_lint_cmd_clang_tidy = clang-tidy $$< -- $(this_cppflags) $$(if $$(patsubst %.c,,$$<),$(this_cxxflags),$(this_cflags))
+....
+
+.example
+
+[source,makefile]
+....
+# Note the deferred assignment
+this_lint_cmd = $(prorab_lint_cmd_clang_tidy)
+
+$(eval $(prorab-build-app))
+....
+
 == prorab-depend
 
 Add file dependencies to the specified target. Automatically checks if dependency is specified as absolute path or local, and in case of local it makes it absolute.
@@ -474,6 +495,7 @@ this_hdrs := <c-cplusplus-header-files>
 this_c_hdrs := <c-header-files>
 this_cxx_hdrs := <cplusplus-header-files>
 this_dot_hxx := <cplusplus-header-file-suffix>
+this_lint_cmd := <command-to-invoke-linter>
 
 $(eval $(prorab-build-app))
 ....
@@ -502,6 +524,7 @@ $(eval $(prorab-build-app))
 - `this_c_hdrs` - list of C header files to check compilation for (see explanation below). Rleative to `$(d)`.
 - `this_cxx_hdrs` - list of {cpp} header files to check compilation for (see explanation below). Rleative to `$(d)`.
 - `this_dot_hxx` - {cpp} header files suffix. Used to filter {cpp} header files from `$(this_hdrs)`. Defaults to `.hpp`.
+- `this_lint_cmd` - Command to invoke linter. Can be empty. Use deferred assignment and `$$<` to refer to the input source file. Empty by default. See `prorab_lint_cmd_clang_tidy` for usage example.
 
 Note: `this_ldlibs` and `this_ldflags` are separated because sometimes order of linker flags, object files and libraries matters. So, linker flags go first, then go object files and then go linker libraries.
 
@@ -584,6 +607,7 @@ this_hdrs := <c-cplusplus-header-files>
 this_c_hdrs := <c-header-files>
 this_cxx_hdrs := <cplusplus-header-files>
 this_dot_hxx := <cplusplus-header-file-suffix>
+this_lint_cmd := <command-to-invoke-linter>
 
 $(eval $(prorab-build-lib))
 ....
@@ -624,6 +648,7 @@ $(eval $(prorab-build-lib))
 - `this_c_hdrs` - list of C header files to check compilation for (see explanation below). Rleative to `$(d)`.
 - `this_cxx_hdrs` - list of {cpp} header files to check compilation for (see explanation below). Rleative to `$(d)`.
 - `this_dot_hxx` - {cpp} header files suffix. Used to filter {cpp} header files from `$(this_hdrs)`. Defaults to `.hpp`.
+- `this_lint_cmd` - Command to invoke linter. Can be empty. Use deferred assignment and `$$<` to refer to the input source file. Empty by default. See `prorab_lint_cmd_clang_tidy` for usage example.
 
 Note: `this_ldlibs` and `this_ldflags` are separated because sometimes order of linker flags, object files and libraries matters. So, linker flags go first, then go object files and then go linker libraries.
 
