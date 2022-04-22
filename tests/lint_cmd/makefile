@@ -13,4 +13,10 @@ $(.RECIPEPREFIX)+$(a)$(MAKE) -C $(d)src clean || $(this_err) "final 'make clean'
 
 $(.RECIPEPREFIX)@$(this_pass)
 endef
-$(eval $(this_rules))
+
+# clang-tidy in Debian 10 and below does not support --quiet flag, which is used in the test,
+# so only run the test on Debian 11 or later
+this_min_supported_debian := 11
+ifeq ($(firstword $(sort $(this_min_supported_debian) $(shell lsb_release --release --short))),$(this_min_supported_debian))
+    $(eval $(this_rules))
+endif
