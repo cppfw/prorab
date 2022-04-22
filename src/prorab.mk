@@ -257,6 +257,9 @@ ifneq ($(prorab_is_included),true)
         prorab_nproc := $(shell nproc)
     endif
 
+    # define predefined lint command for clang-tidy
+    prorab_lint_cmd_clang_tidy = clang-tidy $$< -- $(this_cppflags) $$(if $$(patsubst %.c,,$$<),$(this_cxxflags),$(this_cflags))
+
     # set number of parallel jobs. In case number of jobs is given from the command line via '-j' or '--jobs' option
     # then this setting will be ignored by GNU make
     MAKEFLAGS += -j$(prorab_nproc)
@@ -794,6 +797,7 @@ $(.RECIPEPREFIX)@test -t 1 && printf "\e[1;34mcompile\e[0m $$(patsubst $(prorab_
 $(.RECIPEPREFIX)$(a)mkdir -p $$(dir $$@)
 $(.RECIPEPREFIX)$(a)(cd $(d) && $(this_cxx) --language c++ -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -MP -o "$$@" $(prorab_cxxflags) $$<)
 $(.RECIPEPREFIX)$(a)$(prorab_private_d_file_sed_command)
+$(if $(this_lint_cmd),$(.RECIPEPREFIX)$(a)(cd $(d) && $(this_lint_cmd)))
 
         # compile .hpp.hdr_cpp static pattern rule
         $(prorab_this_hxx_objs): $(d)%.o: $(d)% $(prorab_cxxflags_file)
@@ -808,6 +812,7 @@ $(.RECIPEPREFIX)@test -t 1 && printf "\e[0;35mcompile\e[0m $$(patsubst $(prorab_
 $(.RECIPEPREFIX)$(a)mkdir -p $$(dir $$@)
 $(.RECIPEPREFIX)$(a)(cd $(d) && $(this_cc) --language c -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -MP -o "$$@" $(prorab_cflags) $$<)
 $(.RECIPEPREFIX)$(a)$(prorab_private_d_file_sed_command)
+$(if $(this_lint_cmd),$(.RECIPEPREFIX)$(a)(cd $(d) && $(this_lint_cmd)))
 
         # compile .h.hdr_c static pattern rule
         $(prorab_this_h_objs): $(d)%.o: $(d)% $(prorab_cflags_file)
