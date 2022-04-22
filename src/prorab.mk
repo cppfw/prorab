@@ -258,7 +258,7 @@ ifneq ($(prorab_is_included),true)
     endif
 
     # define predefined lint command for clang-tidy
-    prorab_lint_cmd_clang_tidy = clang-tidy $$< -- $(this_cppflags) $$(if $$(patsubst %.c,,$$<),$(this_cxxflags),$(this_cflags))
+    prorab_lint_cmd_clang_tidy = clang-tidy --quiet $$< -- $(this_cppflags) $$(if $$(patsubst %.c,,$$<),$(this_cxxflags),$(this_cflags))
 
     # set number of parallel jobs. In case number of jobs is given from the command line via '-j' or '--jobs' option
     # then this setting will be ignored by GNU make

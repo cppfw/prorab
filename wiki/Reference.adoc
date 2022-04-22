@@ -126,7 +126,7 @@ Predefined command for `clang-tidy` linter. The value of this constant can be us
 .defined as
 [source,makefile]
 ....
-prorab_lint_cmd_clang_tidy = clang-tidy $$< -- $(this_cppflags) $$(if $$(patsubst %.c,,$$<),$(this_cxxflags),$(this_cflags))
+prorab_lint_cmd_clang_tidy = clang-tidy --quiet $$< -- $(this_cppflags) $$(if $$(patsubst %.c,,$$<),$(this_cxxflags),$(this_cflags))
 ....
 
 .example
