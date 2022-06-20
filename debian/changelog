@@ -1,3 +1,9 @@
+prorab (2.0.13) unstable; urgency=medium
+
+  * pass preprocessor flags to assembler preprocessor
+
+ -- Ivan Gagis <igagis@gmail.com>  Tue, 21 Jun 2022 00:43:00 +0300
+
 prorab (2.0.12) unstable; urgency=medium
 
   * preprocess assembler files
