@@ -275,7 +275,6 @@ Some variables, instead of clearing, are set to their default values.
 - `this_ar`
 - `this_as`
 - `this_as_supports_deps_gen`
-- `this_ld`
 - `this_cppflags`
 - `this_cflags`
 - `this_cxxflags`
@@ -480,7 +479,6 @@ this_as_srcs := <assembler-sources>
 this_cc := <c-compiler>
 this_cxx := <cplusplus-compiler>
 this_as := <assembler-compiler>
-this_ld := <linker>
 this_dot_cxx := <cplusplus-file-suffix>
 this_cflags :=/+= <c-compiler-flags>
 this_cxxflags :=/+= <cplusplus-compiler-flags>
@@ -508,13 +506,12 @@ $(eval $(prorab-build-app))
 - `this_as_srcs` - list of sources files to be compiled by assembler. Relative to `$(d)`.
 - `this_cc` - C compiler to use. Defaults to `$(CC)`.
 - `this_cxx` - {cpp} compiler to use. Defaults to `$(CXX)`.
-- `this_as` - assembler to use. Defaults to `$(AS)`.
-- `this_ld` - linker to use. Defaults to `$(this_cc)`.
+- `this_as` - assembler to use. Defaults to `$(AS)`. When compiling assembler files, the C-preprocessor is run on them first.
 - `this_dot_cxx` - {cpp} source files suffix. Used to filter {cpp} source files from `$(this_srcs)`. Defaults to `.cpp`.
 - `this_cflags` - C compiler flags. Defaults to `$(CFLAGS)`. Relative to `$(d)`.
 - `this_cxxflags` - {cpp} compiler flags. Defaults to `$(CXXFLAGS)`. Relative to `$(d)`.
 - `this_asflags` - assembler flags. Defaults to `$(ASFLAGS)`. Relative to `$(d)`.
-- `this_as_supports_deps_gen` - enable dependency files generation for assembler. Defaults to `true`.
+- `this_as_supports_deps_gen` - enable dependency rules generation from `.include` assembler directives. Defaults to `true`.
 - `this_ldflags` - linker flags. Defaults to `$(LDFLAGS)`. Relative to `$(d)`.
 - `this_ldlibs` - linker libraries. Defaults to `$(LDLIBS)`. Relative to `$(d)`.
 - `this_cppflags` - preprocessor flags. Defaults to `$(CPPFLAGS)`. Relative to `$(d)`.
@@ -590,7 +587,6 @@ this_as_srcs := <assembler-sources>
 this_cc := <c-compiler>
 this_cxx := <cplusplus-compiler>
 this_as := <assembler-compiler>
-this_ld := <linker>
 this_dot_cxx := <cplusplus-file-suffix>
 this_cflags :=/+= <c-compiler-flags>
 this_cflags_test :=/+= <c-compiler-flags-for-testing-public-headers>
@@ -630,15 +626,14 @@ $(eval $(prorab-build-lib))
 - `this_as_srcs` - list of sources files to be compiled by assembler. Relative to `$(d)`.
 - `this_cc` - C compiler to use. Defaults to `$(CC)`.
 - `this_cxx` - {cpp} compiler to use. Defaults to `$(CXX)`.
-- `this_as` - assembler to use. Defaults to `$(AS)`.
-- `this_ld` - linker to use. Defaults to `$(this_cc)`.
+- `this_as` - assembler to use. Defaults to `$(AS)`. When compiling assembler files, the C-preprocessor is run on them first.
 - `this_dot_cxx` - {cpp} source files suffix. Used to filter {cpp} source files from `$(this_srcs)`. Defaults to `.cpp`.
 - `this_cflags` - C compiler flags. Defaults to `$(CFLAGS)`. Relative to `$(d)`.
 - `this_cflags_test` - C compiler flags for testing public header files. See `test::` target in _generated targets_. Defaults to `$(filter -std=%,$(this_cflags)) $(CPPFLAGS) $(CFLAGS)`, deferred assignment. Relative to `$(d)`.
 - `this_cxxflags` - {cpp} compiler flags. Defaults to `$(CXXFLAGS)`. Relative to `$(d)`.
 - `this_cxxflags_test` - {cpp} compiler flags for testing public header files. See `test::` target in _generated targets_. Defaults to `$(filter -std=%,$(this_cxxflags)) $(CPPFLAGS) $(CXXFLAGS)`, deferred assignment. Relative to `$(d)`.
 - `this_asflags` - assembler flags. Defaults to `$(ASFLAGS)`. Relative to `$(d)`.
-- `this_as_supports_deps_gen` - enable dependency files generation for assembler. Defaults to `true`.
+- `this_as_supports_deps_gen` - enable dependency rules generation for `.include` assembler directives. Defaults to `true`.
 - `this_ldflags` - linker flags. Defaults to `$(LDFLAGS)`. Relative to `$(d)`.
 - `this_ldlibs` - linker libraries. Defaults to `$(LDLIBS)`. Relative to `$(d)`.
 - `this_cppflags` - preprocessor flags. Defaults to `$(CPPFLAGS)`. Relative to `$(d)`.
