@@ -111,8 +111,6 @@ ifneq ($(prorab_is_included),true)
         $(eval this_ar := $(AR))
         $(eval this_as := $(AS))
         $(eval this_as_supports_deps_gen := true)
-        # NOTE: the deferred assignment to allow changing just C compiler, and linker will change automatically if not explicitly set
-        $(eval this_ld = $$(this_cc))
 
         # set default values for flags
         $(eval this_cppflags := $(CPPFLAGS))
@@ -822,11 +820,14 @@ $(.RECIPEPREFIX)$(a)(cd $(d) && $(this_cc) --language c -c -MF "$$(patsubst %.o,
 $(.RECIPEPREFIX)$(a)$(prorab_private_d_file_sed_command)
 
         # compile .S static pattern rule
+        # Note, that assembler has its own ".include" directive to include files, so in addition to preprocessor include
+        # directives, there can be .include directives, and we need to generate dependency rules (into .d file) for both of those.
         $(prorab_this_as_objs): $(prorab_this_obj_dir)$(prorab_this_obj_spacer)%.o: $(d)% $(prorab_asflags_file)
 $(.RECIPEPREFIX)@test -t 1 && printf "\e[0;35mcompile\e[0m $$(patsubst $(prorab_root_dir)%,%,$$<)\n" || printf "compile $$(patsubst $(prorab_root_dir)%,%,$$<)\n"
 $(.RECIPEPREFIX)$(a)mkdir -p $$(dir $$@)
-$(.RECIPEPREFIX)$(a)(cd $(d) && $(this_as) $(if $(filter true,$(this_as_supports_deps_gen)),-MD "$$(patsubst %.o,%.d,$$@)") -o "$$@" $(prorab_asflags) $$<)
-$(if $(filter true,$(this_as_supports_deps_gen)),$(.RECIPEPREFIX)$(a)$(prorab_private_d_file_sed_command))
+$(.RECIPEPREFIX)$(a)(cd $(d) && $(this_cc) -E -MF "$$(patsubst %.o,%.d,$$@)" -MT "$$@" -MD -MP $$< | $(this_as) $(if $(filter true,$(this_as_supports_deps_gen)),-MD "$$(patsubst %.o,%.as.d,$$@)") -o "$$@" $(prorab_asflags))
+$(if $(filter true,$(this_as_supports_deps_gen)),$(.RECIPEPREFIX)$(a)cat $$(patsubst %.o,%.as.d,$$@) >> $$(patsubst %.o,%.d,$$@) && rm $$(patsubst %.o,%.as.d,$$@))
+$(.RECIPEPREFIX)$(a)$(prorab_private_d_file_sed_command)
 
         # include rules for header dependencies
         include $(wildcard $(addsuffix *.d,$(dir $(prorab_this_objs))))
@@ -857,7 +858,7 @@ $(.RECIPEPREFIX)$(a)rm -rf $(prorab_this_obj_dir)
         $(prorab_this_name): $(prorab_this_objs) $(prorab_ldargs_file) $(prorab_objs_file)
 $(.RECIPEPREFIX)@test -t 1 && printf "\e[0;31mlink\e[0m $(patsubst $(prorab_root_dir)%,%,$(prorab_private_this_binary_name))\n" || printf "link $(patsubst $(prorab_root_dir)%,%,$(prorab_private_this_binary_name))\n"
 $(.RECIPEPREFIX)$(a)mkdir -p $(d)$(prorab_private_out_dir)
-$(.RECIPEPREFIX)$(a)(cd $(d) && $(this_ld) $(prorab_ldflags) $$(filter %.o,$$^) $(prorab_ldlibs) -o "$(prorab_private_this_binary_name)")
+$(.RECIPEPREFIX)$(a)(cd $(d) && $(this_cc) $(prorab_ldflags) $$(filter %.o,$$^) $(prorab_ldlibs) -o "$(prorab_private_this_binary_name)")
         $(if $(prorab_this_so_name),
 $(.RECIPEPREFIX)@test -t 1 && printf "\e[1;36mcreate symbolic link\e[0m $(notdir $(prorab_this_name)) -> $(notdir $(prorab_private_this_binary_name))\n" || printf "create symbolic link $(notdir $(prorab_this_name)) -> $(notdir $(prorab_private_this_binary_name))\n"
 $(.RECIPEPREFIX)$(a)(cd $(dir $(prorab_private_this_binary_name)) && ln -f -s $(notdir $(prorab_private_this_binary_name)) $(notdir $(prorab_this_name)))

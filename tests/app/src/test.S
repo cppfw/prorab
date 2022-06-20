@@ -1,5 +1,7 @@
+#include "test1.inc"
+
 	.include	"test.inc"
-	.text
+	TEXT_SECTION
 	.globl	asm_func
 asm_func:
 /*  Do not use any assembler instructions, because, for example, ARM architecture does not have 'ret' command,
