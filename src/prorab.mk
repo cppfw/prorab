@@ -823,9 +823,9 @@ $(.RECIPEPREFIX)$(a)$(prorab_private_d_file_sed_command)
         # Note, that assembler has its own ".include" directive to include files, so in addition to preprocessor include
         # directives, there can be .include directives, and we need to generate dependency rules (into .d file) for both of those.
         $(prorab_this_as_objs): $(prorab_this_obj_dir)$(prorab_this_obj_spacer)%.o: $(d)% $(prorab_asflags_file)
-$(.RECIPEPREFIX)@test -t 1 && printf "\e[0;35mcompile\e[0m $$(patsubst $(prorab_root_dir)%,%,$$<)\n" || printf "compile $$(patsubst $(prorab_root_dir)%,%,$$<)\n"
+$(.RECIPEPREFIX)@test -t 1 && printf "\e[2;36mcompile\e[0m $$(patsubst $(prorab_root_dir)%,%,$$<)\n" || printf "compile $$(patsubst $(prorab_root_dir)%,%,$$<)\n"
 $(.RECIPEPREFIX)$(a)mkdir -p $$(dir $$@)
-$(.RECIPEPREFIX)$(a)(cd $(d) && $(this_cc) -E -MF "$$(patsubst %.o,%.d,$$@)" -MT "$$@" -MD -MP $$< | $(this_as) $(if $(filter true,$(this_as_supports_deps_gen)),-MD "$$(patsubst %.o,%.as.d,$$@)") -o "$$@" $(prorab_asflags))
+$(.RECIPEPREFIX)$(a)(cd $(d) && $(this_cc) -E $(this_cppflags) -MF "$$(patsubst %.o,%.d,$$@)" -MT "$$@" -MD -MP $$< | $(this_as) $(if $(filter true,$(this_as_supports_deps_gen)),-MD "$$(patsubst %.o,%.as.d,$$@)") -o "$$@" $(prorab_asflags))
 $(if $(filter true,$(this_as_supports_deps_gen)),$(.RECIPEPREFIX)$(a)cat $$(patsubst %.o,%.as.d,$$@) >> $$(patsubst %.o,%.d,$$@) && rm $$(patsubst %.o,%.as.d,$$@))
 $(.RECIPEPREFIX)$(a)$(prorab_private_d_file_sed_command)
 

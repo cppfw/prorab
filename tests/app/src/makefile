@@ -14,6 +14,8 @@ endif
 # This is just for demonstration that it is possible to generate temporary compilation files
 this_cxxflags += -save-temps=obj
 this_cflags += -save-temps=obj
+this_asflags += -I .
+this_cppflags += -I .
 
 this_ldlibs += -lstdc++
 
