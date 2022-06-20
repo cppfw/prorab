@@ -1,3 +1,9 @@
+prorab (2.0.12) unstable; urgency=medium
+
+  * preprocess assembler files
+
+ -- Ivan Gagis <igagis@gmail.com>  Mon, 20 Jun 2022 23:45:08 +0300
+
 prorab (2.0.11) unstable; urgency=medium
 
   * make clang-tidy quiet
