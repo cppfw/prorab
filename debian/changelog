@@ -1,3 +1,9 @@
+prorab (2.0.14) unstable; urgency=medium
+
+  * build for ubuntu jammy
+
+ -- Ivan Gagis <igagis@gmail.com>  Fri, 21 Oct 2022 18:39:26 +0300
+
 prorab (2.0.13) unstable; urgency=medium
 
   * pass preprocessor flags to assembler preprocessor
