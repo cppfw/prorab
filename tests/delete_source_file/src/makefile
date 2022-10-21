@@ -42,8 +42,8 @@ this_name := tests
 
 this_srcs += $(call prorab-rwildcard, ., *test.cpp *test.c) main.cpp
 
-this_cflags += -g
-this_cxxflags += -g
+this_cflags += -g -O0
+this_cxxflags += -g -O0
 this_ldlibs += -lstdc++
 
 this_out_dir := build_app
