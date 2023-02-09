@@ -611,7 +611,7 @@ $(.RECIPEPREFIX)$(a)rm -f $(prorab_prefix)bin/$(notdir $(prorab_this_name)) \
 
         $(if $(filter macosx,$(os)),
                 $(eval prorab_this_so_name := $(abspath $(d)$(prorab_private_out_dir)$(this_lib_prefix)$(this_name).$(this_soname)$(this_dot_so)))
-                $(eval prorab_private_ldflags := -dynamiclib -Wl,-install_name,@rpath/$(notdir $(prorab_this_so_name)),-headerpad_max_install_names,-undefined,dynamic_lookup,-compatibility_version,1.0,-current_version,1.0)
+                $(eval prorab_private_ldflags := -dynamiclib -Wl,-install_name,@rpath/$(notdir $(prorab_this_so_name)),-headerpad_max_install_names,-compatibility_version,1.0,-current_version,1.0)
             ,
                 $(eval prorab_this_so_name := $(prorab_this_name).$(this_soname))
                 $(eval prorab_private_ldflags := -shared -Wl,-soname,$(notdir $(prorab_this_so_name)))
