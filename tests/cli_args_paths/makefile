@@ -19,7 +19,7 @@ $(.RECIPEPREFIX)+$(a)$(MAKE) --directory=$(d)prj || $(this_err) "initial 'make' 
 ifeq ($(prorab_msys),true)
 $(.RECIPEPREFIX)$(a)cp $(d)prj/lib/out/*.dll $(d)prj/app/out
 endif
-$(.RECIPEPREFIX)$(a)(cd $(d)prj/app && LD_LIBRARY_PATH=../lib/out DYLD_LIBRARY_PATH=$$LD_LIBRARY_PATH out/app | dos2unix) > $(d)out.log
+$(.RECIPEPREFIX)$(a)(cd $(d)prj/app && LD_LIBRARY_PATH=../lib/out DYLD_LIBRARY_PATH=$$LD_LIBRARY_PATH D_LIBRARY_PATH=$$LD_LIBRARY_PATH out/app | dos2unix) > $(d)out.log
 $(.RECIPEPREFIX)$(a)cmp $(d)out.log $(d)out.log.cmp || (echo "out.log = "; cat $(d)out.log; echo "out.log.cmp = "; cat $(d)out.log.cmp; $(this_err) "first output log is not as expected");
 
 # use sed to unify the output across all environments
