@@ -275,6 +275,9 @@ ifneq ($(prorab_is_included),true)
     # shorthand alias for config variable
     override c := $(config)
 
+    # lint is on by default
+    lint := on
+
     define prorab-private-config
         this_out_dir := out/$(c)/
 
@@ -795,7 +798,7 @@ $(.RECIPEPREFIX)@test -t 1 && printf "\e[1;34mcompile\e[0m $$(patsubst $(prorab_
 $(.RECIPEPREFIX)$(a)mkdir -p $$(dir $$@)
 $(.RECIPEPREFIX)$(a)(cd $(d) && $(this_cxx) --language c++ -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -MP -o "$$@" $(prorab_cxxflags) $$<)
 $(.RECIPEPREFIX)$(a)$(prorab_private_d_file_sed_command)
-$(if $(this_lint_cmd),$(.RECIPEPREFIX)$(a)(cd $(d) && $(this_lint_cmd)))
+$(if $(this_lint_cmd),$(if $(filter $(lint),off),,$(.RECIPEPREFIX)$(a)(cd $(d) && $(this_lint_cmd))))
 
         # compile .hpp.hdr_cpp static pattern rule
         $(prorab_this_hxx_objs): $(d)%.o: $(d)% $(prorab_cxxflags_file)
@@ -810,7 +813,7 @@ $(.RECIPEPREFIX)@test -t 1 && printf "\e[0;35mcompile\e[0m $$(patsubst $(prorab_
 $(.RECIPEPREFIX)$(a)mkdir -p $$(dir $$@)
 $(.RECIPEPREFIX)$(a)(cd $(d) && $(this_cc) --language c -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -MP -o "$$@" $(prorab_cflags) $$<)
 $(.RECIPEPREFIX)$(a)$(prorab_private_d_file_sed_command)
-$(if $(this_lint_cmd),$(.RECIPEPREFIX)$(a)(cd $(d) && $(this_lint_cmd)))
+$(if $(this_lint_cmd),$(if $(filter $(lint),off),,$(.RECIPEPREFIX)$(a)(cd $(d) && $(this_lint_cmd))))
 
         # compile .h.hdr_c static pattern rule
         $(prorab_this_h_objs): $(d)%.o: $(d)% $(prorab_cflags_file)

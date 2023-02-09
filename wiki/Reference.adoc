@@ -91,6 +91,22 @@ Note that priority of `v` variable is less than `verbose` variable. For example 
 $ make v=t
 ....
 
+== lint
+
+Input variable which controls lint to be run on compiled files or not.
+
+.values
+- `off` - no lint will be run on compiled files.
+- any other value - lint will be run on compiled files in case `this_lint_cmd` is set.
+
+Default value is `on`.
+
+.example
+[source,sh]
+....
+$ make lint=off
+....
+
 == .RECIPEPREFIX
 
 By default in `GNU make` the prefix for recipe lines is the **tab** character. `GNU make` allows overriding the character by setting the `.RECIPEPREFIX` variable but the initial value of the `.RECIPEPREFIX` is empty, which results in using the default recipe prefix character, i.e. **tab** character.
