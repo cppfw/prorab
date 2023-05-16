@@ -13,7 +13,7 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - {os: debian, codename: stretch, image_owner: , package_type: deb}
+          # - {os: debian, codename: stretch, image_owner: , package_type: deb}
           - {os: debian, codename: buster, image_owner: , package_type: deb}
           - {os: debian, codename: bullseye, image_owner: , package_type: deb}
           # - {os: ubuntu, codename: bionic, image_owner: , package_type: deb}
