@@ -122,7 +122,10 @@ ifneq ($(prorab_is_included),true)
         $(eval this_cxxflags_test = $$(filter -std=%,$$(this_cxxflags)) $(CPPFLAGS) $(CXXFLAGS))
         $(eval this_asflags := $(ASFLAGS))
         $(eval this_ldflags := $(LDFLAGS))
-        $(eval this_ldlibs := $(LDLIBS))
+        # NOTE: add LIBS as well, as some environments pass libraris via LIBS instead of LDLIBS,
+        #       e.g. conan v2 AutotoolsDeps generator.
+        #       See https://github.com/conan-io/conan/issues/13889
+        $(eval this_ldlibs := $(LDLIBS) $(LIBS))
     endef
 
     #############
