@@ -69,10 +69,15 @@ jobs:
       - name: install ci tools
         run: |
           pacman --sync --refresh --sysupgrade --noconfirm base-devel git
+      - name: add cppfw pacman msys repo
+        uses: myci-actions/add-pacman-repo@master
+        with:
+          name: cppfw
+          url: http://gagis.hopto.org/repo/cppfw/archlinux
+          key-server: http://gagis.hopto.org/repo/cppfw/pubkey.gpg
+          install: myci
       - name: git clone
         uses: myci-actions/checkout@master
-      - name: install myci
-        run: make install
       - name: set PACKAGE_VERSION
         uses: myci-actions/export-env-var@master
         with: {name: PACKAGE_VERSION, value: $(myci-deb-version.sh debian/changelog)}
