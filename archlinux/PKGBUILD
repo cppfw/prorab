@@ -1,0 +1,49 @@
+# Maintainer: Ivan Gagis <igagis@gmail.com>
+pkgname=prorab
+pkgver=$PACKAGE_VERSION
+pkgrel=1
+epoch=
+pkgdesc="non-recursive GNU make-based build system"
+arch=('any')
+url="http://github.com/cppfw/prorab"
+license=('MIT')
+groups=()
+
+# Need 'diffutils' package for 'cmp' program
+depends=('make' 'diffutils')
+
+makedepends=('myci' 'coreutils' 'dos2unix')
+checkdepends=('myci')
+optdepends=()
+provides=()
+conflicts=()
+replaces=()
+backup=()
+options=()
+install=
+changelog=
+source=() # Do not download any sources
+noextract=()
+md5sums=()
+validpgpkeys=()
+
+rootDir=$(pwd)/.. # project root directory
+
+prepare() {
+	cd "$rootDir"
+}
+
+build() {
+	cd "$rootDir"
+	make
+}
+
+check() {
+	cd "$rootDir"
+	make test
+}
+
+package() {
+	cd "$rootDir"
+	make DESTDIR="$pkgdir" PREFIX=/usr install
+}
