@@ -9,11 +9,20 @@ url="http://github.com/cppfw/prorab"
 license=('MIT')
 groups=()
 
-# Need 'diffutils' package for 'cmp' program
-depends=('make' 'diffutils')
+depends=(
+	'make'
+	'diffutils' # for 'cmp' program
+)
 
-makedepends=('myci' 'coreutils' 'dos2unix')
-checkdepends=('myci')
+makedepends=(
+	'myci'
+	'coreutils'
+	'dos2unix'
+)
+checkdepends=(
+	'myci'
+	'clang' # for clang-tidy
+)
 optdepends=()
 provides=()
 conflicts=()
