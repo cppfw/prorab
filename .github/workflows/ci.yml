@@ -28,9 +28,9 @@ jobs:
       - name: add cppfw deb repo
         uses: myci-actions/add-deb-repo@master
         with:
-          repo: deb http://gagis.hopto.org/repo/cppfw/${{ matrix.os }} ${{ matrix.codename }} main
+          repo: deb https://gagis.hopto.org/repo/cppfw/${{ matrix.os }} ${{ matrix.codename }} main
           repo-name: cppfw
-          keys-asc: http://gagis.hopto.org/repo/cppfw/pubkey.gpg
+          keys-asc: https://gagis.hopto.org/repo/cppfw/pubkey.gpg
           install: git myci
       - name: install ci tools
         run: |
@@ -69,13 +69,15 @@ jobs:
       - name: install ci tools
         run: |
           pacman --sync --refresh --sysupgrade --noconfirm base-devel git
-      - name: add cppfw pacman msys repo
+      - name: add cppfw pacman repo
         uses: myci-actions/add-pacman-repo@master
         with:
           name: cppfw
-          url: http://gagis.hopto.org/repo/cppfw/archlinux
-          key-server: http://gagis.hopto.org/repo/cppfw/pubkey.gpg
-          install: myci
+          url: https://gagis.hopto.org/repo/cppfw/archlinux
+          key-server: https://gagis.hopto.org/repo/cppfw/pubkey.gpg
+          install: >-
+            myci
+            dos2unix
       - name: git clone
         uses: myci-actions/checkout@master
       - name: set PACKAGE_VERSION
@@ -135,9 +137,9 @@ jobs:
       uses: myci-actions/add-pacman-repo@master
       with:
         name: cppfw_msys
-        url: http://gagis.hopto.org/repo/cppfw/msys2/msys
+        url: https://gagis.hopto.org/repo/cppfw/msys2/msys
         shell: 'msys2 {0}'
-        key-server: http://gagis.hopto.org/repo/cppfw/pubkey.gpg
+        key-server: https://gagis.hopto.org/repo/cppfw/pubkey.gpg
         install: myci git
     - name: git clone
       uses: myci-actions/checkout@master
@@ -181,9 +183,9 @@ jobs:
       uses: myci-actions/add-pacman-repo@master
       with:
         name: cppfw_msys
-        url: http://gagis.hopto.org/repo/cppfw/msys2/msys
+        url: https://gagis.hopto.org/repo/cppfw/msys2/msys
         shell: 'msys2 {0}'
-        key-server: http://gagis.hopto.org/repo/cppfw/pubkey.gpg
+        key-server: https://gagis.hopto.org/repo/cppfw/pubkey.gpg
         install: myci git
     - name: git clone
       uses: myci-actions/checkout@master
