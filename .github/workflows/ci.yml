@@ -78,6 +78,7 @@ jobs:
           install: >-
             myci
             dos2unix
+            clang
       - name: git clone
         uses: myci-actions/checkout@master
       - name: set PACKAGE_VERSION
