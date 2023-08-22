@@ -13,14 +13,14 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          # - {os: debian, codename: stretch, image_owner: , package_type: deb}
-          - {os: debian, codename: buster, image_owner: , package_type: deb}
-          - {os: debian, codename: bullseye, image_owner: , package_type: deb}
-          # - {os: ubuntu, codename: bionic, image_owner: , package_type: deb}
-          - {os: ubuntu, codename: focal, image_owner: , package_type: deb}
-          - {os: ubuntu, codename: jammy, image_owner: , package_type: deb}
-          - {os: raspbian, codename: buster, image_owner: igagis/, package_type: deb, labels: [arm,docker]}
-          - {os: raspbian, codename: bullseye, image_owner: igagis/, package_type: deb, labels: [arm,docker]}
+          # - {os: debian, codename: stretch, image_owner: }
+          - {os: debian, codename: buster, image_owner: }
+          - {os: debian, codename: bullseye, image_owner: }
+          # - {os: ubuntu, codename: bionic, image_owner: }
+          - {os: ubuntu, codename: focal, image_owner: }
+          - {os: ubuntu, codename: jammy, image_owner: }
+          - {os: raspbian, codename: buster, image_owner: igagis/, labels: [arm,docker]}
+          - {os: raspbian, codename: bullseye, image_owner: igagis/, labels: [arm,docker]}
     runs-on: ${{ (matrix.labels == '' && 'ubuntu-latest') || matrix.labels }}
     container: ${{ matrix.image_owner }}${{ matrix.os }}:${{ matrix.codename }}
     name: linux - ${{ matrix.image_owner }}${{ matrix.os }}:${{ matrix.codename }}
@@ -54,7 +54,7 @@ jobs:
         run: |
           echo "${{ secrets.MYCI_REPO_SSH_KEY }}" > repo_key_rsa && chmod 600 repo_key_rsa
           myci-deploy-debian-ssh-freight.sh --key repo_key_rsa --server gagis.hopto.org --repo cppfw/${{ matrix.os }} --distro ${{ matrix.codename }} --component main ../${PACKAGE_NAME}*_${PACKAGE_VERSION}_*.deb
-        if: matrix.package_type == 'deb' && startsWith(github.ref, 'refs/tags/')
+        if: startsWith(github.ref, 'refs/tags/')
 ##### archlinux #####
   archlinux:
     strategy:
