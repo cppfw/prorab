@@ -88,7 +88,7 @@ jobs:
           # provide write access to user nobody
           chmod --recursive 777 .
           cd archlinux
-          sudo --user=nobody --preserve-env=PACKAGE_VERSION makepkg --syncdeps --noconfirm --skipinteg
+          echo "" | sudo --stdin --user=nobody --preserve-env=PACKAGE_VERSION makepkg --syncdeps --noconfirm --skipinteg
       - name: deploy
         run: |
           echo "${{ secrets.MYCI_REPO_SSH_KEY }}" > repo_key_rsa && chmod 600 repo_key_rsa
