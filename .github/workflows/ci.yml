@@ -77,13 +77,14 @@ jobs:
           key-server: https://gagis.hopto.org/repo/cppfw/pubkey.gpg
           install: >-
             myci
-            dos2unix
-            clang
       - name: git clone
         uses: myci-actions/checkout@master
       - name: set PACKAGE_VERSION
         uses: myci-actions/export-env-var@master
         with: {name: PACKAGE_VERSION, value: $(myci-deb-version.sh debian/changelog)}
+      - name: add nobody to sudoers
+        run: |
+          echo "nobody ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
       - name: build
         run: |
           # provide write access to user nobody
