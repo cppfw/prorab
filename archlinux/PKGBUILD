@@ -5,7 +5,7 @@ pkgrel=1
 epoch=
 pkgdesc="non-recursive GNU make-based build system"
 arch=('any')
-url="http://github.com/cppfw/prorab"
+url="https://github.com/cppfw/${pkgname}"
 license=('MIT')
 groups=()
 
