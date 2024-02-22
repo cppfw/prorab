@@ -1,3 +1,9 @@
+prorab (2.0.20) unstable; urgency=medium
+
+  * bookworm
+
+ -- Ivan Gagis <igagis@gmail.com>  Thu, 22 Feb 2024 14:55:23 +0200
+
 prorab (2.0.19) unstable; urgency=medium
 
   * archlinux: deploy to arch repos
