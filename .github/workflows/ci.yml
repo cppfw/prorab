@@ -27,10 +27,10 @@ jobs:
     container: ${{ matrix.image_owner }}${{ matrix.os }}:${{ matrix.codename }}
     name: linux - ${{ matrix.image_owner }}${{ matrix.os }}:${{ matrix.codename }}
     steps:
-      # - name: set TZ for ubuntu:focal
-      #   run: |
-      #     # configure timezone to avoid 'tzdata' package to require user interaction during installation (needed for ubuntu:focal)
-      #     TZ=Europe/Helsinki ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+      - name: set TZ for ubuntu:focal
+        run: |
+          # configure timezone to avoid 'tzdata' package to require user interaction during installation (needed for ubuntu:focal)
+          TZ=Europe/Helsinki ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
       - name: add cppfw deb repo
         uses: myci-actions/add-deb-repo@master
         with:
