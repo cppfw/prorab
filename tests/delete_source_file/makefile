@@ -13,11 +13,11 @@ test::
 $(.RECIPEPREFIX)@$(this_running) $(this_test)
 $(.RECIPEPREFIX)$(a)rm -rf $(d)tmp_src
 $(.RECIPEPREFIX)$(a)cp -r $(d)src $(d)tmp_src
-$(.RECIPEPREFIX)+$(a)$(MAKE) -C $(d)tmp_src clean || $(this_err) "initial 'make clean' failed"
-$(.RECIPEPREFIX)+$(a)$(MAKE) -C $(d)tmp_src || $(this_err) "'make' failed"
+$(.RECIPEPREFIX)+$(a)$(MAKE) --directory $(d)tmp_src clean || $(this_err) "initial 'make clean' failed"
+$(.RECIPEPREFIX)+$(a)$(MAKE) --directory $(d)tmp_src || $(this_err) "'make' failed"
 $(.RECIPEPREFIX)$(a)rm $(d)tmp_src/test.cpp
-$(.RECIPEPREFIX)$(a)sleep 2 # timestamp resolution can be as low as 1 second, so wait some time before modifying the file.
-$(.RECIPEPREFIX)+$(a)$(MAKE) -C $(d)tmp_src || $(this_err) "'make' failed"
+$(.RECIPEPREFIX)$(a)sleep 3 # timestamp resolution can be as low as 1 second, so wait some time before modifying the file.
+$(.RECIPEPREFIX)+$(a)$(MAKE) --directory $(d)tmp_src || $(this_err) "'make' failed"
 
 # unpack static lib archive
 $(.RECIPEPREFIX)$(a)(cd $(d)tmp_src/build_static && ar x libtests.a)
