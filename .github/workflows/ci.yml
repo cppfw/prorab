@@ -124,7 +124,7 @@ jobs:
       run: brew install myci make
     - name: set PATH to use latest make
       uses: myci-actions/export-env-var@master
-      with: {name: PATH, value: "/usr/local/opt/make/libexec/gnubin:$PATH"}
+      with: {name: PATH, value: "$HOMEBREW_PREFIX/opt/make/libexec/gnubin:$PATH"}
     - name: install deps
       run: myci-brew-install.sh `myci-list-deps-homebrew.sh`
     - name: build
