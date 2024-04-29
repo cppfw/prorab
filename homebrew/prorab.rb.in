@@ -9,7 +9,7 @@ class Prorab < Formula
 
   # use gmake here because otherwise homebrew uses default Mac's make which is of too old version 3.81
   def install
-    ENV['PATH'] += ':/usr/local/bin'
+    ENV['PATH'] += ':#{ENV['HOMEBREW_PREFIX']}/bin'
     system "gmake", "--include-dir=#{ENV['HOMEBREW_PREFIX']}/include", "install", "PREFIX=#{prefix}"
   end
   
