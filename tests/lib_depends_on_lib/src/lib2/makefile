@@ -12,8 +12,8 @@ this_cxxflags += -fPIC
 
 this_no_install := true
 
-$(eval $(prorab-build-lib))
+this_ldlibs += ../lib1/build/liblib1$(dot_so)
 
-$(eval $(call prorab-depend, $(prorab_this_name), ../lib1/build/liblib1$(dot_so)))
+$(eval $(prorab-build-lib))
 
 $(eval $(call prorab-include, ../lib1/makefile))

@@ -849,6 +849,12 @@ $(.RECIPEPREFIX)$(a)rm -rf $(prorab_this_obj_dir)
         $(eval prorab_ldflags := $(this_ldflags) $(prorab_private_ldflags))
         $(eval prorab_ldlibs := $(this_ldlibs))
 
+        # Find libraries specified as a path to a static or shared library file.
+        # These will be added as dependencies of the final binary being built.
+        $(eval prorab_private_dep_libs := $(filter %.a,$(prorab_ldlibs)) $(filter %$(dot_so),$(prorab_ldlibs)))
+        $(eval prorab_private_dep_libs := $(foreach deplib,$(prorab_private_dep_libs),$(if $(filter /%,$(deplib)),$(deplib),$(d)$(deplib))) )
+        $(eval prorab_private_dep_libs := $(abspath $(prorab_private_dep_libs)))
+
         $(eval prorab_ldargs_file := $(prorab_this_obj_dir)ldargs.txt)
 
         $(call prorab-private-args-file-rules, $(prorab_ldargs_file),$(this_cc) $(prorab_ldflags) $(prorab_ldlibs))
@@ -862,7 +868,7 @@ $(.RECIPEPREFIX)$(a)rm -rf $(prorab_this_obj_dir)
         # this is needed to avoid problems when adding dependencies to the symbolic link name, thus the dependency will effectively be added
         # to the binary name.
         # this is why we build the binary and create symbolic link in the same recepie.
-        $(prorab_this_name): $(prorab_this_objs) $(prorab_ldargs_file) $(prorab_objs_file)
+        $(prorab_this_name): $(prorab_this_objs) $(prorab_ldargs_file) $(prorab_objs_file) $(prorab_private_dep_libs)
 $(.RECIPEPREFIX)@test -t 1 && printf "\e[0;31mlink\e[0m $(patsubst $(prorab_root_dir)%,%,$(prorab_private_this_binary_name))\n" || printf "link $(patsubst $(prorab_root_dir)%,%,$(prorab_private_this_binary_name))\n"
 $(.RECIPEPREFIX)$(a)mkdir -p $(d)$(prorab_private_out_dir)
 $(.RECIPEPREFIX)$(a)(cd $(d) && $(this_cc) $(prorab_ldflags) $$(filter %.o,$$^) $(prorab_ldlibs) -o "$(prorab_private_this_binary_name)")

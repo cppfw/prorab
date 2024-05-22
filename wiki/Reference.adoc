@@ -529,7 +529,7 @@ $(eval $(prorab-build-app))
 - `this_asflags` - assembler flags. Defaults to `$(ASFLAGS)`. Relative to `$(d)`.
 - `this_as_supports_deps_gen` - enable dependency rules generation from `.include` assembler directives. Defaults to `true`.
 - `this_ldflags` - linker flags. Defaults to `$(LDFLAGS)`. Relative to `$(d)`.
-- `this_ldlibs` - linker libraries. Defaults to `$(LDLIBS) $(LIBS)`. Relative to `$(d)`.
+- `this_ldlibs` - linker libraries as they are passed to the linker. Defaults to `$(LDLIBS) $(LIBS)`. Relative to `$(d)`. All libraries specified as a path to a file will be added as dependencies of the final binary which is being built.
 - `this_cppflags` - preprocessor flags. Defaults to `$(CPPFLAGS)`. Relative to `$(d)`.
 - `this_out_dir` - output directory. This is where all the build artefacts are to be stored. Relative to `$(d)`. Defaults to `./`.
 - `this_no_install` - disable `install` targets. Can be `true` or `false`. Defaults to `false`.
@@ -651,7 +651,7 @@ $(eval $(prorab-build-lib))
 - `this_asflags` - assembler flags. Defaults to `$(ASFLAGS)`. Relative to `$(d)`.
 - `this_as_supports_deps_gen` - enable dependency rules generation for `.include` assembler directives. Defaults to `true`.
 - `this_ldflags` - linker flags. Defaults to `$(LDFLAGS)`. Relative to `$(d)`.
-- `this_ldlibs` - linker libraries. Defaults to `$(LDLIBS) $(LIBS)`. Relative to `$(d)`.
+- `this_ldlibs` - linker libraries as they are passed to the linker. Defaults to `$(LDLIBS) $(LIBS)`. Relative to `$(d)`. All libraries specified as a path to a file will be added as dependencies of the final binary which is being built.
 - `this_cppflags` - preprocessor flags. Defaults to `$(CPPFLAGS)`. Relative to `$(d)`.
 - `this_out_dir` - output directory. This is where all the build artefacts are to be stored. Relative to `$(d)`. Defaults to `./`.
 - `this_no_install` - disable `install` targets. Can be `true` or `false`. Defaults to `false`.

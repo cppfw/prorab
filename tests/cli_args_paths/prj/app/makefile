@@ -13,12 +13,8 @@ this_cflags += -I ../lib
 this_cxxflags += -ffile-prefix-map=$(d)=
 this_cflags += -ffile-prefix-map=$(d)=
 
-this_ldflags += -L ../lib/out
-
-this_ldlibs += -lstdc++ -lstuff
+this_ldlibs += -lstdc++ ../lib/out/libstuff$(dot_so)
 
 $(eval $(prorab-build-app))
-
-$(eval $(call prorab-depend, $(prorab_this_name), ../lib/out/libstuff$(dot_so) ))
 
 $(eval $(call prorab-include, ../lib/makefile))
