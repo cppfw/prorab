@@ -1,3 +1,9 @@
+prorab (2.0.27) unstable; urgency=medium
+
+  * conan
+
+ -- Ivan Gagis <igagis@gmail.com>  Mon, 02 Dec 2024 23:21:29 +0200
+
 prorab (2.0.26) unstable; urgency=medium
 
   * build for ubuntu:noble
