@@ -546,14 +546,16 @@ $(prorab-private-generate-test-source-file-recepie)
         $(prorab_this_hxx_test_objs): $(d)%.o: $(d)%
 $(.RECIPEPREFIX)@test -t 1 && printf "\e[1;34mcompile\e[0m $$(patsubst $(prorab_root_dir)%,%,$$<)\n" || printf "compile $$(patsubst $(prorab_root_dir)%,%,$$<)\n"
 $(.RECIPEPREFIX)$(a)mkdir -p $$(dir $$@)
-$(.RECIPEPREFIX)$(a)(cd $(d) && $(this_cxx) --language c++ -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -MP $(this_cxxflags_test) -o "$$@" $$<)
+# NOTE: using short -x option instead of --language because some compilers (e.g. emcc) only support -x
+$(.RECIPEPREFIX)$(a)(cd $(d) && $(this_cxx) -x c++ -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -MP $(this_cxxflags_test) -o "$$@" $$<)
 $(.RECIPEPREFIX)$(a)$(prorab_private_d_file_sed_command)
 
         # compile .h.test_c static pattern rule
         $(prorab_this_h_test_objs): $(d)%.o: $(d)%
 $(.RECIPEPREFIX)@test -t 1 && printf "\e[0;35mcompile\e[0m $$(patsubst $(prorab_root_dir)%,%,$$<)\n" || printf "compile $$(patsubst $(prorab_root_dir)%,%,$$<)\n"
 $(.RECIPEPREFIX)$(a)mkdir -p $$(dir $$@)
-$(.RECIPEPREFIX)$(a)(cd $(d) && $(this_cc) --language c -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -MP $(this_cflags_test) -o "$$@" $$<)
+# NOTE: using short -x option instead of --language because some compilers (e.g. emcc) only support -x
+$(.RECIPEPREFIX)$(a)(cd $(d) && $(this_cc) -x c -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -MP $(this_cflags_test) -o "$$@" $$<)
 $(.RECIPEPREFIX)$(a)$(prorab_private_d_file_sed_command)
 
         # include rules for header dependencies
@@ -800,7 +802,8 @@ $(prorab-private-generate-test-source-file-recepie)
         $(prorab_this_cxx_objs): $(prorab_this_obj_dir)$(prorab_this_obj_spacer)%.o: $(d)% $(prorab_cxxflags_file)
 $(.RECIPEPREFIX)@test -t 1 && printf "\e[1;34mcompile\e[0m $$(patsubst $(prorab_root_dir)%,%,$$<)\n" || printf "compile $$(patsubst $(prorab_root_dir)%,%,$$<)\n"
 $(.RECIPEPREFIX)$(a)mkdir -p $$(dir $$@)
-$(.RECIPEPREFIX)$(a)(cd $(d) && $(this_cxx) --language c++ -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -MP -o "$$@" $(prorab_cxxflags) $$<)
+# NOTE: using short -x option instead of --language because some compilers (e.g. emcc) only support -x
+$(.RECIPEPREFIX)$(a)(cd $(d) && $(this_cxx) -x c++ -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -MP -o "$$@" $(prorab_cxxflags) $$<)
 $(.RECIPEPREFIX)$(a)$(prorab_private_d_file_sed_command)
 $(if $(this_lint_cmd),$(if $(filter $(lint),off),,$(.RECIPEPREFIX)$(a)(cd $(d) && $(this_lint_cmd))))
 
@@ -808,14 +811,16 @@ $(if $(this_lint_cmd),$(if $(filter $(lint),off),,$(.RECIPEPREFIX)$(a)(cd $(d) &
         $(prorab_this_hxx_objs): $(d)%.o: $(d)% $(prorab_cxxflags_file)
 $(.RECIPEPREFIX)@test -t 1 && printf "\e[1;34mcompile\e[0m $$(patsubst $(prorab_root_dir)%,%,$$<)\n" || printf "compile $$(patsubst $(prorab_root_dir)%,%,$$<)\n"
 $(.RECIPEPREFIX)$(a)mkdir -p $$(dir $$@)
-$(.RECIPEPREFIX)$(a)(cd $(d) && $(this_cxx) --language c++ -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -MP -o "$$@" $(prorab_cxxflags) $$<)
+# NOTE: using short -x option instead of --language because some compilers (e.g. emcc) only support -x
+$(.RECIPEPREFIX)$(a)(cd $(d) && $(this_cxx) -x c++ -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -MP -o "$$@" $(prorab_cxxflags) $$<)
 $(.RECIPEPREFIX)$(a)$(prorab_private_d_file_sed_command)
 
         # compile .c static pattern rule
         $(prorab_this_c_objs): $(prorab_this_obj_dir)$(prorab_this_obj_spacer)%.o: $(d)% $(prorab_cflags_file)
 $(.RECIPEPREFIX)@test -t 1 && printf "\e[0;35mcompile\e[0m $$(patsubst $(prorab_root_dir)%,%,$$<)\n" || printf "compile $$(patsubst $(prorab_root_dir)%,%,$$<)\n"
 $(.RECIPEPREFIX)$(a)mkdir -p $$(dir $$@)
-$(.RECIPEPREFIX)$(a)(cd $(d) && $(this_cc) --language c -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -MP -o "$$@" $(prorab_cflags) $$<)
+# NOTE: using short -x option instead of --language because some compilers (e.g. emcc) only support -x
+$(.RECIPEPREFIX)$(a)(cd $(d) && $(this_cc) -x c -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -MP -o "$$@" $(prorab_cflags) $$<)
 $(.RECIPEPREFIX)$(a)$(prorab_private_d_file_sed_command)
 $(if $(this_lint_cmd),$(if $(filter $(lint),off),,$(.RECIPEPREFIX)$(a)(cd $(d) && $(this_lint_cmd))))
 
@@ -823,7 +828,8 @@ $(if $(this_lint_cmd),$(if $(filter $(lint),off),,$(.RECIPEPREFIX)$(a)(cd $(d) &
         $(prorab_this_h_objs): $(d)%.o: $(d)% $(prorab_cflags_file)
 $(.RECIPEPREFIX)@test -t 1 && printf "\e[0;35mcompile\e[0m $$(patsubst $(prorab_root_dir)%,%,$$<)\n" || printf "compile $$(patsubst $(prorab_root_dir)%,%,$$<)\n"
 $(.RECIPEPREFIX)$(a)mkdir -p $$(dir $$@)
-$(.RECIPEPREFIX)$(a)(cd $(d) && $(this_cc) --language c -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -MP -o "$$@" $(prorab_cflags) $$<)
+# NOTE: using short -x option instead of --language because some compilers (e.g. emcc) only support -x
+$(.RECIPEPREFIX)$(a)(cd $(d) && $(this_cc) -x c -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -MP -o "$$@" $(prorab_cflags) $$<)
 $(.RECIPEPREFIX)$(a)$(prorab_private_d_file_sed_command)
 
         # compile .S static pattern rule
