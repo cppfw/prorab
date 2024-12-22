@@ -1,3 +1,9 @@
+prorab (2.0.29) unstable; urgency=medium
+
+  * redirect stderr to /dev/null for clang-tidy
+
+ -- Ivan Gagis <igagis@gmail.com>  Sun, 22 Dec 2024 17:17:46 +0200
+
 prorab (2.0.28) unstable; urgency=medium
 
   * compiler option language -> x
