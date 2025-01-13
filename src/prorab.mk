@@ -94,6 +94,10 @@ ifneq ($(prorab_is_included),true)
     # function to find all header files from specified directory recursively
     prorab-hdr-dir = $(call prorab-rwildcard,$1,*$(this_dot_hxx) *.h)
 
+    # function to print colored action info, args: action text, filename, bash color.
+    # to be used only from the recipe
+    prorab-private-print = @test -t 1 && printf "\e[$3m$1\e[0m$2\n" || printf "$1$2\n"
+
     # function which clears all 'this_'-prefixed variables and sets default values
     define prorab-clear-this-vars
         # clear all vars
@@ -463,10 +467,10 @@ $(.RECIPEPREFIX)$(a)rm -rf $(d)out
     define prorab-private-rules
 
         echo-clean:
-$(.RECIPEPREFIX)@test -t 1 && printf "\e[0;32mclean\e[0m\n" || printf "clean\n"
+$(.RECIPEPREFIX)$(call prorab-private-print,clean,,0;32)
 
         echo-clean-all:
-$(.RECIPEPREFIX)@test -t 1 && printf "\e[0;32mclean all configurations\e[0m\n" || printf "clean all configurations\n"
+$(.RECIPEPREFIX)$(call prorab-private-print,clean all configurations,,0;32)
 
         clean:: echo-clean
 
@@ -485,7 +489,7 @@ $(.RECIPEPREFIX)+$(a)$(MAKE)
     prorab_private_out_dir = $(if $(this_out_dir),$(if $(patsubst %/,,$(this_out_dir)),$(this_out_dir)/,$(this_out_dir)))
 
     define prorab-private-generate-test-source-file-recepie
-$(.RECIPEPREFIX)@test -t 1 && printf "\e[1;90mgenerate\e[0m $$(patsubst $(prorab_root_dir)%,%,$$@)\n" || printf "generate $$(patsubst $(prorab_root_dir)%,%,$$@)\n"
+$(.RECIPEPREFIX)$(call prorab-private-print,generate, $$(patsubst $(prorab_root_dir)%,%,$$@),1;90)
 $(.RECIPEPREFIX)$(a)mkdir -p $$(dir $$@)
 $(.RECIPEPREFIX)$(a)echo '#include "$$(call prorab-private-make-include-path,$$<)"' > $$@
 $(.RECIPEPREFIX)$(a)echo '#include "$$(call prorab-private-make-include-path,$$<)"' >> $$@
@@ -545,7 +549,7 @@ $(prorab-private-generate-test-source-file-recepie)
 
         # compile .hpp.test_cpp static pattern rule
         $(prorab_this_hxx_test_objs): $(d)%.o: $(d)%
-$(.RECIPEPREFIX)@test -t 1 && printf "\e[1;34mcompile\e[0m $$(patsubst $(prorab_root_dir)%,%,$$<)\n" || printf "compile $$(patsubst $(prorab_root_dir)%,%,$$<)\n"
+$(.RECIPEPREFIX)$(call prorab-private-print,compile, $$(patsubst $(prorab_root_dir)%,%,$$<),1;34)
 $(.RECIPEPREFIX)$(a)mkdir -p $$(dir $$@)
 # NOTE: using short -x option instead of --language because some compilers (e.g. emcc) only support -x
 $(.RECIPEPREFIX)$(a)(cd $(d) && $(this_cxx) -x c++ -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -MP $(this_cxxflags_test) -o "$$@" $$<)
@@ -553,7 +557,7 @@ $(.RECIPEPREFIX)$(a)$(prorab_private_d_file_sed_command)
 
         # compile .h.test_c static pattern rule
         $(prorab_this_h_test_objs): $(d)%.o: $(d)%
-$(.RECIPEPREFIX)@test -t 1 && printf "\e[0;35mcompile\e[0m $$(patsubst $(prorab_root_dir)%,%,$$<)\n" || printf "compile $$(patsubst $(prorab_root_dir)%,%,$$<)\n"
+$(.RECIPEPREFIX)$(call prorab-private-print,compile, $$(patsubst $(prorab_root_dir)%,%,$$<),0;35)
 $(.RECIPEPREFIX)$(a)mkdir -p $$(dir $$@)
 # NOTE: using short -x option instead of --language because some compilers (e.g. emcc) only support -x
 $(.RECIPEPREFIX)$(a)(cd $(d) && $(this_cc) -x c -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -MP $(this_cflags_test) -o "$$@" $$<)
@@ -704,7 +708,7 @@ $(.RECIPEPREFIX)$(a)rm -f $(prorab_prefix)lib/$(notdir $(prorab_this_static_lib)
         # static library rule
         # NOTE: need to remove the lib before creating, otherwise files will just be appended to the existing .a archive.
         $(prorab_this_static_lib): $(prorab_this_objs) $(prorab_objs_file)
-$(.RECIPEPREFIX)@test -t 1 && printf "\e[0;33mcreate static library\e[0m $$(notdir $$@)\n" || printf "create static library $$(notdir $$@)\n"
+$(.RECIPEPREFIX)$(call prorab-private-print,create static library, $$(notdir $$@),0;33)
 $(.RECIPEPREFIX)$(a)rm -f $$@
 $(.RECIPEPREFIX)$(a)$(this_ar) cr $$@ $$(filter %.o,$$^)
     endef
@@ -801,7 +805,7 @@ $(prorab-private-generate-test-source-file-recepie)
 
         # compile .cpp static pattern rule
         $(prorab_this_cxx_objs): $(prorab_this_obj_dir)$(prorab_this_obj_spacer)%.o: $(d)% $(prorab_cxxflags_file)
-$(.RECIPEPREFIX)@test -t 1 && printf "\e[1;34mcompile\e[0m $$(patsubst $(prorab_root_dir)%,%,$$<)\n" || printf "compile $$(patsubst $(prorab_root_dir)%,%,$$<)\n"
+$(.RECIPEPREFIX)$(call prorab-private-print,compile, $$(patsubst $(prorab_root_dir)%,%,$$<),1;34)
 $(.RECIPEPREFIX)$(a)mkdir -p $$(dir $$@)
 # NOTE: using short -x option instead of --language because some compilers (e.g. emcc) only support -x
 $(.RECIPEPREFIX)$(a)(cd $(d) && $(this_cxx) -x c++ -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -MP -o "$$@" $(prorab_cxxflags) $$<)
@@ -810,7 +814,7 @@ $(if $(this_lint_cmd),$(if $(filter $(lint),off),,$(.RECIPEPREFIX)$(a)(cd $(d) &
 
         # compile .hpp.hdr_cpp static pattern rule
         $(prorab_this_hxx_objs): $(d)%.o: $(d)% $(prorab_cxxflags_file)
-$(.RECIPEPREFIX)@test -t 1 && printf "\e[1;34mcompile\e[0m $$(patsubst $(prorab_root_dir)%,%,$$<)\n" || printf "compile $$(patsubst $(prorab_root_dir)%,%,$$<)\n"
+$(.RECIPEPREFIX)$(call prorab-private-print,compile, $$(patsubst $(prorab_root_dir)%,%,$$<),1;34)
 $(.RECIPEPREFIX)$(a)mkdir -p $$(dir $$@)
 # NOTE: using short -x option instead of --language because some compilers (e.g. emcc) only support -x
 $(.RECIPEPREFIX)$(a)(cd $(d) && $(this_cxx) -x c++ -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -MP -o "$$@" $(prorab_cxxflags) $$<)
@@ -818,7 +822,7 @@ $(.RECIPEPREFIX)$(a)$(prorab_private_d_file_sed_command)
 
         # compile .c static pattern rule
         $(prorab_this_c_objs): $(prorab_this_obj_dir)$(prorab_this_obj_spacer)%.o: $(d)% $(prorab_cflags_file)
-$(.RECIPEPREFIX)@test -t 1 && printf "\e[0;35mcompile\e[0m $$(patsubst $(prorab_root_dir)%,%,$$<)\n" || printf "compile $$(patsubst $(prorab_root_dir)%,%,$$<)\n"
+$(.RECIPEPREFIX)$(call prorab-private-print,compile, $$(patsubst $(prorab_root_dir)%,%,$$<),0;35)
 $(.RECIPEPREFIX)$(a)mkdir -p $$(dir $$@)
 # NOTE: using short -x option instead of --language because some compilers (e.g. emcc) only support -x
 $(.RECIPEPREFIX)$(a)(cd $(d) && $(this_cc) -x c -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -MP -o "$$@" $(prorab_cflags) $$<)
@@ -827,7 +831,7 @@ $(if $(this_lint_cmd),$(if $(filter $(lint),off),,$(.RECIPEPREFIX)$(a)(cd $(d) &
 
         # compile .h.hdr_c static pattern rule
         $(prorab_this_h_objs): $(d)%.o: $(d)% $(prorab_cflags_file)
-$(.RECIPEPREFIX)@test -t 1 && printf "\e[0;35mcompile\e[0m $$(patsubst $(prorab_root_dir)%,%,$$<)\n" || printf "compile $$(patsubst $(prorab_root_dir)%,%,$$<)\n"
+$(.RECIPEPREFIX)$(call prorab-private-print,compile, $$(patsubst $(prorab_root_dir)%,%,$$<),0;35)
 $(.RECIPEPREFIX)$(a)mkdir -p $$(dir $$@)
 # NOTE: using short -x option instead of --language because some compilers (e.g. emcc) only support -x
 $(.RECIPEPREFIX)$(a)(cd $(d) && $(this_cc) -x c -c -MF "$$(patsubst %.o,%.d,$$@)" -MD -MP -o "$$@" $(prorab_cflags) $$<)
@@ -837,7 +841,7 @@ $(.RECIPEPREFIX)$(a)$(prorab_private_d_file_sed_command)
         # Note, that assembler has its own ".include" directive to include files, so in addition to preprocessor include
         # directives, there can be .include directives, and we need to generate dependency rules (into .d file) for both of those.
         $(prorab_this_as_objs): $(prorab_this_obj_dir)$(prorab_this_obj_spacer)%.o: $(d)% $(prorab_asflags_file)
-$(.RECIPEPREFIX)@test -t 1 && printf "\e[2;36mcompile\e[0m $$(patsubst $(prorab_root_dir)%,%,$$<)\n" || printf "compile $$(patsubst $(prorab_root_dir)%,%,$$<)\n"
+$(.RECIPEPREFIX)$(call prorab-private-print,compile, $$(patsubst $(prorab_root_dir)%,%,$$<),2;36)
 $(.RECIPEPREFIX)$(a)mkdir -p $$(dir $$@)
 $(.RECIPEPREFIX)$(a)(cd $(d) && $(this_cc) -E $(this_cppflags) -MF "$$(patsubst %.o,%.d,$$@)" -MT "$$@" -MD -MP $$< | $(this_as) $(if $(filter true,$(this_as_supports_deps_gen)),-MD "$$(patsubst %.o,%.as.d,$$@)") -o "$$@" $(prorab_asflags))
 $(if $(filter true,$(this_as_supports_deps_gen)),$(.RECIPEPREFIX)$(a)cat $$(patsubst %.o,%.as.d,$$@) >> $$(patsubst %.o,%.d,$$@) && rm $$(patsubst %.o,%.as.d,$$@))
@@ -876,11 +880,11 @@ $(.RECIPEPREFIX)$(a)rm -rf $(prorab_this_obj_dir)
         # to the binary name.
         # this is why we build the binary and create symbolic link in the same recepie.
         $(prorab_this_name): $(prorab_this_objs) $(prorab_ldargs_file) $(prorab_objs_file) $(prorab_private_dep_libs)
-$(.RECIPEPREFIX)@test -t 1 && printf "\e[0;31mlink\e[0m $(patsubst $(prorab_root_dir)%,%,$(prorab_private_this_binary_name))\n" || printf "link $(patsubst $(prorab_root_dir)%,%,$(prorab_private_this_binary_name))\n"
+$(.RECIPEPREFIX)$(call prorab-private-print,link, $(patsubst $(prorab_root_dir)%,%,$(prorab_private_this_binary_name)),0;31)
 $(.RECIPEPREFIX)$(a)mkdir -p $(d)$(prorab_private_out_dir)
 $(.RECIPEPREFIX)$(a)(cd $(d) && $(this_cc) $(prorab_ldflags) $$(filter %.o,$$^) $(prorab_ldlibs) -o "$(prorab_private_this_binary_name)")
         $(if $(prorab_this_so_name),
-$(.RECIPEPREFIX)@test -t 1 && printf "\e[1;36mcreate symbolic link\e[0m $(notdir $(prorab_this_name)) -> $(notdir $(prorab_private_this_binary_name))\n" || printf "create symbolic link $(notdir $(prorab_this_name)) -> $(notdir $(prorab_private_this_binary_name))\n"
+$(.RECIPEPREFIX)$(call prorab-private-print,create symbolic link, $(notdir $(prorab_this_name)) -> $(notdir $(prorab_private_this_binary_name)),1;36)
 $(.RECIPEPREFIX)$(a)(cd $(dir $(prorab_private_this_binary_name)) && ln -f -s $(notdir $(prorab_private_this_binary_name)) $(notdir $(prorab_this_name)))
             )
 
