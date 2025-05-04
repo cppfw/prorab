@@ -25,9 +25,9 @@ jobs:
           # - {os: ubuntu, codename: focal, image_owner: }
           # - {os: ubuntu, codename: jammy, image_owner: }
           - {os: ubuntu, codename: noble, image_owner: }
-          # - {os: raspbian, codename: buster, image_owner: igagis/, labels: [arm,docker]}
-          # - {os: raspbian, codename: bullseye, image_owner: igagis/, labels: [arm,docker]}
-          - {os: raspbian, codename: bookworm, image_owner: igagis/, labels: [arm,docker]}
+          # - {os: raspbian, codename: buster, image_owner: igagis/, labels: [ubuntu-24.04-arm]}
+          # - {os: raspbian, codename: bullseye, image_owner: igagis/, labels: [ubuntu-24.04-arm]}
+          # - {os: raspbian, codename: bookworm, image_owner: igagis/, labels: [ubuntu-24.04-arm]}
     runs-on: ${{ (matrix.labels == '' && 'ubuntu-latest') || matrix.labels }}
     container: ${{ matrix.image_owner }}${{ matrix.os }}:${{ matrix.codename }}
     name: linux - ${{ matrix.image_owner }}${{ matrix.os }}:${{ matrix.codename }}
@@ -66,7 +66,7 @@ jobs:
   #     matrix:
   #       include:
   #         - {image: "archlinux:latest", arch: amd64}
-  #         # - {image: "lopsided/archlinux-arm32v7:latest", arch: arm32, labels: [arm,docker]}
+  #         # - {image: "lopsided/archlinux-arm32v7:latest", arch: arm32, labels: [ubuntu-24.04-arm]}
   #         - {image: "lopsided/archlinux-arm64v8:latest", arch: arm64, labels: [arm64,docker]}
   #   runs-on: ${{ (matrix.labels == '' && 'ubuntu-latest') || matrix.labels }}
   #   container: ${{ matrix.image }}
@@ -216,12 +216,9 @@ jobs:
       matrix:
         include:
           - {os: debian, codename: bookworm, image_owner: }
-          # - {os: debian, codename: bookworm, image_owner: i386/, labels: [i386,docker]}
-          # - {os: debian, codename: bookworm, image_owner: , labels: [arm32,docker]}
-          # - {os: debian, codename: bookworm, image_owner: , labels: [arm64,docker]}
     runs-on: ${{ (matrix.labels == '' && 'ubuntu-latest') || matrix.labels }}
     container: ${{ matrix.image_owner }}${{ matrix.os }}:${{ matrix.codename }}
-    name: conan - linux | ${{ matrix.labels[0] }}
+    name: conan - linux | ${{ matrix.image_owner }}
     steps:
       - name: add cppfw deb repo
         uses: myci-actions/add-deb-repo@main
