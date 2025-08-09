@@ -1,3 +1,9 @@
+prorab (2.0.30) unstable; urgency=medium
+
+  * debian trixie build
+
+ -- Ivan Gagis <igagis@gmail.com>  Sat, 09 Aug 2025 20:17:46 +0300
+
 prorab (2.0.29) unstable; urgency=medium
 
   * redirect stderr to /dev/null for clang-tidy
