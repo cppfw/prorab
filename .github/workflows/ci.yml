@@ -48,7 +48,7 @@ jobs:
         uses: myci-actions/checkout@main
       - name: set PACKAGE_VERSION
         uses: myci-actions/export-env-var@main
-        with: {name: PACKAGE_VERSION, value: $(myci-deb-version.sh debian/changelog)}
+        with: {name: PACKAGE_VERSION, value: $(myci-deb-version.sh)}
       - name: prepare debian package
         run: myci-deb-prepare.sh
       - name: install deps
@@ -88,7 +88,7 @@ jobs:
   #       uses: myci-actions/checkout@main
   #     - name: set PACKAGE_VERSION
   #       uses: myci-actions/export-env-var@main
-  #       with: {name: PACKAGE_VERSION, value: $(myci-deb-version.sh debian/changelog)}
+  #       with: {name: PACKAGE_VERSION, value: $(myci-deb-version.sh)}
   #     # makepkg needs to install dependency packages, so nobody user needs sudo rights
   #     - name: add nobody to sudoers
   #       run: |
@@ -163,7 +163,7 @@ jobs:
     - name: git clone
       uses: myci-actions/checkout@main
     - name: prepare pacman package
-      run: myci-apply-version.sh -v $(myci-deb-version.sh debian/changelog) msys2/PKGBUILD.in
+      run: myci-apply-version.sh msys2/PKGBUILD.in
     - name: build
       run: |
         cd msys2
@@ -241,7 +241,7 @@ jobs:
         uses: myci-actions/checkout@main
       - name: set PACKAGE_VERSION
         uses: myci-actions/export-env-var@main
-        with: {name: PACKAGE_VERSION, value: $(myci-deb-version.sh debian/changelog)}
+        with: {name: PACKAGE_VERSION, value: $(myci-deb-version.sh)}
         if: startsWith(github.ref, 'refs/tags/')
       - name: build
         run: |
