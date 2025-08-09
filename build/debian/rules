@@ -1,4 +1,7 @@
 #!/usr/bin/make -f
+
+$(info SOURCE_DATE_EPOCH=$(SOURCE_DATE_EPOCH))
+
 %:
 	dh $@
 

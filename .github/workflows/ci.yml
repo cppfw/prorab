@@ -54,11 +54,13 @@ jobs:
       - name: install deps
         run: myci-deb-install-build-deps.sh
       - name: build
-        run: dpkg-buildpackage --unsigned-source --unsigned-changes
+        run: |
+          cd build
+          dpkg-buildpackage --unsigned-source --unsigned-changes
       - name: deploy deb packages
         run: |
           echo "${{ secrets.MYCI_REPO_SSH_KEY }}" > repo_key_rsa && chmod 600 repo_key_rsa
-          myci-deploy-apt-ssh.sh --key repo_key_rsa --server gagis.hopto.org --repo cppfw/${{ matrix.os }} --distro ${{ matrix.codename }} --component main ../${PACKAGE_NAME}*_${PACKAGE_VERSION}_*.deb
+          myci-deploy-apt-ssh.sh --key repo_key_rsa --server gagis.hopto.org --repo cppfw/${{ matrix.os }} --distro ${{ matrix.codename }} --component main ${PACKAGE_NAME}*_${PACKAGE_VERSION}_*.deb
         if: startsWith(github.ref, 'refs/tags/')
 ##### archlinux #####
   # archlinux:
@@ -97,12 +99,12 @@ jobs:
   #       run: |
   #         # provide write access to user nobody
   #         chmod --recursive 777 .
-  #         cd archlinux
+  #         cd build/archlinux
   #         sudo --user=nobody --preserve-env=PACKAGE_VERSION makepkg --syncdeps --noconfirm --skipinteg --noprogressbar
   #     - name: deploy
   #       run: |
   #         echo "${{ secrets.MYCI_REPO_SSH_KEY }}" > repo_key_rsa && chmod 600 repo_key_rsa
-  #         myci-deploy-pacman-ssh.sh --server gagis.hopto.org --key repo_key_rsa --repo cppfw/archlinux/${{ matrix.arch }} --database cppfw archlinux/$PACKAGE_NAME-*-any.pkg.*
+  #         myci-deploy-pacman-ssh.sh --server gagis.hopto.org --key repo_key_rsa --repo cppfw/archlinux/${{ matrix.arch }} --database cppfw build/archlinux/$PACKAGE_NAME-*-any.pkg.*
   #       if: startsWith(github.ref, 'refs/tags/')
 ##### macosx #####
   macosx:
@@ -163,15 +165,15 @@ jobs:
     - name: git clone
       uses: myci-actions/checkout@main
     - name: prepare pacman package
-      run: myci-apply-version.sh msys2/PKGBUILD.in
+      run: myci-apply-version.sh build/msys2/PKGBUILD.in
     - name: build
       run: |
-        cd msys2
+        cd build/msys2
         makepkg --syncdeps --noconfirm --skipinteg
     - name: deploy
       run: |
         echo "${{ secrets.MYCI_REPO_SSH_KEY }}" > repo_key_rsa && chmod 600 repo_key_rsa
-        myci-deploy-pacman-ssh.sh --server gagis.hopto.org --key repo_key_rsa --repo cppfw/msys2/msys --database cppfw_msys msys2/$PACKAGE_NAME-*-any.pkg.*
+        myci-deploy-pacman-ssh.sh --server gagis.hopto.org --key repo_key_rsa --repo cppfw/msys2/msys --database cppfw_msys build/msys2/$PACKAGE_NAME-*-any.pkg.*
       if: startsWith(github.ref, 'refs/tags/')
 ##### mingw #####
   msys2-mingw:
@@ -246,7 +248,7 @@ jobs:
       - name: build
         run: |
           conan remote add cppfw $MYCI_CONAN_REMOTE
-          conan create conan --build-require --build=missing --user $MYCI_CONAN_USER --channel main --version $PACKAGE_VERSION
+          conan create build/conan --build-require --build=missing --user $MYCI_CONAN_USER --channel main --version $PACKAGE_VERSION
       - name: deploy conan package
         run: |
           conan remote login --password $MYCI_CONAN_PASSWORD cppfw $MYCI_CONAN_USER

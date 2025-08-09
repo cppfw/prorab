@@ -2,12 +2,14 @@ Source: prorab
 Section: misc
 Priority: extra
 Maintainer: Ivan Gagis <igagis@gmail.com>
-Build-Depends: debhelper (>= 9), make,
-		dos2unix,
-		g++,
-		lsb-release,
-		myci,
-		clang-tidy
+Build-Depends:
+	debhelper (>= 9),
+	make,
+	dos2unix,
+	g++,
+	lsb-release,
+	myci,
+	clang-tidy
 Standards-Version: 3.9.2
 
 Package: prorab
@@ -15,5 +17,5 @@ Section: devel
 Architecture: all
 Depends: sed, make, diffutils
 Description: GNU make based build system.
- GNU make based build system mainly for C++ programs.
- Defines building sequences for applications, libraries, debian packages.
+	GNU make based build system mainly for C++ programs.
+	Defines building sequences for applications, libraries, debian packages.
