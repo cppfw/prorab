@@ -21,6 +21,7 @@ jobs:
           # - {os: debian, codename: buster, image_owner: }
           # - {os: debian, codename: bullseye, image_owner: }
           - {os: debian, codename: bookworm, image_owner: }
+          - {os: debian, codename: trixie, image_owner: }
           # - {os: ubuntu, codename: bionic, image_owner: }
           # - {os: ubuntu, codename: focal, image_owner: }
           # - {os: ubuntu, codename: jammy, image_owner: }
