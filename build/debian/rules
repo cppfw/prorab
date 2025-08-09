@@ -1,10 +1,17 @@
 #!/usr/bin/make -f
 
+export PREFIX := /usr
+
 $(info SOURCE_DATE_EPOCH=$(SOURCE_DATE_EPOCH))
 
 %:
 	dh $@
 
-.PHONY: override_dh_auto_install
+override_dh_auto_build:
+	dh_auto_build --buildsystem=makefile -- --directory=..
+
 override_dh_auto_install:
-	PREFIX=/usr dh_auto_install
+	dh_auto_install --buildsystem=makefile -- --directory=../
+
+override_dh_auto_clean:
+	dh_auto_clean --buildsystem=makefile -- --directory=../
