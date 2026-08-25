@@ -1,3 +1,9 @@
+prorab (2.0.31) unstable; urgency=medium
+
+  * conan: pin make dependency recipe revision
+
+ -- Ivan Gagis <igagis@gmail.com>  Tue, 25 Aug 2026 12:52:18 +0300
+
 prorab (2.0.30) unstable; urgency=medium
 
   * debian trixie build
