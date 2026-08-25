@@ -16,8 +16,8 @@ class ProrabConan(ConanFile):
 	def requirements(self):
 		# TODO: make package recipie revision is pinned because of
 		#       https://github.com/conan-io/conan-center-index/issues/30837
-		#       Revert the pinning when the bug is fixed.
-		self.requires("make/[>=4.4.1#c47f1ee3241ca8bd56f97c6ca4d0a082]", run=True, visible=True)
+		#       Revert the pinning to [>=4.4.1] when the bug is fixed.
+		self.requires("make/4.4.1#c47f1ee3241ca8bd56f97c6ca4d0a082", run=True, visible=True)
 
 	# save commit and remote URL to conandata.yml for packaging
 	def export(self):
